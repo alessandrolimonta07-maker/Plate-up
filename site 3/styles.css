@@ -1687,6 +1687,8 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   border-radius: var(--rad);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   transition: border-color var(--d-fast) var(--t-fast), transform var(--d-eos) var(--t-eos);
 }
 .plan:hover { transform: translateY(-4px); border-color: var(--line-2); }
@@ -1822,6 +1824,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 
 .plan-cta {
   display: block;
+  width: 100%;
   text-align: center;
   padding: 12px;
   background: rgba(244,237,225,.04);
@@ -1841,6 +1844,8 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
+  text-align: left;
 }
 .plan-feats li {
   font-size: .82rem;
