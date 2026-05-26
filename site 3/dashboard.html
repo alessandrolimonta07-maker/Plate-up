@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account · PlateUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="is-dashboard">
+
+<div class="grain"></div>
+
+<!-- ── TOP BAR ── -->
+<header class="db-nav">
+  <a href="index.html" class="db-logo">
+    <span class="logo-mark">◆</span>
+    <span class="logo-text">PlateUp</span>
+  </a>
+
+  <div class="db-locale">
+    <span class="db-locale-mark">A</span>
+    <div class="db-locale-info">
+      <span class="db-locale-name">A Casa di Lori</span>
+      <span class="db-locale-meta mono">elite · attivo</span>
+    </div>
+  </div>
+
+  <div class="db-nav-right">
+    <a href="index.html" class="db-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Torna al sito</span>
+    </a>
+    <div class="db-account">
+      <div class="db-avatar">MR</div>
+      <div class="db-account-info">
+        <span class="db-account-name">Mario Rossi</span>
+        <span class="db-account-role mono">owner</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="db-hero">
+  <p class="db-greet mono"><span class="dot"></span> Account &amp; fatturazione</p>
+  <h1 class="db-title">Il tuo <em>account.</em></h1>
+  <p class="db-lede">Gestisci profilo, piano, pagamenti e sicurezza. Tutto da qui, in qualsiasi momento.</p>
+</section>
+
+<!-- ── LAYOUT: sidebar + content ── -->
+<div class="db-layout">
+
+  <aside class="db-side-nav">
+    <a href="#profilo" class="db-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 22v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg>
+      <span>Profilo</span>
+    </a>
+    <a href="#piano" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+      <span>Piano &amp; rinnovi</span>
+      <span class="db-nav-pill">Elite</span>
+    </a>
+    <a href="#fatturazione" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 11h20"/></svg>
+      <span>Fatturazione</span>
+    </a>
+    <a href="#pagamenti" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 14h6M9 18h6"/></svg>
+      <span>Storico pagamenti</span>
+    </a>
+    <a href="#sicurezza" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <span>Sicurezza</span>
+    </a>
+    <a href="#notifiche" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      <span>Notifiche</span>
+    </a>
+    <div class="db-nav-divider"></div>
+    <a href="#danger" class="db-nav-item danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 11v6M14 11v6M5 6h14l-1 14H6zM9 6V3h6v3"/></svg>
+      <span>Area pericolosa</span>
+    </a>
+  </aside>
+
+  <main class="db-content">
+
+    <!-- ── PROFILO ── -->
+    <section class="db-card" id="profilo">
+      <header class="db-card-head">
+        <div>
+          <h2>Profilo</h2>
+          <p class="db-card-sub">Informazioni di base del tuo account.</p>
+        </div>
+      </header>
+
+      <div class="db-form-grid">
+        <label class="db-field">
+          <span>Nome</span>
+          <input type="text" value="Mario">
+        </label>
+        <label class="db-field">
+          <span>Cognome</span>
+          <input type="text" value="Rossi">
+        </label>
+        <label class="db-field full">
+          <span>Email <span class="db-verified mono">✓ verificata</span></span>
+          <div class="db-input-row">
+            <input type="email" value="mario@iltuolocale.it">
+            <button class="db-link-btn">Cambia</button>
+          </div>
+        </label>
+        <label class="db-field full">
+          <span>Telefono</span>
+          <input type="tel" value="+39 342 9730557">
+        </label>
+        <label class="db-field full">
+          <span>Nome del locale</span>
+          <input type="text" value="A Casa di Lori">
+        </label>
+        <label class="db-field full">
+          <span>Indirizzo</span>
+          <input type="text" value="Via Plinio 12, 22100 Como">
+        </label>
+      </div>
+
+      <footer class="db-card-foot">
+        <span class="db-saved mono">salvato 2 min fa</span>
+        <button class="db-btn-primary">Salva modifiche</button>
+      </footer>
+    </section>
+
+    <!-- ── PIANO ── -->
+    <section class="db-card plan-card" id="piano">
+      <header class="db-card-head">
+        <div>
+          <h2>Piano &amp; rinnovi</h2>
+          <p class="db-card-sub">Il piano attivo e quando viene rinnovato.</p>
+        </div>
+        <span class="db-card-tag mono">attivo</span>
+      </header>
+
+      <div class="db-plan-hero">
+        <div class="db-plan-info">
+          <span class="db-plan-eyebrow mono">piano attuale</span>
+          <div class="db-plan-name">Elite</div>
+          <div class="db-plan-price">
+            <span class="db-plan-cur">€</span><span class="db-plan-num">199</span><span class="db-plan-per">/mese · IVA esclusa</span>
+          </div>
+          <ul class="db-plan-bullets">
+            <li>Menù digitale multilingua · 5 lingue</li>
+            <li>Ordini e gestione tavoli live</li>
+            <li>Libro prenotazioni + sito web</li>
+            <li>Hardware installato + WiFi dedicato</li>
+            <li>Statistiche, turni del personale</li>
+          </ul>
+        </div>
+
+        <div class="db-plan-stats">
+          <div class="db-plan-stat">
+            <span class="db-plan-stat-lbl mono">prossimo rinnovo</span>
+            <span class="db-plan-stat-val">28 dic 2026</span>
+            <span class="db-plan-stat-sub">tra 30 giorni · €199</span>
+          </div>
+          <div class="db-plan-stat">
+            <span class="db-plan-stat-lbl mono">ciclo</span>
+            <span class="db-plan-stat-val">Annuale</span>
+            <span class="db-plan-stat-sub">pagamento mensile · sconto 20%</span>
+          </div>
+          <div class="db-plan-stat">
+            <span class="db-plan-stat-lbl mono">attivo dal</span>
+            <span class="db-plan-stat-val">12 nov 2025</span>
+            <span class="db-plan-stat-sub">1 anno e 16 giorni</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="db-plan-actions">
+        <button class="db-btn-primary">
+          <span>Passa a VIP</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <button class="db-btn-ghost">Cambia ciclo (mensile)</button>
+        <button class="db-btn-ghost">Confronta piani</button>
+      </div>
+    </section>
+
+    <!-- ── FATTURAZIONE ── -->
+    <section class="db-card" id="fatturazione">
+      <header class="db-card-head">
+        <div>
+          <h2>Dati di fatturazione</h2>
+          <p class="db-card-sub">Le informazioni che compaiono in fattura.</p>
+        </div>
+      </header>
+
+      <div class="db-form-grid">
+        <label class="db-field full">
+          <span>Ragione sociale</span>
+          <input type="text" value="Lori S.r.l.">
+        </label>
+        <label class="db-field">
+          <span>Partita IVA</span>
+          <input type="text" value="03452890135">
+        </label>
+        <label class="db-field">
+          <span>Codice fiscale</span>
+          <input type="text" value="RSSMRA85L01F205Z">
+        </label>
+        <label class="db-field">
+          <span>Codice SDI / PEC</span>
+          <input type="text" value="M5UXCR1">
+        </label>
+        <label class="db-field">
+          <span>Email amministrativa</span>
+          <input type="email" value="amministrazione@iltuolocale.it">
+        </label>
+      </div>
+
+      <div class="db-pay-method">
+        <span class="db-pay-eyebrow mono">metodo di pagamento</span>
+        <div class="db-pay-row">
+          <div class="db-pay-card">
+            <span class="db-pay-brand">VISA</span>
+            <span class="db-pay-mask">•••• •••• •••• 4242</span>
+            <span class="db-pay-exp mono">12/27</span>
+          </div>
+          <button class="db-link-btn">Cambia carta</button>
+        </div>
+      </div>
+
+      <footer class="db-card-foot">
+        <span class="db-saved mono"></span>
+        <button class="db-btn-primary">Salva dati fatturazione</button>
+      </footer>
+    </section>
+
+    <!-- ── PAGAMENTI ── -->
+    <section class="db-card" id="pagamenti">
+      <header class="db-card-head">
+        <div>
+          <h2>Storico pagamenti</h2>
+          <p class="db-card-sub">Tutte le fatture e i pagamenti del tuo account.</p>
+        </div>
+        <button class="db-btn-ghost small">Scarica tutto (CSV)</button>
+      </header>
+
+      <div class="db-table">
+        <div class="db-tr db-th">
+          <span>Data</span>
+          <span>Descrizione</span>
+          <span>Importo</span>
+          <span>Stato</span>
+          <span></span>
+        </div>
+        <div class="db-tr">
+          <span class="mono">28 nov 2026</span>
+          <span>PlateUp Elite · novembre</span>
+          <span class="db-amt">€199,00</span>
+          <span class="db-status ok">✓ pagato</span>
+          <button class="db-link-btn">Scarica PDF</button>
+        </div>
+        <div class="db-tr">
+          <span class="mono">28 ott 2026</span>
+          <span>PlateUp Elite · ottobre</span>
+          <span class="db-amt">€199,00</span>
+          <span class="db-status ok">✓ pagato</span>
+          <button class="db-link-btn">Scarica PDF</button>
+        </div>
+        <div class="db-tr">
+          <span class="mono">28 set 2026</span>
+          <span>PlateUp Elite · settembre</span>
+          <span class="db-amt">€199,00</span>
+          <span class="db-status ok">✓ pagato</span>
+          <button class="db-link-btn">Scarica PDF</button>
+        </div>
+        <div class="db-tr">
+          <span class="mono">28 ago 2026</span>
+          <span>PlateUp Elite · agosto</span>
+          <span class="db-amt">€199,00</span>
+          <span class="db-status ok">✓ pagato</span>
+          <button class="db-link-btn">Scarica PDF</button>
+        </div>
+        <div class="db-tr">
+          <span class="mono">12 nov 2025</span>
+          <span>Setup &amp; installazione Elite</span>
+          <span class="db-amt">€599,00</span>
+          <span class="db-status ok">✓ pagato</span>
+          <button class="db-link-btn">Scarica PDF</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SICUREZZA ── -->
+    <section class="db-card" id="sicurezza">
+      <header class="db-card-head">
+        <div>
+          <h2>Sicurezza</h2>
+          <p class="db-card-sub">Password e accesso al tuo account.</p>
+        </div>
+      </header>
+
+      <div class="db-sec-list">
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Password</div>
+            <div class="db-sec-meta">Cambiata 47 giorni fa</div>
+          </div>
+          <button class="db-btn-ghost">Cambia password</button>
+        </div>
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Autenticazione a due fattori <span class="db-rec mono">consigliata</span></div>
+            <div class="db-sec-meta">Aggiungi un livello extra di sicurezza al login.</div>
+          </div>
+          <button class="db-btn-primary small">Attiva 2FA</button>
+        </div>
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Sessioni attive</div>
+            <div class="db-sec-meta">2 dispositivi · MacBook (Como, ora) · iPhone (Como, 2h fa)</div>
+          </div>
+          <button class="db-btn-ghost">Gestisci</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── NOTIFICHE ── -->
+    <section class="db-card" id="notifiche">
+      <header class="db-card-head">
+        <div>
+          <h2>Notifiche</h2>
+          <p class="db-card-sub">Cosa vuoi ricevere via email.</p>
+        </div>
+      </header>
+
+      <div class="db-toggle-list">
+        <label class="db-toggle-row">
+          <div>
+            <div class="db-toggle-name">Riepilogo giornaliero</div>
+            <div class="db-toggle-meta">Ricevi a fine giornata un riepilogo di incassi e coperti.</div>
+          </div>
+          <span class="db-switch on"><span class="db-switch-thumb"></span></span>
+        </label>
+        <label class="db-toggle-row">
+          <div>
+            <div class="db-toggle-name">Nuove prenotazioni</div>
+            <div class="db-toggle-meta">Email quando arriva una prenotazione online.</div>
+          </div>
+          <span class="db-switch on"><span class="db-switch-thumb"></span></span>
+        </label>
+        <label class="db-toggle-row">
+          <div>
+            <div class="db-toggle-name">Promozioni PlateUp</div>
+            <div class="db-toggle-meta">Novità, sconti e nuove funzioni.</div>
+          </div>
+          <span class="db-switch"><span class="db-switch-thumb"></span></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- ── AREA PERICOLOSA ── -->
+    <section class="db-card danger" id="danger">
+      <header class="db-card-head">
+        <div>
+          <h2 style="color:#ff7a7a">Area pericolosa</h2>
+          <p class="db-card-sub">Azioni irreversibili. Procedi con attenzione.</p>
+        </div>
+      </header>
+
+      <div class="db-sec-list">
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Sospendi abbonamento</div>
+            <div class="db-sec-meta">Metti in pausa il piano fino a 3 mesi.</div>
+          </div>
+          <button class="db-btn-ghost">Sospendi</button>
+        </div>
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Disdici abbonamento</div>
+            <div class="db-sec-meta">Resta attivo fino al 28 dicembre 2026. Nessun addebito futuro.</div>
+          </div>
+          <button class="db-btn-danger">Disdici piano</button>
+        </div>
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Elimina account</div>
+            <div class="db-sec-meta">Cancellazione definitiva. I dati non sono recuperabili.</div>
+          </div>
+          <button class="db-btn-danger ghost">Elimina account</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="db-foot">
+  <span>Loggato come <strong>Mario Rossi</strong> · <span class="mono">mario@iltuolocale.it</span></span>
+  <span class="db-foot-dot">·</span>
+  <a href="index.html" id="db-logout">Esci</a>
+</footer>
+
+<script>
+  // Logout
+  document.getElementById('db-logout')?.addEventListener('click', () => {
+    try { localStorage.removeItem('plateup-auth'); } catch(_) {}
+  });
+
+  // Sidebar active state on scroll
+  const navItems = document.querySelectorAll('.db-nav-item');
+  const sections = document.querySelectorAll('.db-content > .db-card');
+  if (sections.length) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          navItems.forEach((n) => n.classList.toggle('active', n.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -55% 0px' });
+    sections.forEach((s) => io.observe(s));
+  }
+
+  // Smooth scroll on sidebar clicks
+  navItems.forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (!id || id.length < 2) return;
+      const t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      const y = t.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+  });
+
+  // Toggle switches
+  document.querySelectorAll('.db-switch').forEach((sw) => {
+    sw.addEventListener('click', () => sw.classList.toggle('on'));
+  });
+
+  // "Salva modifiche" feedback
+  document.querySelectorAll('.db-btn-primary').forEach((b) => {
+    if (b.textContent.trim().startsWith('Salva')) {
+      b.addEventListener('click', () => {
+        const saved = b.closest('.db-card')?.querySelector('.db-saved');
+        if (saved) {
+          saved.textContent = 'salvato adesso ✓';
+          saved.style.color = '#6fd49a';
+          setTimeout(() => {
+            saved.textContent = 'salvato 2 min fa';
+            saved.style.color = '';
+          }, 3000);
+        }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
