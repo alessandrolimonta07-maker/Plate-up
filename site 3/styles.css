@@ -155,18 +155,19 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 
 .nav-center {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   padding: 0 8px;
   border-left: 1px solid var(--line);
   border-right: 1px solid var(--line);
 }
 .nav-link {
-  padding: 8px 14px;
-  font-size: 0.83rem;
+  padding: 8px 11px;
+  font-size: 0.8rem;
   color: var(--cream-2);
   border-radius: 100px;
   transition: color var(--d-fast) var(--t-fast), background var(--d-fast) var(--t-fast);
   font-weight: 400;
+  white-space: nowrap;
 }
 .nav-link:hover { color: var(--cream); background: var(--line); }
 
@@ -176,10 +177,11 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   gap: 4px;
 }
 .nav-login {
-  padding: 8px 14px;
-  font-size: .83rem;
+  padding: 8px 12px;
+  font-size: .8rem;
   color: var(--cream-2);
   transition: color var(--d-fast) var(--t-fast);
+  white-space: nowrap;
 }
 .nav-login:hover { color: var(--gold); }
 
@@ -187,15 +189,16 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px 10px 20px;
+  padding: 10px 14px 10px 18px;
   background: var(--cream);
   color: var(--bg);
   border-radius: 100px;
-  font-size: .83rem;
+  font-size: .8rem;
   font-weight: 500;
   transition: background var(--d-fast) var(--t-fast), color var(--d-fast) var(--t-fast);
   position: relative;
   will-change: transform;
+  white-space: nowrap;
 }
 .btn-magnetic .btn-arrow {
   display: inline-flex;
@@ -1601,6 +1604,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   padding: 140px 4% 100px;
   position: relative;
   z-index: 1;
+  text-align: center;
 }
 .billing-switch {
   position: relative;
@@ -1610,8 +1614,6 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 100px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 .billing-note {
   text-align: center;
@@ -1672,7 +1674,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 
 .plans {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   max-width: 1300px;
   margin: 0 auto;
@@ -1752,18 +1754,22 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   border-radius: 100px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: 14px;
   width: fit-content;
   opacity: 0;
   max-height: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   overflow: hidden;
   transform: translateY(-4px);
-  transition: opacity .3s, max-height .35s, transform .35s var(--t-eos), margin-bottom .3s;
+  transition: opacity .3s, max-height .35s, transform .35s var(--t-eos), margin-bottom .3s, padding .3s;
   box-shadow: 0 6px 18px rgba(212, 175, 55, 0.25);
 }
 .plan-best.show {
   opacity: 1;
   max-height: 32px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   transform: translateY(0);
   margin-bottom: 14px;
 }
