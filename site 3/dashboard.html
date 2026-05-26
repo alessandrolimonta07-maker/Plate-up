@@ -22,10 +22,10 @@
   </a>
 
   <div class="db-locale">
-    <span class="db-locale-mark">A</span>
+    <span class="db-locale-mark" id="db-locale-mark">?</span>
     <div class="db-locale-info">
-      <span class="db-locale-name">A Casa di Lori</span>
-      <span class="db-locale-meta mono">elite · attivo</span>
+      <span class="db-locale-name" id="db-locale-name">Il tuo locale</span>
+      <span class="db-locale-meta mono">— · attivazione in corso</span>
     </div>
   </div>
 
@@ -35,9 +35,9 @@
       <span>Torna al sito</span>
     </a>
     <div class="db-account">
-      <div class="db-avatar">MR</div>
+      <div class="db-avatar" id="db-avatar-initials">--</div>
       <div class="db-account-info">
-        <span class="db-account-name">Mario Rossi</span>
+        <span class="db-account-name" id="db-account-name">—</span>
         <span class="db-account-role mono">owner</span>
       </div>
     </div>
@@ -101,30 +101,30 @@
       <div class="db-form-grid">
         <label class="db-field">
           <span>Nome</span>
-          <input type="text" value="Mario">
+          <input type="text" id="field-firstname" value="">
         </label>
         <label class="db-field">
           <span>Cognome</span>
-          <input type="text" value="Rossi">
+          <input type="text" id="field-lastname" value="">
         </label>
         <label class="db-field full">
           <span>Email <span class="db-verified mono">✓ verificata</span></span>
           <div class="db-input-row">
-            <input type="email" value="mario@iltuolocale.it">
+            <input type="email" id="field-email" value="">
             <button class="db-link-btn">Cambia</button>
           </div>
         </label>
         <label class="db-field full">
           <span>Telefono</span>
-          <input type="tel" value="+39 342 9730557">
+          <input type="tel" id="field-phone" value="" placeholder="+39 …">
         </label>
         <label class="db-field full">
           <span>Nome del locale</span>
-          <input type="text" value="A Casa di Lori">
+          <input type="text" id="field-restaurant" value="">
         </label>
         <label class="db-field full">
           <span>Indirizzo</span>
-          <input type="text" value="Via Plinio 12, 22100 Como">
+          <input type="text" id="field-address" value="" placeholder="Via …, CAP Città">
         </label>
       </div>
 
@@ -141,50 +141,43 @@
           <h2>Piano &amp; rinnovi</h2>
           <p class="db-card-sub">Il piano attivo e quando viene rinnovato.</p>
         </div>
-        <span class="db-card-tag mono">attivo</span>
+        <span class="db-card-tag mono">demo</span>
       </header>
 
       <div class="db-plan-hero">
         <div class="db-plan-info">
           <span class="db-plan-eyebrow mono">piano attuale</span>
-          <div class="db-plan-name">Elite</div>
+          <div class="db-plan-name">Demo gratuita</div>
           <div class="db-plan-price">
-            <span class="db-plan-cur">€</span><span class="db-plan-num">199</span><span class="db-plan-per">/mese · IVA esclusa</span>
+            <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
           </div>
           <ul class="db-plan-bullets">
-            <li>Menù digitale multilingua · 5 lingue</li>
+            <li>Accesso completo per 30 giorni</li>
+            <li>Menù digitale multilingua</li>
             <li>Ordini e gestione tavoli live</li>
-            <li>Libro prenotazioni + sito web</li>
-            <li>Hardware installato + WiFi dedicato</li>
-            <li>Statistiche, turni del personale</li>
+            <li>Supporto onboarding incluso</li>
           </ul>
         </div>
 
         <div class="db-plan-stats">
           <div class="db-plan-stat">
-            <span class="db-plan-stat-lbl mono">prossimo rinnovo</span>
-            <span class="db-plan-stat-val">28 dic 2026</span>
-            <span class="db-plan-stat-sub">tra 30 giorni · €199</span>
+            <span class="db-plan-stat-lbl mono">scadenza demo</span>
+            <span class="db-plan-stat-val" id="db-demo-expire">—</span>
+            <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
           </div>
           <div class="db-plan-stat">
-            <span class="db-plan-stat-lbl mono">ciclo</span>
-            <span class="db-plan-stat-val">Annuale</span>
-            <span class="db-plan-stat-sub">pagamento mensile · sconto 20%</span>
-          </div>
-          <div class="db-plan-stat">
-            <span class="db-plan-stat-lbl mono">attivo dal</span>
-            <span class="db-plan-stat-val">12 nov 2025</span>
-            <span class="db-plan-stat-sub">1 anno e 16 giorni</span>
+            <span class="db-plan-stat-lbl mono">stato</span>
+            <span class="db-plan-stat-val">Attiva</span>
+            <span class="db-plan-stat-sub">nessun addebito in corso</span>
           </div>
         </div>
       </div>
 
       <div class="db-plan-actions">
         <button class="db-btn-primary">
-          <span>Passa a VIP</span>
+          <span>Scegli un piano</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
-        <button class="db-btn-ghost">Cambia ciclo (mensile)</button>
         <button class="db-btn-ghost">Confronta piani</button>
       </div>
     </section>
@@ -257,40 +250,12 @@
           <span>Stato</span>
           <span></span>
         </div>
-        <div class="db-tr">
-          <span class="mono">28 nov 2026</span>
-          <span>PlateUp Elite · novembre</span>
-          <span class="db-amt">€199,00</span>
-          <span class="db-status ok">✓ pagato</span>
-          <button class="db-link-btn">Scarica PDF</button>
-        </div>
-        <div class="db-tr">
-          <span class="mono">28 ott 2026</span>
-          <span>PlateUp Elite · ottobre</span>
-          <span class="db-amt">€199,00</span>
-          <span class="db-status ok">✓ pagato</span>
-          <button class="db-link-btn">Scarica PDF</button>
-        </div>
-        <div class="db-tr">
-          <span class="mono">28 set 2026</span>
-          <span>PlateUp Elite · settembre</span>
-          <span class="db-amt">€199,00</span>
-          <span class="db-status ok">✓ pagato</span>
-          <button class="db-link-btn">Scarica PDF</button>
-        </div>
-        <div class="db-tr">
-          <span class="mono">28 ago 2026</span>
-          <span>PlateUp Elite · agosto</span>
-          <span class="db-amt">€199,00</span>
-          <span class="db-status ok">✓ pagato</span>
-          <button class="db-link-btn">Scarica PDF</button>
-        </div>
-        <div class="db-tr">
-          <span class="mono">12 nov 2025</span>
-          <span>Setup &amp; installazione Elite</span>
-          <span class="db-amt">€599,00</span>
-          <span class="db-status ok">✓ pagato</span>
-          <button class="db-link-btn">Scarica PDF</button>
+        <div class="db-tr" style="opacity:.5; pointer-events:none;">
+          <span class="mono">—</span>
+          <span>Nessun pagamento ancora</span>
+          <span class="db-amt">—</span>
+          <span class="db-status">—</span>
+          <span></span>
         </div>
       </div>
     </section>
@@ -401,13 +366,60 @@
 </div>
 
 <footer class="db-foot">
-  <span>Loggato come <strong>Mario Rossi</strong> · <span class="mono">mario@iltuolocale.it</span></span>
+  <span>Loggato come <strong id="db-foot-name">—</strong> · <span class="mono" id="db-foot-email">—</span></span>
   <span class="db-foot-dot">·</span>
   <a href="index.html" id="db-logout">Esci</a>
 </footer>
 
 <script>
-  // Logout
+  // ── Populate dashboard from localStorage ──
+  (() => {
+    let user = {};
+    try { user = JSON.parse(localStorage.getItem('plateup-auth') || '{}'); } catch(_) {}
+
+    // If not logged in, redirect home
+    if (!user.email) { window.location.href = 'index.html'; return; }
+
+    const firstname  = user.firstname  || '';
+    const lastname   = user.lastname   || '';
+    const restaurant = user.restaurant || '';
+    const email      = user.email      || '';
+    const fullName   = [firstname, lastname].filter(Boolean).join(' ') || email;
+    const initials   = [firstname[0], lastname[0]].filter(Boolean).join('').toUpperCase() || email[0]?.toUpperCase() || '?';
+
+    // Header avatar + name
+    const avatarEl = document.getElementById('db-avatar-initials');
+    const nameEl   = document.getElementById('db-account-name');
+    if (avatarEl) avatarEl.textContent = initials;
+    if (nameEl)   nameEl.textContent   = fullName;
+
+    // Locale badge
+    const localeMark = document.getElementById('db-locale-mark');
+    const localeName = document.getElementById('db-locale-name');
+    if (localeMark) localeMark.textContent = restaurant ? restaurant[0].toUpperCase() : '?';
+    if (localeName) localeName.textContent = restaurant || 'Il tuo locale';
+
+    // Footer
+    const footName  = document.getElementById('db-foot-name');
+    const footEmail = document.getElementById('db-foot-email');
+    if (footName)  footName.textContent  = fullName;
+    if (footEmail) footEmail.textContent = email;
+
+    // Profile form fields
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    set('field-firstname',  firstname);
+    set('field-lastname',   lastname);
+    set('field-email',      email);
+    set('field-restaurant', restaurant);
+
+    // Demo expiry date (30 days from signup)
+    const expireEl = document.getElementById('db-demo-expire');
+    if (expireEl && user.ts) {
+      const expire = new Date(user.ts + 30 * 24 * 60 * 60 * 1000);
+      expireEl.textContent = expire.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+  })();
+</script>
   document.getElementById('db-logout')?.addEventListener('click', () => {
     try { localStorage.removeItem('plateup-auth'); } catch(_) {}
   });

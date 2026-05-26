@@ -373,13 +373,21 @@
         submit.classList.remove('loading');
         submit.querySelector('span').textContent = originalLabel;
 
-        // Persist a basic flag so dashboard knows the user is "logged in"
+        // Persist user data so dashboard can read it
         try {
-          localStorage.setItem('plateup-auth', JSON.stringify({
-            email,
-            mode: which,
-            ts: Date.now()
-          }));
+          const existing = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
+          const payload = { email, mode: which, ts: Date.now() };
+          if (which === 'signup') {
+            payload.firstname  = data.get('firstname')?.toString().trim() || '';
+            payload.lastname   = data.get('lastname')?.toString().trim()  || '';
+            payload.restaurant = data.get('restaurant')?.toString().trim() || '';
+          } else {
+            // On login keep existing profile data if present
+            payload.firstname  = existing.firstname  || '';
+            payload.lastname   = existing.lastname   || '';
+            payload.restaurant = existing.restaurant || '';
+          }
+          localStorage.setItem('plateup-auth', JSON.stringify(payload));
         } catch (_) {}
 
         // For login: redirect straight to the dashboard.
