@@ -181,11 +181,9 @@
             <span>Scegli un piano</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
+          <button class="db-btn-ghost" id="btn-attiva-demo">Prova demo</button>
           <button class="db-btn-ghost">Confronta piani</button>
         </div>
-      </div>
-
-      <!-- STATO: demo attiva (nascosto finché non attivata) -->
       <div id="db-plan-active" style="display:none">
         <div class="db-plan-hero">
           <div class="db-plan-info">
@@ -500,6 +498,16 @@
 </script>
 
 <script>
+  // ── Attiva demo ──
+  document.getElementById('btn-attiva-demo')?.addEventListener('click', () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
+      user.demoActivatedAt = Date.now();
+      localStorage.setItem('plateup-auth', JSON.stringify(user));
+      window.location.reload();
+    } catch(_) {}
+  });
+
   // ── Logout ──
   document.getElementById('db-logout')?.addEventListener('click', () => {
     try { localStorage.removeItem('plateup-auth'); } catch(_) {}
