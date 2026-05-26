@@ -141,44 +141,91 @@
           <h2>Piano &amp; rinnovi</h2>
           <p class="db-card-sub">Il piano attivo e quando viene rinnovato.</p>
         </div>
-        <span class="db-card-tag mono">demo</span>
+        <span class="db-card-tag mono" id="db-plan-tag">in attesa</span>
       </header>
 
-      <div class="db-plan-hero">
-        <div class="db-plan-info">
-          <span class="db-plan-eyebrow mono">piano attuale</span>
-          <div class="db-plan-name">Demo gratuita</div>
-          <div class="db-plan-price">
-            <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
+      <!-- STATO: demo non ancora attivata -->
+      <div id="db-plan-pending">
+        <div class="db-plan-hero">
+          <div class="db-plan-info">
+            <span class="db-plan-eyebrow mono">piano attuale</span>
+            <div class="db-plan-name">Demo gratuita</div>
+            <div class="db-plan-price">
+              <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
+            </div>
+            <ul class="db-plan-bullets">
+              <li>Accesso completo per 30 giorni</li>
+              <li>Menù digitale multilingua</li>
+              <li>Ordini e gestione tavoli live</li>
+              <li>Supporto onboarding incluso</li>
+            </ul>
           </div>
-          <ul class="db-plan-bullets">
-            <li>Accesso completo per 30 giorni</li>
-            <li>Menù digitale multilingua</li>
-            <li>Ordini e gestione tavoli live</li>
-            <li>Supporto onboarding incluso</li>
-          </ul>
+          <div class="db-plan-stats">
+            <div class="db-plan-stat">
+              <span class="db-plan-stat-lbl mono">stato</span>
+              <span class="db-plan-stat-val" style="color:#d4af37">In attesa</span>
+              <span class="db-plan-stat-sub">la demo non è ancora stata attivata</span>
+            </div>
+            <div class="db-plan-stat">
+              <span class="db-plan-stat-lbl mono">scadenza demo</span>
+              <span class="db-plan-stat-val">—</span>
+              <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
+            </div>
+          </div>
         </div>
-
-        <div class="db-plan-stats">
-          <div class="db-plan-stat">
-            <span class="db-plan-stat-lbl mono">scadenza demo</span>
-            <span class="db-plan-stat-val" id="db-demo-expire">—</span>
-            <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
-          </div>
-          <div class="db-plan-stat">
-            <span class="db-plan-stat-lbl mono">stato</span>
-            <span class="db-plan-stat-val">Attiva</span>
-            <span class="db-plan-stat-sub">nessun addebito in corso</span>
-          </div>
+        <p style="font-size:.85rem; opacity:.55; margin: 0 0 1.5rem; font-family: monospace;">
+          ◆ La tua demo partirà quando il team PlateUp completa il tuo onboarding. Riceverai una notifica.
+        </p>
+        <div class="db-plan-actions">
+          <button class="db-btn-primary">
+            <span>Scegli un piano</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <button class="db-btn-ghost">Confronta piani</button>
         </div>
       </div>
 
-      <div class="db-plan-actions">
-        <button class="db-btn-primary">
-          <span>Scegli un piano</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
-        <button class="db-btn-ghost">Confronta piani</button>
+      <!-- STATO: demo attiva (nascosto finché non attivata) -->
+      <div id="db-plan-active" style="display:none">
+        <div class="db-plan-hero">
+          <div class="db-plan-info">
+            <span class="db-plan-eyebrow mono">piano attuale</span>
+            <div class="db-plan-name">Demo gratuita</div>
+            <div class="db-plan-price">
+              <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
+            </div>
+            <ul class="db-plan-bullets">
+              <li>Accesso completo per 30 giorni</li>
+              <li>Menù digitale multilingua</li>
+              <li>Ordini e gestione tavoli live</li>
+              <li>Supporto onboarding incluso</li>
+            </ul>
+          </div>
+          <div class="db-plan-stats">
+            <div class="db-plan-stat">
+              <span class="db-plan-stat-lbl mono">stato</span>
+              <span class="db-plan-stat-val" style="color:#6fd49a">Attiva</span>
+              <span class="db-plan-stat-sub">nessun addebito in corso</span>
+            </div>
+            <div class="db-plan-stat">
+              <span class="db-plan-stat-lbl mono">attiva dal</span>
+              <span class="db-plan-stat-val" id="db-demo-start">—</span>
+              <span class="db-plan-stat-sub" id="db-demo-days-left"></span>
+            </div>
+            <div class="db-plan-stat">
+              <span class="db-plan-stat-lbl mono">scadenza</span>
+              <span class="db-plan-stat-val" id="db-demo-expire">—</span>
+              <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
+            </div>
+          </div>
+        </div>
+        <div class="db-plan-actions">
+          <button class="db-btn-primary">
+            <span>Scegli un piano</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <button class="db-btn-ghost">Confronta piani</button>
+        </div>
       </div>
     </section>
 
@@ -194,35 +241,35 @@
       <div class="db-form-grid">
         <label class="db-field full">
           <span>Ragione sociale</span>
-          <input type="text" value="Lori S.r.l.">
+          <input type="text" id="field-ragione" value="" placeholder="Es. Trattoria Mario S.r.l.">
         </label>
         <label class="db-field">
           <span>Partita IVA</span>
-          <input type="text" value="03452890135">
+          <input type="text" id="field-piva" value="" placeholder="Es. 03452890135">
         </label>
         <label class="db-field">
           <span>Codice fiscale</span>
-          <input type="text" value="RSSMRA85L01F205Z">
+          <input type="text" id="field-cf" value="" placeholder="Es. RSSMRA85L01F205Z">
         </label>
         <label class="db-field">
           <span>Codice SDI / PEC</span>
-          <input type="text" value="M5UXCR1">
+          <input type="text" id="field-sdi" value="" placeholder="Es. M5UXCR1">
         </label>
         <label class="db-field">
           <span>Email amministrativa</span>
-          <input type="email" value="amministrazione@iltuolocale.it">
+          <input type="email" id="field-email-amm" value="" placeholder="amministrazione@iltuolocale.it">
         </label>
       </div>
 
       <div class="db-pay-method">
         <span class="db-pay-eyebrow mono">metodo di pagamento</span>
         <div class="db-pay-row">
-          <div class="db-pay-card">
-            <span class="db-pay-brand">VISA</span>
-            <span class="db-pay-mask">•••• •••• •••• 4242</span>
-            <span class="db-pay-exp mono">12/27</span>
+          <div class="db-pay-card" style="opacity:.45">
+            <span class="db-pay-brand">—</span>
+            <span class="db-pay-mask">nessuna carta aggiunta</span>
+            <span class="db-pay-exp mono"></span>
           </div>
-          <button class="db-link-btn">Cambia carta</button>
+          <button class="db-link-btn">Aggiungi carta</button>
         </div>
       </div>
 
@@ -412,19 +459,53 @@
     set('field-email',      email);
     set('field-restaurant', restaurant);
 
-    // Demo expiry date (30 days from signup)
-    const expireEl = document.getElementById('db-demo-expire');
-    if (expireEl && user.ts) {
-      const expire = new Date(user.ts + 30 * 24 * 60 * 60 * 1000);
-      expireEl.textContent = expire.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+    // Demo activation state
+    const demoStart = user.demoActivatedAt ? new Date(user.demoActivatedAt) : null;
+    const pending   = document.getElementById('db-plan-pending');
+    const active    = document.getElementById('db-plan-active');
+    const planTag   = document.getElementById('db-plan-tag');
+
+    if (demoStart) {
+      // Demo è attiva
+      if (pending) pending.style.display = 'none';
+      if (active)  active.style.display  = '';
+      if (planTag) planTag.textContent = 'demo attiva';
+
+      const expire = new Date(demoStart.getTime() + 30 * 24 * 60 * 60 * 1000);
+      const daysLeft = Math.max(0, Math.ceil((expire - Date.now()) / (24 * 60 * 60 * 1000)));
+
+      const startEl    = document.getElementById('db-demo-start');
+      const expireEl   = document.getElementById('db-demo-expire');
+      const daysLeftEl = document.getElementById('db-demo-days-left');
+
+      if (startEl)    startEl.textContent    = demoStart.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+      if (expireEl)   expireEl.textContent   = expire.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+      if (daysLeftEl) daysLeftEl.textContent = daysLeft > 0 ? `ancora ${daysLeft} giorni` : 'scaduta';
+    } else {
+      // Demo non ancora attivata
+      if (pending) pending.style.display = '';
+      if (active)  active.style.display  = 'none';
+      if (planTag) planTag.textContent = 'in attesa';
     }
+    // Populate billing fields from localStorage
+    const billing = user.billing || {};
+    const setB = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    setB('field-ragione',   billing.ragione);
+    setB('field-piva',      billing.piva);
+    setB('field-cf',        billing.cf);
+    setB('field-sdi',       billing.sdi);
+    setB('field-email-amm', billing.emailAmm);
+
   })();
 </script>
+
+<script>
+  // ── Logout ──
   document.getElementById('db-logout')?.addEventListener('click', () => {
     try { localStorage.removeItem('plateup-auth'); } catch(_) {}
   });
 
-  // Sidebar active state on scroll
+  // ── Sidebar active state on scroll ──
   const navItems = document.querySelectorAll('.db-nav-item');
   const sections = document.querySelectorAll('.db-content > .db-card');
   if (sections.length) {
@@ -439,7 +520,7 @@
     sections.forEach((s) => io.observe(s));
   }
 
-  // Smooth scroll on sidebar clicks
+  // ── Smooth scroll on sidebar clicks ──
   navItems.forEach((a) => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');
@@ -452,26 +533,75 @@
     });
   });
 
-  // Toggle switches
+  // ── Toggle switches ──
   document.querySelectorAll('.db-switch').forEach((sw) => {
     sw.addEventListener('click', () => sw.classList.toggle('on'));
   });
 
-  // "Salva modifiche" feedback
+  // ── Salva modifiche profilo → localStorage ──
   document.querySelectorAll('.db-btn-primary').forEach((b) => {
-    if (b.textContent.trim().startsWith('Salva')) {
-      b.addEventListener('click', () => {
-        const saved = b.closest('.db-card')?.querySelector('.db-saved');
-        if (saved) {
-          saved.textContent = 'salvato adesso ✓';
-          saved.style.color = '#6fd49a';
-          setTimeout(() => {
-            saved.textContent = 'salvato 2 min fa';
-            saved.style.color = '';
-          }, 3000);
+    if (!b.textContent.trim().startsWith('Salva')) return;
+    b.addEventListener('click', () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
+
+        // Profilo
+        const fn = document.getElementById('field-firstname');
+        const ln = document.getElementById('field-lastname');
+        const em = document.getElementById('field-email');
+        const rs = document.getElementById('field-restaurant');
+        const ph = document.getElementById('field-phone');
+        const ad = document.getElementById('field-address');
+        if (fn) user.firstname  = fn.value;
+        if (ln) user.lastname   = ln.value;
+        if (em) user.email      = em.value;
+        if (rs) user.restaurant = rs.value;
+        if (ph) user.phone      = ph.value;
+        if (ad) user.address    = ad.value;
+
+        // Fatturazione
+        const ra  = document.getElementById('field-ragione');
+        const pi  = document.getElementById('field-piva');
+        const cf  = document.getElementById('field-cf');
+        const sdi = document.getElementById('field-sdi');
+        const ea  = document.getElementById('field-email-amm');
+        if (ra || pi || cf || sdi || ea) {
+          user.billing = user.billing || {};
+          if (ra)  user.billing.ragione   = ra.value;
+          if (pi)  user.billing.piva      = pi.value;
+          if (cf)  user.billing.cf        = cf.value;
+          if (sdi) user.billing.sdi       = sdi.value;
+          if (ea)  user.billing.emailAmm  = ea.value;
         }
-      });
-    }
+
+        localStorage.setItem('plateup-auth', JSON.stringify(user));
+      } catch(_) {}
+
+      // Feedback visivo
+      const saved = b.closest('.db-card')?.querySelector('.db-saved');
+      if (saved) {
+        saved.textContent = 'salvato adesso ✓';
+        saved.style.color = '#6fd49a';
+        setTimeout(() => { saved.textContent = ''; saved.style.color = ''; }, 3000);
+      }
+
+      // Aggiorna nome/avatar in tempo reale
+      const fn2 = document.getElementById('field-firstname')?.value || '';
+      const ln2 = document.getElementById('field-lastname')?.value  || '';
+      const rs2 = document.getElementById('field-restaurant')?.value || '';
+      const full = [fn2, ln2].filter(Boolean).join(' ');
+      const init = [fn2[0], ln2[0]].filter(Boolean).join('').toUpperCase();
+      const nameEl   = document.getElementById('db-account-name');
+      const avatarEl = document.getElementById('db-avatar-initials');
+      const footName = document.getElementById('db-foot-name');
+      const localeMark = document.getElementById('db-locale-mark');
+      const localeName = document.getElementById('db-locale-name');
+      if (nameEl && full)    nameEl.textContent   = full;
+      if (avatarEl && init)  avatarEl.textContent = init;
+      if (footName && full)  footName.textContent = full;
+      if (localeMark && rs2) localeMark.textContent = rs2[0]?.toUpperCase() || '?';
+      if (localeName && rs2) localeName.textContent = rs2;
+    });
   });
 </script>
 
