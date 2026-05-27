@@ -899,15 +899,13 @@ body:has(#nav-toggle:checked) { overflow: hidden; }
   .bento-3 { grid-column: span 5; }
   .bento-4 { grid-column: span 4; grid-row: span 2; }
   .bento-5 { grid-column: span 8; }
-  .bento-6 { grid-column: span 5; }
-  .bento-7 { grid-column: span 12; }
+  .bento-6 { grid-column: span 12; }
 }
 /* Tablet: 2-col layout */
 @media (min-width: 640px) and (max-width: 1023px) {
   .bento-1 { grid-column: span 2; }
   .bento-4 { grid-column: span 2; }
   .bento-5, .bento-6 { grid-column: span 2; }
-  .bento-7 { grid-column: span 2; }
 }
 
 .bento-card.accent {
@@ -1265,158 +1263,172 @@ body:has(#nav-toggle:checked) { overflow: hidden; }
   color: var(--blue);
 }
 
-/* ── AI card ── */
-.ai-card {
-  background: linear-gradient(135deg, #0e1018 0%, #131a24 60%, #1a1208 100%);
-  border-color: rgba(212,175,55,.22);
+/* ============================================
+   AI FEATURE SECTION (standalone)
+   ============================================ */
+
+.ai-feature {
+  padding: 0 4% 80px;
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 1024px) { .ai-feature { padding: 0 4% 100px; } }
+
+.ai-feature-inner {
+  background: linear-gradient(135deg, #0e1018 0%, #131a24 55%, #1a1208 100%);
+  border: 1px solid rgba(212,175,55,.22);
+  border-radius: var(--rad-lg);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
   position: relative;
   overflow: hidden;
+  max-width: 1400px;
+  margin: 0 auto;
 }
-.ai-card::before {
+@media (min-width: 640px) { .ai-feature-inner { padding: 44px 40px; } }
+@media (min-width: 1024px) {
+  .ai-feature-inner {
+    flex-direction: row;
+    align-items: center;
+    gap: 60px;
+    padding: 56px;
+  }
+}
+
+.ai-feature-inner::before {
   content: '';
   position: absolute;
-  top: -60%; right: -10%;
-  width: 50%; height: 200%;
-  background: radial-gradient(ellipse, rgba(212,175,55,.08) 0%, transparent 65%);
+  top: -40%; right: -5%;
+  width: 45%; height: 180%;
+  background: radial-gradient(ellipse, rgba(212,175,55,.1) 0%, transparent 65%);
   pointer-events: none;
 }
-.ai-card::after {
+.ai-feature-inner::after {
   content: '✦';
   position: absolute;
-  bottom: -20px; right: 32px;
-  font-size: 10rem;
+  bottom: -30px; right: 40px;
+  font-size: 12rem;
   color: rgba(212,175,55,.04);
   line-height: 1;
   pointer-events: none;
-  font-family: sans-serif;
+  user-select: none;
 }
 
-/* Full-width horizontal layout on desktop */
+.ai-feature-left {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
 @media (min-width: 1024px) {
-  .ai-card {
-    flex-direction: row;
-    align-items: center;
-    gap: 0;
-  }
-  .ai-card .ai-left {
+  .ai-feature-left {
     flex: 0 0 380px;
-    padding-right: 40px;
+    padding-right: 60px;
     border-right: 1px solid rgba(212,175,55,.12);
   }
-  .ai-card .ai-right {
-    flex: 1;
-    padding-left: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .ai-card .bento-visual { margin: 0; border: none; background: transparent; padding: 0; }
-  .ai-card h3 { font-size: 2.6rem; }
-  .ai-card p { max-width: 320px; padding-bottom: 0; }
 }
+.ai-feature-left .sec-title { font-size: clamp(2rem, 5vw, 3.2rem); }
 
-.ai-left { display: flex; flex-direction: column; gap: 16px; }
-.ai-right { margin-top: 8px; }
-@media (min-width: 1024px) {
-  .ai-left { gap: 20px; }
-  .ai-right { margin-top: 0; }
+.ai-feature-right {
+  flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .ai-mock {
-  padding: 14px;
-  gap: 10px;
-  background: rgba(0,0,0,.35);
-  border-radius: var(--rad-sm);
+  background: rgba(0,0,0,.4);
+  border: 1px solid var(--line);
+  border-radius: var(--rad);
+  padding: 16px;
 }
 .ai-chat {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
-
-/* Desktop: show chat as horizontal 3-column grid */
 @media (min-width: 1024px) {
   .ai-chat {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
-  .ai-msg { flex-direction: column; gap: 8px; }
-  .ai-msg.user { flex-direction: column; align-items: flex-start; }
-  .ai-bubble.user-bubble { max-width: 100%; border-radius: 12px; }
-  .ai-bubble { border-radius: 12px; max-width: 100%; }
+  .ai-chat .ai-msg:last-child { grid-column: span 2; }
 }
 
 .ai-msg {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 10px;
 }
-.ai-msg.user {
-  flex-direction: row-reverse;
-}
+.ai-msg.user { flex-direction: row-reverse; }
+
 .ai-avatar {
   flex-shrink: 0;
-  width: 26px; height: 26px;
+  width: 28px; height: 28px;
   background: linear-gradient(135deg, var(--gold), #c49a30);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: .72rem;
+  font-size: .76rem;
   color: var(--bg);
-  box-shadow: 0 0 10px rgba(212,175,55,.3);
   animation: aiGlow 3s ease-in-out infinite alternate;
 }
 @keyframes aiGlow {
   0%   { box-shadow: 0 0 8px rgba(212,175,55,.25); }
-  100% { box-shadow: 0 0 18px rgba(212,175,55,.55); }
+  100% { box-shadow: 0 0 20px rgba(212,175,55,.6); }
 }
+
 .ai-bubble {
   flex: 1;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: 4px 12px 12px 12px;
-  padding: 9px 13px;
-  font-size: .8rem;
+  padding: 10px 14px;
+  font-size: .82rem;
   color: var(--cream-2);
-  line-height: 1.5;
-  max-width: calc(100% - 36px);
+  line-height: 1.55;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 .ai-bubble.user-bubble {
   background: rgba(212,175,55,.08);
   border-color: rgba(212,175,55,.2);
   border-radius: 12px 4px 12px 12px;
   color: var(--cream);
-  max-width: 72%;
+  flex: 0 1 auto;
+  max-width: 75%;
 }
 .ai-typing-label {
+  font-family: var(--mono);
   font-size: .62rem;
   color: var(--gold);
   letter-spacing: 0;
-  margin-bottom: 2px;
   display: block;
+  margin-bottom: 2px;
 }
 .ai-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
+  gap: 8px;
 }
 .ai-chip {
-  padding: 6px 12px;
+  padding: 7px 14px;
   background: rgba(255,255,255,.04);
   border: 1px solid var(--line);
   border-radius: 100px;
-  font-size: .76rem;
+  font-size: .78rem;
   color: var(--cream-2);
   white-space: nowrap;
   transition: border-color var(--d-fast) var(--t-fast), color var(--d-fast) var(--t-fast), background var(--d-fast) var(--t-fast);
   cursor: default;
 }
 .ai-chip:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
-   ============================================ */
+
+/* ============================================
 
 .how {
   padding: 80px 4%;
