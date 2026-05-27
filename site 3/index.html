@@ -358,7 +358,155 @@
 
 <!-- ── STICKY HOW IT WORKS ── -->
 <section class="how" id="how">
-  <div class="how-inner">
+
+  <!-- MOBILE LAYOUT: step cards with inline visuals -->
+  <div class="how-mobile">
+    <header class="sec-header" data-reveal-block>
+      <div class="sec-tag"><span class="dot"></span> Come funziona</div>
+      <h2 class="sec-title">Dal QR code<br>al <em>cliente fidelizzato.</em></h2>
+      <p class="sec-lede">Quattro passaggi. Niente formazione, niente tecnici. Solo sala.</p>
+    </header>
+
+    <div class="how-cards">
+
+      <!-- Card 01 -->
+      <div class="how-card" data-reveal-block>
+        <div class="hc-head">
+          <span class="hc-num">01</span>
+          <div class="hc-text">
+            <h4>Il cliente inquadra il QR</h4>
+            <p>Sul tavolo o sul tablet. Il menù si apre nella lingua del telefono, in due secondi.</p>
+          </div>
+        </div>
+        <div class="hc-visual hcv-qr">
+          <div class="hcv-inner">
+            <div class="hcv-qr-grid"></div>
+            <div class="hcv-qr-label mono">scansione in corso…</div>
+            <div class="hcv-qr-foot">a casa di lori · tavolo 4</div>
+          </div>
+          <div class="hcv-badge mono">◆ scan QR · nessuna app</div>
+        </div>
+      </div>
+
+      <!-- Card 02 -->
+      <div class="how-card" data-reveal-block>
+        <div class="hc-head">
+          <span class="hc-num">02</span>
+          <div class="hc-text">
+            <h4>Sfoglia, sceglie, ordina</h4>
+            <p>Foto HD, filtri allergeni, chiamata cameriere integrata. Nessuna app da scaricare.</p>
+          </div>
+        </div>
+        <div class="hc-visual hcv-menu">
+          <div class="hcv-menu-shell">
+            <aside class="hcv-side">
+              <div class="hcv-side-title">A CASA<br>DI LORI</div>
+              <div class="hcv-cat active">Antipasti</div>
+              <div class="hcv-cat">Primi</div>
+              <div class="hcv-cat">Secondi</div>
+            </aside>
+            <div class="hcv-main">
+              <div class="hcv-bar"><span><b>Tav 4</b> · 2 pers.</span><span class="hcv-search">🔍</span></div>
+              <div class="hcv-grid">
+                <div class="hcv-item">
+                  <div class="hcv-img" style="background:linear-gradient(135deg,#d4af37,#8a6f1f)"></div>
+                  <div class="hcv-name">Risotto tartufo</div>
+                  <div class="hcv-price">€28</div>
+                  <div class="hcv-add">+</div>
+                </div>
+                <div class="hcv-item">
+                  <div class="hcv-img" style="background:linear-gradient(135deg,#c46b3e,#5e2e1a)"></div>
+                  <div class="hcv-name">Tagliata manzo</div>
+                  <div class="hcv-price">€32</div>
+                  <div class="hcv-add">+</div>
+                </div>
+                <div class="hcv-item">
+                  <div class="hcv-img" style="background:linear-gradient(135deg,#9a7c4e,#54402b)"></div>
+                  <div class="hcv-name">Caprese trad.</div>
+                  <div class="hcv-price">€14</div>
+                  <div class="hcv-add">+</div>
+                </div>
+                <div class="hcv-item">
+                  <div class="hcv-img" style="background:linear-gradient(135deg,#7c5e3e,#3d2d1e)"></div>
+                  <div class="hcv-name">Branzino al sale</div>
+                  <div class="hcv-price">€26</div>
+                  <div class="hcv-add">+</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hcv-badge mono">◆ 5 lingue · no download</div>
+        </div>
+      </div>
+
+      <!-- Card 03 -->
+      <div class="how-card" data-reveal-block>
+        <div class="hc-head">
+          <span class="hc-num">03</span>
+          <div class="hc-text">
+            <h4>La cucina riceve <em>live</em></h4>
+            <p>Ticket separati per cucina e bar. Pulsante "pronto", stampa automatica, zero errori.</p>
+          </div>
+        </div>
+        <div class="hc-visual hcv-kitchen">
+          <div class="hcv-kitchen-header">
+            <span>👨‍🍳 Cucina</span>
+            <span class="hcv-live-pill"><span class="hcv-live-dot"></span> LIVE</span>
+          </div>
+          <div class="hcv-ticket new">
+            <div class="hcv-ticket-hdr">
+              <span class="hcv-ticket-tav">TAVOLO 4</span>
+              <span class="hcv-ticket-time mono">20:24</span>
+            </div>
+            <div class="hcv-ticket-row">2× Risotto al tartufo</div>
+            <div class="hcv-ticket-row">1× Tagliata di manzo</div>
+            <div class="hcv-ticket-ready">✓ Pronto</div>
+          </div>
+          <div class="hcv-ticket">
+            <div class="hcv-ticket-hdr">
+              <span class="hcv-ticket-tav">TAVOLO 11</span>
+              <span class="hcv-ticket-time mono">20:18</span>
+            </div>
+            <div class="hcv-ticket-row">1× Caprese</div>
+          </div>
+          <div class="hcv-badge mono">◆ zero comande perse</div>
+        </div>
+      </div>
+
+      <!-- Card 04 -->
+      <div class="how-card" data-reveal-block>
+        <div class="hc-head">
+          <span class="hc-num">04</span>
+          <div class="hc-text">
+            <h4>La sala vede tutto, dal palmo</h4>
+            <p>Tavoli liberi, occupati, prenotati. Tempi di permanenza, conto, pagamento.</p>
+          </div>
+        </div>
+        <div class="hc-visual hcv-sala">
+          <div class="hcv-sala-header">
+            <span>Sala · Tavoli</span>
+            <span class="mono">8 attivi</span>
+          </div>
+          <div class="hcv-tav-grid">
+            <div class="hcv-tav libero"><span class="hcvt-n">1</span><span class="hcvt-s">libero</span></div>
+            <div class="hcv-tav occ"><span class="hcvt-n">2</span><span class="hcvt-s">14m</span></div>
+            <div class="hcv-tav occ"><span class="hcvt-n">3</span><span class="hcvt-s">32m</span></div>
+            <div class="hcv-tav occ alert"><span class="hcvt-n">4</span><span class="hcvt-s">servito</span></div>
+            <div class="hcv-tav libero"><span class="hcvt-n">5</span><span class="hcvt-s">libero</span></div>
+            <div class="hcv-tav occ"><span class="hcvt-n">6</span><span class="hcvt-s">8m</span></div>
+            <div class="hcv-tav prenot"><span class="hcvt-n">7</span><span class="hcvt-s">20:30</span></div>
+            <div class="hcv-tav occ"><span class="hcvt-n">8</span><span class="hcvt-s">45m</span></div>
+            <div class="hcv-tav libero"><span class="hcvt-n">9</span><span class="hcvt-s">libero</span></div>
+          </div>
+          <div class="hcv-badge mono">◆ controllo sala in tempo reale</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DESKTOP LAYOUT: sticky phone -->
+  <div class="how-inner how-desktop-only">
     <div class="how-left">
       <header class="sec-header left" data-reveal-block>
         <div class="sec-tag"><span class="dot"></span> Come funziona</div>
