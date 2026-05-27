@@ -20,9 +20,6 @@
 <!-- ── Scroll progress bar ── -->
 <div class="scroll-progress" id="scroll-progress"></div>
 
-<!-- ── Nav toggle (CSS-only mobile menu) ── -->
-<input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
-
 <!-- ── NAV ── -->
 <nav class="nav" id="nav">
   <a href="#top" class="logo">
@@ -43,46 +40,8 @@
       <span class="btn-arrow">→</span>
     </a>
   </div>
-  <label for="nav-toggle" class="hamburger" aria-label="Menu">
-    <span></span><span></span>
-  </label>
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span></button>
 </nav>
-
-<!-- ── MOBILE MENU ── -->
-<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-  <nav class="mm-nav">
-    <a href="#features" class="mm-link">
-      <span class="mm-num mono">01</span>
-      <span>Funzioni</span>
-    </a>
-    <a href="#how" class="mm-link">
-      <span class="mm-num mono">02</span>
-      <span>Come funziona</span>
-    </a>
-    <a href="#pricing" class="mm-link">
-      <span class="mm-num mono">03</span>
-      <span>Piani</span>
-    </a>
-    <a href="#gallery" class="mm-link">
-      <span class="mm-num mono">04</span>
-      <span>Locali</span>
-    </a>
-    <a href="#faq" class="mm-link">
-      <span class="mm-num mono">05</span>
-      <span>FAQ</span>
-    </a>
-  </nav>
-  <div class="mm-actions">
-    <a href="#" class="mm-login" id="mm-open-auth">Accedi al pannello →</a>
-    <a href="#contact" class="btn-primary mm-cta">
-      <span>Prenota demo gratuita</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-    </a>
-  </div>
-  <div class="mm-footer mono">
-    <span>◆ PlateUp — Il sistema operativo della tua sala</span>
-  </div>
-</div>
 
 <!-- ── HERO ── -->
 <section class="hero" id="top">
@@ -112,7 +71,7 @@
   </h1>
 
   <p class="hero-sub" data-reveal data-delay="600">
-    Menù, ordini, prenotazioni, turni, analytics e AI — tutto connesso in un'unica piattaforma. Non uno strumento in più: il sistema operativo del tuo locale.
+    Menù multilingua, ordini live, prenotazioni e analytics — un'unica piattaforma per chi lavora davvero in sala. Pensata in Italia, per la ristorazione che non ha tempo da perdere.
   </p>
 
   <div class="hero-ctas" data-reveal data-delay="800">
@@ -143,8 +102,8 @@
     </div>
     <div class="meta-divider"></div>
     <div class="meta-item">
-      <span class="meta-num">0</span>
-      <span class="meta-lbl">errori nelle comande</span>
+      <span class="meta-num">∞</span>
+      <span class="meta-lbl">menù ristampati</span>
     </div>
   </div>
 
@@ -189,11 +148,10 @@
   <header class="sec-header" data-reveal-block>
     <div class="sec-tag"><span class="dot"></span> Funzioni</div>
     <h2 class="sec-title">
-      Un ecosistema.<br>
+      Una piattaforma.<br>
       <em>Sette superpoteri.</em>
     </h2>
-    <p class="sec-lede">Non solo menù digitale — ordini, prenotazioni, turni, analytics e AI. Tutto connesso, tutto in un posto.</p>
-    <p class="carousel-hint mono">← scorri per vedere tutte →</p>
+    <p class="sec-lede">Tutto ciò che serve per servire meglio. Niente di superfluo, niente di confuso.</p>
   </header>
 
   <div class="bento">
@@ -360,211 +318,9 @@
   </div>
 </section>
 
-<!-- ── AI FEATURE SECTION ──-->
-<section class="ai-feature" id="ai">
-  <div class="ai-feature-inner" data-reveal-block>
-    <div class="ai-feature-left">
-      <div class="sec-tag"><span class="dot"></span> <span class="mono">07 — intelligenza artificiale</span></div>
-      <h2 class="sec-title">Assistente AI<br><em>sempre sveglio.</em></h2>
-      <p class="sec-lede">Suggerisce i piatti giusti, risponde ai clienti, ottimizza i prezzi. Lavora mentre tu servi la sala.</p>
-      <div class="ai-chips">
-        <span class="ai-chip">📈 Analizza incassi</span>
-        <span class="ai-chip">🍽️ Suggerisci menù</span>
-        <span class="ai-chip">💬 Rispondi ai clienti</span>
-        <span class="ai-chip">⚡ Ottimizza prezzi</span>
-      </div>
-    </div>
-    <div class="ai-feature-right">
-      <div class="ai-mock">
-        <div class="ai-chat">
-          <div class="ai-msg assistant">
-            <span class="ai-avatar">✦</span>
-            <div class="ai-bubble">
-              <span class="ai-typing-label mono">PlateUp AI</span>
-              Stasera il risotto è il piatto più ordinato. Considera di aumentare il prezzo di €2.
-            </div>
-          </div>
-          <div class="ai-msg user">
-            <div class="ai-bubble user-bubble">
-              Quanti coperti abbiamo fatto venerdì scorso?
-            </div>
-          </div>
-          <div class="ai-msg assistant">
-            <span class="ai-avatar">✦</span>
-            <div class="ai-bubble">
-              <span class="ai-typing-label mono">PlateUp AI</span>
-              47 coperti · scontrino medio €38 · picco 20:30–21:00
-            </div>
-          </div>
-          <div class="ai-msg user">
-            <div class="ai-bubble user-bubble">
-              Qualcosa da migliorare per sabato?
-            </div>
-          </div>
-          <div class="ai-msg assistant">
-            <span class="ai-avatar">✦</span>
-            <div class="ai-bubble">
-              <span class="ai-typing-label mono">PlateUp AI</span>
-              Aggiungi 2 camerieri tra le 20:30 e le 22:00 — sabato scorso hai perso 3 tavoli per tempi lunghi.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ── STICKY HOW IT WORKS ── -->
 <section class="how" id="how">
-
-  <!-- MOBILE LAYOUT: step cards with inline visuals -->
-  <div class="how-mobile">
-    <header class="sec-header" data-reveal-block>
-      <div class="sec-tag"><span class="dot"></span> Come funziona</div>
-      <h2 class="sec-title">Dal QR code<br>al <em>cliente fidelizzato.</em></h2>
-      <p class="sec-lede">Quattro passaggi. Niente formazione, niente tecnici. Solo sala.</p>
-    </header>
-
-    <div class="how-cards">
-
-      <!-- Card 01 -->
-      <div class="how-card" data-reveal-block>
-        <div class="hc-head">
-          <span class="hc-num">01</span>
-          <div class="hc-text">
-            <h4>Il cliente inquadra il QR</h4>
-            <p>Sul tavolo o sul tablet. Il menù si apre nella lingua del telefono, in due secondi.</p>
-          </div>
-        </div>
-        <div class="hc-visual hcv-qr">
-          <div class="hcv-inner">
-            <div class="hcv-qr-grid"></div>
-            <div class="hcv-qr-label mono">scansione in corso…</div>
-            <div class="hcv-qr-foot">a casa di lori · tavolo 4</div>
-          </div>
-          <div class="hcv-badge mono">◆ scan QR · nessuna app</div>
-        </div>
-      </div>
-
-      <!-- Card 02 -->
-      <div class="how-card" data-reveal-block>
-        <div class="hc-head">
-          <span class="hc-num">02</span>
-          <div class="hc-text">
-            <h4>Sfoglia, sceglie, ordina</h4>
-            <p>Foto HD, filtri allergeni, chiamata cameriere integrata. Nessuna app da scaricare.</p>
-          </div>
-        </div>
-        <div class="hc-visual hcv-menu">
-          <div class="hcv-menu-shell">
-            <aside class="hcv-side">
-              <div class="hcv-side-title">A CASA<br>DI LORI</div>
-              <div class="hcv-cat active">Antipasti</div>
-              <div class="hcv-cat">Primi</div>
-              <div class="hcv-cat">Secondi</div>
-            </aside>
-            <div class="hcv-main">
-              <div class="hcv-bar"><span><b>Tav 4</b> · 2 pers.</span><span class="hcv-search">🔍</span></div>
-              <div class="hcv-grid">
-                <div class="hcv-item">
-                  <div class="hcv-img" style="background:linear-gradient(135deg,#d4af37,#8a6f1f)"></div>
-                  <div class="hcv-name">Risotto tartufo</div>
-                  <div class="hcv-price">€28</div>
-                  <div class="hcv-add">+</div>
-                </div>
-                <div class="hcv-item">
-                  <div class="hcv-img" style="background:linear-gradient(135deg,#c46b3e,#5e2e1a)"></div>
-                  <div class="hcv-name">Tagliata manzo</div>
-                  <div class="hcv-price">€32</div>
-                  <div class="hcv-add">+</div>
-                </div>
-                <div class="hcv-item">
-                  <div class="hcv-img" style="background:linear-gradient(135deg,#9a7c4e,#54402b)"></div>
-                  <div class="hcv-name">Caprese trad.</div>
-                  <div class="hcv-price">€14</div>
-                  <div class="hcv-add">+</div>
-                </div>
-                <div class="hcv-item">
-                  <div class="hcv-img" style="background:linear-gradient(135deg,#7c5e3e,#3d2d1e)"></div>
-                  <div class="hcv-name">Branzino al sale</div>
-                  <div class="hcv-price">€26</div>
-                  <div class="hcv-add">+</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="hcv-badge mono">◆ 5 lingue · no download</div>
-        </div>
-      </div>
-
-      <!-- Card 03 -->
-      <div class="how-card" data-reveal-block>
-        <div class="hc-head">
-          <span class="hc-num">03</span>
-          <div class="hc-text">
-            <h4>La cucina riceve <em>live</em></h4>
-            <p>Ticket separati per cucina e bar. Pulsante "pronto", stampa automatica, zero errori.</p>
-          </div>
-        </div>
-        <div class="hc-visual hcv-kitchen">
-          <div class="hcv-kitchen-header">
-            <span>👨‍🍳 Cucina</span>
-            <span class="hcv-live-pill"><span class="hcv-live-dot"></span> LIVE</span>
-          </div>
-          <div class="hcv-ticket new">
-            <div class="hcv-ticket-hdr">
-              <span class="hcv-ticket-tav">TAVOLO 4</span>
-              <span class="hcv-ticket-time mono">20:24</span>
-            </div>
-            <div class="hcv-ticket-row">2× Risotto al tartufo</div>
-            <div class="hcv-ticket-row">1× Tagliata di manzo</div>
-            <div class="hcv-ticket-ready">✓ Pronto</div>
-          </div>
-          <div class="hcv-ticket">
-            <div class="hcv-ticket-hdr">
-              <span class="hcv-ticket-tav">TAVOLO 11</span>
-              <span class="hcv-ticket-time mono">20:18</span>
-            </div>
-            <div class="hcv-ticket-row">1× Caprese</div>
-          </div>
-          <div class="hcv-badge mono">◆ zero comande perse</div>
-        </div>
-      </div>
-
-      <!-- Card 04 -->
-      <div class="how-card" data-reveal-block>
-        <div class="hc-head">
-          <span class="hc-num">04</span>
-          <div class="hc-text">
-            <h4>La sala vede tutto, dal palmo</h4>
-            <p>Tavoli liberi, occupati, prenotati. Tempi di permanenza, conto, pagamento.</p>
-          </div>
-        </div>
-        <div class="hc-visual hcv-sala">
-          <div class="hcv-sala-header">
-            <span>Sala · Tavoli</span>
-            <span class="mono">8 attivi</span>
-          </div>
-          <div class="hcv-tav-grid">
-            <div class="hcv-tav libero"><span class="hcvt-n">1</span><span class="hcvt-s">libero</span></div>
-            <div class="hcv-tav occ"><span class="hcvt-n">2</span><span class="hcvt-s">14m</span></div>
-            <div class="hcv-tav occ"><span class="hcvt-n">3</span><span class="hcvt-s">32m</span></div>
-            <div class="hcv-tav occ alert"><span class="hcvt-n">4</span><span class="hcvt-s">servito</span></div>
-            <div class="hcv-tav libero"><span class="hcvt-n">5</span><span class="hcvt-s">libero</span></div>
-            <div class="hcv-tav occ"><span class="hcvt-n">6</span><span class="hcvt-s">8m</span></div>
-            <div class="hcv-tav prenot"><span class="hcvt-n">7</span><span class="hcvt-s">20:30</span></div>
-            <div class="hcv-tav occ"><span class="hcvt-n">8</span><span class="hcvt-s">45m</span></div>
-            <div class="hcv-tav libero"><span class="hcvt-n">9</span><span class="hcvt-s">libero</span></div>
-          </div>
-          <div class="hcv-badge mono">◆ controllo sala in tempo reale</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- DESKTOP LAYOUT: sticky phone -->
-  <div class="how-inner how-desktop-only">
+  <div class="how-inner">
     <div class="how-left">
       <header class="sec-header left" data-reveal-block>
         <div class="sec-tag"><span class="dot"></span> Come funziona</div>
@@ -714,7 +470,7 @@
 <section class="why" id="why">
   <header class="sec-header" data-reveal-block>
     <div class="sec-tag"><span class="dot"></span> Perché PlateUp</div>
-    <h2 class="sec-title">Tutto in una piattaforma.<br><em>Zero compromessi.</em></h2>
+    <h2 class="sec-title">Metterla insieme da solo<br><em>costa il doppio.</em></h2>
   </header>
 
   <div class="compare">
@@ -737,7 +493,7 @@
     </div>
 
     <div class="compare-col unified" data-reveal-block>
-      <div class="compare-label mono">— PlateUp Pro</div>
+      <div class="compare-label mono">— PlateUp Elite</div>
       <div class="unified-price">
         <span class="up-cur">€</span><span class="up-num">199</span><span class="up-per">/mese</span>
       </div>
@@ -760,8 +516,7 @@
   <header class="sec-header" data-reveal-block>
     <div class="sec-tag"><span class="dot"></span> Piani</div>
     <h2 class="sec-title">Scegli il tuo <em>kit.</em></h2>
-    <p class="sec-lede">Tre piani. Cresci quando ti serve. Nessun vincolo.</p>
-    <p class="carousel-hint mono">← scorri per vedere i piani →</p>
+    <p class="sec-lede">Quattro piani. Cresci quando ti serve. Nessun vincolo.</p>
   </header>
 
   <div class="billing-switch" data-reveal-block>
@@ -780,23 +535,23 @@
       <div class="plan-discount" data-discount>−20%</div>
       <div class="plan-head">
         <div class="plan-name">Lite</div>
-        <div class="plan-tag">Il digitale di base. Ordini, tavoli, clienti.</div>
+        <div class="plan-tag">Per smettere di prendere comande a voce.</div>
       </div>
       <div class="plan-price-row">
         <div class="plan-price"><span class="cur">€</span><span class="num" data-monthly="69" data-annual="55">69</span><span class="per">/mese</span></div>
         <div class="plan-strike" data-strike-annual="828">—</div>
       </div>
       <div class="plan-setup mono">+ €99 attivazione</div>
-      <a href="#contact" class="plan-cta">Fissa sopralluogo gratuito →</a>
+      <a href="#contact" class="plan-cta">Fissa sopralluogo →</a>
       <ul class="plan-feats">
         <li class="cat">Base</li>
-        <li>✓ Menù digitale multilingua (5 lingue) + QR per ogni tavolo</li>
-        <li>✓ Foto piatti & filtri allergeni</li>
-        <li>✓ Ordini digitali cucina & bar (tramite cameriere)</li>
-        <li>✓ Chiamata cameriere dal tavolo</li>
-        <li>✓ Admin dashboard (prezzi, disponibilità)</li>
-        <li>✓ Gestione ordini tavoli live</li>
-        <li>✓ Database clienti & storico</li>
+        <li>✓ Menù digitale multilingua + QR</li>
+        <li>✓ Foto piatti + filtri allergeni</li>
+        <li>✓ Ordini digitali (via cameriere)</li>
+        <li>✓ Admin dashboard</li>
+        <li class="cat">Gestionale</li>
+        <li>✓ Gestione tavoli live</li>
+        <li>✓ Database clienti</li>
       </ul>
     </article>
 
@@ -805,31 +560,53 @@
       <div class="plan-discount" data-discount>−20%</div>
       <div class="plan-head">
         <div class="plan-name">Pro</div>
-        <div class="plan-tag">La gestione completa del tuo locale, tutta in un posto.</div>
+        <div class="plan-tag">Per farti trovare online e prenotare in autonomia.</div>
       </div>
       <div class="plan-price-row">
         <div class="plan-price"><span class="cur">€</span><span class="num" data-monthly="119" data-annual="95">119</span><span class="per">/mese</span></div>
         <div class="plan-strike" data-strike-annual="1428">—</div>
       </div>
-      <div class="plan-setup mono">+ €99 attivazione</div>
-      <a href="#contact" class="plan-cta primary">Fissa sopralluogo gratuito →</a>
+      <div class="plan-setup mono">+ €349 attivazione</div>
+      <a href="#contact" class="plan-cta primary">Fissa sopralluogo →</a>
       <ul class="plan-feats">
         <li class="cat">Tutto Lite +</li>
         <li>✓ Libro prenotazioni digitale</li>
-        <li>✓ Prenotazioni online dal sito <span style="opacity:.55;font-size:.8em">(disponibile con il servizio sito web)</span></li>
-        <li>✓ Software gestione turni dipendenti</li>
-        <li>✓ Statistiche complete (piatti, incassi, coperti)</li>
-        <li>✓ Assistente AI 24/7</li>
+        <li>✓ Prenotazione online dal sito</li>
+        <li>✓ Sito web + Google Maps</li>
+        <li>✓ Gallery e integrazione social</li>
+        <li>✓ Software gestione turni</li>
+      </ul>
+    </article>
+
+    <article class="plan" data-plan="elite">
+      <div class="plan-discount" data-discount>−20%</div>
+      <div class="plan-best" data-best>★ Massimo risparmio</div>
+      <div class="plan-head">
+        <div class="plan-name">Elite</div>
+        <div class="plan-tag">Tutto installato e configurato. Pensiamo a tutto noi.</div>
+      </div>
+      <div class="plan-price-row">
+        <div class="plan-price"><span class="cur">€</span><span class="num" data-monthly="199" data-annual="159">199</span><span class="per">/mese</span></div>
+        <div class="plan-strike" data-strike-annual="2388">—</div>
+      </div>
+      <div class="plan-setup mono">+ €599 attivazione</div>
+      <a href="#contact" class="plan-cta">Fissa sopralluogo →</a>
+      <ul class="plan-feats">
+        <li class="cat">Tutto Pro +</li>
+        <li>✓ Setup tablet al tavolo</li>
+        <li>✓ Installazione hardware</li>
+        <li>✓ WiFi dedicato professionale</li>
+        <li>✓ Onboarding personalizzato</li>
       </ul>
     </article>
 
     <article class="plan vip" data-plan="vip">
       <div class="plan-head">
         <div class="plan-name vip">VIP</div>
-        <div class="plan-tag gold">Gestione totale. Operatore dedicato, multilocale.</div>
+        <div class="plan-tag gold">Il massimo. Hardware incluso, operatore dedicato.</div>
       </div>
       <div class="plan-price-row">
-        <div class="plan-price coming">In arrivo · €199/mese</div>
+        <div class="plan-price coming">In arrivo</div>
       </div>
       <div class="plan-setup mono">attivazione gratuita</div>
       <form class="waitlist" onsubmit="event.preventDefault(); this.querySelector('.wl-ok').classList.add('show');">
@@ -838,65 +615,13 @@
         <div class="wl-ok">✓ Ti avvisiamo al lancio</div>
       </form>
       <ul class="plan-feats">
-        <li class="cat">Tutto Pro +</li>
-        <li>✓ Operatore PlateUp dedicato</li>
-        <li>✓ Gestione multilocale</li>
-        <li>✓ Report mensile personalizzato</li>
-        <li>✓ Personalizzazione grafica menù</li>
+        <li class="cat">Tutto Elite +</li>
+        <li>✓ Tablet in comodato d'uso</li>
+        <li>✓ Operatore dedicato</li>
+        <li>✓ Garanzia kasko hardware</li>
         <li>✓ Aggiornamenti prioritari</li>
       </ul>
     </article>
-
-  </div>
-</section>
-
-<!-- ── SERVIZI EXTRA ── -->
-<section class="extras" id="extras">
-  <header class="sec-header" data-reveal-block>
-    <div class="sec-tag"><span class="dot"></span> Servizi opzionali</div>
-    <h2 class="sec-title">Aggiungi quello<br><em>che ti serve.</em></h2>
-    <p class="sec-lede">Servizi una tantum acquistabili su qualsiasi piano. Investimenti puntuali, non costi ricorrenti.</p>
-  </header>
-
-  <div class="extras-grid" data-reveal-block>
-
-    <!-- SITO WEB -->
-    <div class="extra-card">
-      <div class="extra-icon">🌐</div>
-      <div class="extra-name">Sito web professionale</div>
-      <div class="extra-desc">Design su misura per il tuo locale, ottimizzato per Google, con galleria, menù e link ai social. Consegnato in 7–10 giorni lavorativi.</div>
-      <div class="extra-price">
-        <span class="extra-cur">€</span><span class="extra-num">400</span>
-        <span class="extra-per">una tantum · IVA esclusa</span>
-      </div>
-      <a href="mailto:plateupinfo@gmail.com?subject=Richiesta%20Sito%20Web%20PlateUp&body=Buongiorno%2C%20sono%20interessato%2Fa%20al%20servizio%20Sito%20Web%20professionale.%20Il%20mio%20locale%20si%20chiama%3A" class="extra-cta">Richiedi informazioni →</a>
-    </div>
-
-    <!-- FOTO PIATTI -->
-    <div class="extra-card">
-      <div class="extra-icon">📸</div>
-      <div class="extra-name">Sessione foto piatti</div>
-      <div class="extra-desc">Fotografiamo i tuoi piatti direttamente nel locale. Immagini pronte per il menù digitale, il sito e i social. Consegna entro 48 ore.</div>
-      <div class="extra-price">
-        <span class="extra-cur">€</span><span class="extra-num">150</span>
-        <span class="extra-per">una tantum · IVA esclusa</span>
-      </div>
-      <a href="mailto:plateupinfo@gmail.com?subject=Richiesta%20Sessione%20Foto%20Piatti&body=Buongiorno%2C%20sono%20interessato%2Fa%20al%20servizio%20di%20fotografia%20piatti.%20Il%20mio%20locale%20si%20chiama%3A" class="extra-cta">Richiedi informazioni →</a>
-    </div>
-
-    <!-- COMBO -->
-    <div class="extra-card extra-featured">
-      <div class="extra-badge">Risparmia €100</div>
-      <div class="extra-icon">✨</div>
-      <div class="extra-name">Sito web + Foto piatti</div>
-      <div class="extra-desc">Sito professionale e sessione fotografica in un unico pacchetto. Il modo più veloce per avere tutto pronto al lancio.</div>
-      <div class="extra-price">
-        <span class="extra-cur">€</span><span class="extra-num">450</span>
-        <span class="extra-per">una tantum · IVA esclusa</span>
-      </div>
-      <div class="extra-strike">€550 separati</div>
-      <a href="mailto:plateupinfo@gmail.com?subject=Richiesta%20Pacchetto%20Sito%20%2B%20Foto&body=Buongiorno%2C%20sono%20interessato%2Fa%20al%20pacchetto%20Sito%20Web%20%2B%20Foto%20Piatti.%20Il%20mio%20locale%20si%20chiama%3A" class="extra-cta primary">Richiedi informazioni →</a>
-    </div>
 
   </div>
 </section>
@@ -978,7 +703,7 @@
   <div class="faq-list">
     <details class="faq-item">
       <summary>Quanto tempo ci vuole per attivare PlateUp nel mio locale?<span class="faq-x">+</span></summary>
-      <div class="faq-a">Lite e Pro si attivano in <strong>meno di un'ora</strong>: ricevi le credenziali e sei online. Ti contattiamo per un breve onboarding e sei operativo.</div>
+      <div class="faq-a">Lite e Pro si attivano in <strong>meno di un'ora</strong>: ricevi le credenziali e sei online. Per Elite e VIP, che includono hardware on-site, ti contattiamo entro 24 ore e interveniamo in 3–5 giorni lavorativi.</div>
     </details>
     <details class="faq-item">
       <summary>Ho bisogno di competenze tecniche?<span class="faq-x">+</span></summary>
@@ -994,7 +719,7 @@
     </details>
     <details class="faq-item">
       <summary>Posso cancellare l'abbonamento quando voglio?</summary>
-      <div class="faq-a">Sì. I piani mensili si rinnovano automaticamente ogni mese — disdici quando vuoi e smetti di pagare il mese successivo. I piani annuali hanno lo sconto del 20% e si pagano in rate mensili: se disdici, il piano resta attivo fino alla scadenza annuale e le rate continuano fino ad allora.</div>
+      <div class="faq-a">Sì. Nessun vincolo di durata sui piani mensili. I piani annuali hanno uno sconto del 20% e si rinnovano automaticamente — disdici quando vuoi entro la scadenza.</div>
     </details>
     <details class="faq-item">
       <summary>I dati dei clienti sono al sicuro?</summary>
@@ -1127,6 +852,15 @@
         <span>Accedi</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
+
+      <div class="auth-or">
+        <span>oppure</span>
+      </div>
+
+      <button type="button" class="auth-social">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC04" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.83z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
+        <span>Continua con Google</span>
+      </button>
     </form>
 
     <!-- SIGNUP -->
@@ -1176,6 +910,13 @@
         <span>Crea account</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
+
+      <div class="auth-or"><span>oppure</span></div>
+
+      <button type="button" class="auth-social">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC04" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.83z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
+        <span>Registrati con Google</span>
+      </button>
     </form>
 
     <!-- SUCCESS state (after submit) -->
@@ -1194,26 +935,6 @@
   </div>
 </div>
 
-<script>
-// Close mobile menu when a link is clicked
-(function() {
-  var toggle = document.getElementById('nav-toggle');
-  if (!toggle) return;
-  document.querySelectorAll('.mobile-menu a[href]').forEach(function(a) {
-    a.addEventListener('click', function() { toggle.checked = false; });
-  });
-  // Forward auth click from mobile menu to existing auth button
-  var mmLogin = document.getElementById('mm-open-auth');
-  var navLogin = document.getElementById('open-auth');
-  if (mmLogin && navLogin) {
-    mmLogin.addEventListener('click', function(e) {
-      e.preventDefault();
-      toggle.checked = false;
-      setTimeout(function() { navLogin.click(); }, 60);
-    });
-  }
-})();
-</script>
 <script src="app.js"></script>
 </body>
 </html>
