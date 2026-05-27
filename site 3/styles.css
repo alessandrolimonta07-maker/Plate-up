@@ -65,7 +65,6 @@ body {
   letter-spacing: -0.005em;
   overflow-x: hidden;
 }
-body.menu-open { overflow: hidden; }
 
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
@@ -73,6 +72,18 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 
 .mono { font-family: var(--mono); font-size: .72em; letter-spacing: 0; text-transform: lowercase; font-weight: 400; }
 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--gold); }
+
+/* ── Nav toggle checkbox ── */
+.nav-toggle {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+  width: 0; height: 0;
+  z-index: -1;
+}
+
+/* Lock body scroll when menu open */
+body:has(#nav-toggle:checked) { overflow: hidden; }
 
 /* ── Cursor glow — desktop/mouse only ── */
 .cursor-glow {
@@ -196,8 +207,8 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   transition: transform var(--d-eos) var(--t-eos), opacity var(--d-fast) var(--t-fast), width var(--d-fast) var(--t-fast);
 }
 .hamburger:hover { background: rgba(255,255,255,.08); border-color: var(--line-2); }
-body.menu-open .hamburger span:first-child { transform: translateY(3.25px) rotate(45deg); }
-body.menu-open .hamburger span:last-child  { transform: translateY(-3.25px) rotate(-45deg); }
+#nav-toggle:checked ~ nav .hamburger span:first-child { transform: translateY(3.25px) rotate(45deg); }
+#nav-toggle:checked ~ nav .hamburger span:last-child  { transform: translateY(-3.25px) rotate(-45deg); }
 
 /* Desktop: show full nav */
 @media (min-width: 900px) {
@@ -288,7 +299,7 @@ body.menu-open .hamburger span:last-child  { transform: translateY(-3.25px) rota
   transition: opacity .35s var(--t-eos), transform .35s var(--t-eos);
   overflow-y: auto;
 }
-body.menu-open .mobile-menu {
+#nav-toggle:checked ~ .mobile-menu {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
@@ -888,13 +899,14 @@ body.menu-open .mobile-menu {
   .bento-3 { grid-column: span 5; }
   .bento-4 { grid-column: span 4; grid-row: span 2; }
   .bento-5 { grid-column: span 8; }
-  .bento-6 { grid-column: span 12; }
+  .bento-6 { grid-column: span 6; }
+  .bento-7 { grid-column: span 6; }
 }
 /* Tablet: 2-col layout */
 @media (min-width: 640px) and (max-width: 1023px) {
   .bento-1 { grid-column: span 2; }
   .bento-4 { grid-column: span 2; }
-  .bento-5, .bento-6 { grid-column: span 2; }
+  .bento-5, .bento-6, .bento-7 { grid-column: span 2; }
 }
 
 .bento-card.accent {
@@ -1252,8 +1264,90 @@ body.menu-open .mobile-menu {
   color: var(--blue);
 }
 
-/* ============================================
-   STICKY HOW IT WORKS
+/* ── AI card ── */
+.ai-card {
+  background: linear-gradient(160deg, #0e1018 0%, #131720 100%);
+  border-color: rgba(212,175,55,.18);
+}
+.ai-mock {
+  padding: 14px;
+  gap: 10px;
+  background: rgba(0,0,0,.35);
+}
+.ai-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ai-msg {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ai-msg.user {
+  flex-direction: row-reverse;
+}
+.ai-avatar {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  background: linear-gradient(135deg, var(--gold), #e6a800);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .7rem;
+  color: var(--bg);
+  box-shadow: 0 0 10px rgba(212,175,55,.3);
+  animation: aiGlow 3s ease-in-out infinite alternate;
+}
+@keyframes aiGlow {
+  0%   { box-shadow: 0 0 8px rgba(212,175,55,.25); }
+  100% { box-shadow: 0 0 16px rgba(212,175,55,.55); }
+}
+.ai-bubble {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 4px 12px 12px 12px;
+  padding: 8px 12px;
+  font-size: .78rem;
+  color: var(--cream-2);
+  line-height: 1.5;
+  max-width: calc(100% - 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.ai-bubble.user-bubble {
+  background: rgba(212,175,55,.1);
+  border-color: rgba(212,175,55,.25);
+  border-radius: 12px 4px 12px 12px;
+  color: var(--cream);
+  max-width: 70%;
+}
+.ai-typing-label {
+  font-size: .6rem;
+  color: var(--gold);
+  letter-spacing: 0;
+  margin-bottom: 2px;
+  display: block;
+}
+.ai-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.ai-chip {
+  padding: 5px 10px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: .7rem;
+  color: var(--cream-2);
+  white-space: nowrap;
+  transition: border-color var(--d-fast) var(--t-fast), color var(--d-fast) var(--t-fast);
+  cursor: default;
+}
+.ai-chip:hover { border-color: var(--gold); color: var(--gold); }
    ============================================ */
 
 .how {

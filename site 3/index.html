@@ -20,6 +20,9 @@
 <!-- ── Scroll progress bar ── -->
 <div class="scroll-progress" id="scroll-progress"></div>
 
+<!-- ── Nav toggle (CSS-only mobile menu) ── -->
+<input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
+
 <!-- ── NAV ── -->
 <nav class="nav" id="nav">
   <a href="#top" class="logo">
@@ -40,9 +43,9 @@
       <span class="btn-arrow">→</span>
     </a>
   </div>
-  <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+  <label for="nav-toggle" class="hamburger" aria-label="Menu">
     <span></span><span></span>
-  </button>
+  </label>
 </nav>
 
 <!-- ── MOBILE MENU ── -->
@@ -148,6 +151,41 @@
   <div class="hero-scroll-hint">
     <span class="mono">scroll</span>
     <span class="scroll-line"></span>
+    <!-- 7. AI integrata -->
+    <article class="bento-card bento-7 ai-card" data-reveal-block>
+      <div class="bento-eyebrow"><span class="mono">07 — intelligenza artificiale</span></div>
+      <h3>Assistente AI<br><em>sempre sveglio.</em></h3>
+      <p>Suggerisce i piatti giusti, risponde ai clienti, ottimizza i prezzi. Lavora mentre tu servi la sala.</p>
+      <div class="bento-visual ai-mock">
+        <div class="ai-chat">
+          <div class="ai-msg assistant">
+            <span class="ai-avatar">✦</span>
+            <div class="ai-bubble">
+              <span class="ai-typing-label mono">PlateUp AI</span>
+              Stasera il risotto è il piatto più ordinato. Considera di aumentare il prezzo di €2.
+            </div>
+          </div>
+          <div class="ai-msg user">
+            <div class="ai-bubble user-bubble">
+              Quanti coperti abbiamo fatto venerdì scorso?
+            </div>
+          </div>
+          <div class="ai-msg assistant">
+            <span class="ai-avatar">✦</span>
+            <div class="ai-bubble">
+              <span class="ai-typing-label mono">PlateUp AI</span>
+              47 coperti · scontrino medio €38 · picco 20:30–21:00
+            </div>
+          </div>
+        </div>
+        <div class="ai-chips">
+          <span class="ai-chip">📈 Analizza incassi</span>
+          <span class="ai-chip">🍽️ Suggerisci menù</span>
+          <span class="ai-chip">💬 Rispondi ai clienti</span>
+        </div>
+      </div>
+    </article>
+
   </div>
 </section>
 
@@ -1136,47 +1174,23 @@
 </div>
 
 <script>
-// ── Mobile menu toggle ──
+// Close mobile menu when a link is clicked
 (function() {
-  const btn = document.getElementById('hamburger');
-  const menu = document.getElementById('mobile-menu');
-  const mmLogin = document.getElementById('mm-open-auth');
-  const navLogin = document.getElementById('open-auth');
-  if (!btn || !menu) return;
-
-  function openMenu() {
-    document.body.classList.add('menu-open');
-    btn.setAttribute('aria-expanded', 'true');
-    menu.setAttribute('aria-hidden', 'false');
-  }
-  function closeMenu() {
-    document.body.classList.remove('menu-open');
-    btn.setAttribute('aria-expanded', 'false');
-    menu.setAttribute('aria-hidden', 'true');
-  }
-
-  btn.addEventListener('click', function() {
-    document.body.classList.contains('menu-open') ? closeMenu() : openMenu();
+  var toggle = document.getElementById('nav-toggle');
+  if (!toggle) return;
+  document.querySelectorAll('.mobile-menu a[href]').forEach(function(a) {
+    a.addEventListener('click', function() { toggle.checked = false; });
   });
-
-  // Close on link click
-  menu.querySelectorAll('a[href]').forEach(function(a) {
-    a.addEventListener('click', closeMenu);
-  });
-
   // Forward auth click from mobile menu to existing auth button
+  var mmLogin = document.getElementById('mm-open-auth');
+  var navLogin = document.getElementById('open-auth');
   if (mmLogin && navLogin) {
     mmLogin.addEventListener('click', function(e) {
       e.preventDefault();
-      closeMenu();
-      setTimeout(function() { navLogin.click(); }, 80);
+      toggle.checked = false;
+      setTimeout(function() { navLogin.click(); }, 60);
     });
   }
-
-  // Close on Escape
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeMenu();
-  });
 })();
 </script>
 <script src="app.js"></script>
