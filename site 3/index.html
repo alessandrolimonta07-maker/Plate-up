@@ -40,8 +40,46 @@
       <span class="btn-arrow">→</span>
     </a>
   </div>
-  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span></button>
+  <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span>
+  </button>
 </nav>
+
+<!-- ── MOBILE MENU ── -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <nav class="mm-nav">
+    <a href="#features" class="mm-link">
+      <span class="mm-num mono">01</span>
+      <span>Funzioni</span>
+    </a>
+    <a href="#how" class="mm-link">
+      <span class="mm-num mono">02</span>
+      <span>Come funziona</span>
+    </a>
+    <a href="#pricing" class="mm-link">
+      <span class="mm-num mono">03</span>
+      <span>Piani</span>
+    </a>
+    <a href="#gallery" class="mm-link">
+      <span class="mm-num mono">04</span>
+      <span>Locali</span>
+    </a>
+    <a href="#faq" class="mm-link">
+      <span class="mm-num mono">05</span>
+      <span>FAQ</span>
+    </a>
+  </nav>
+  <div class="mm-actions">
+    <a href="#" class="mm-login" id="mm-open-auth">Accedi al pannello →</a>
+    <a href="#contact" class="btn-primary mm-cta">
+      <span>Prenota demo gratuita</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+  <div class="mm-footer mono">
+    <span>◆ PlateUp — Il sistema operativo della tua sala</span>
+  </div>
+</div>
 
 <!-- ── HERO ── -->
 <section class="hero" id="top">
@@ -949,6 +987,50 @@
   </div>
 </div>
 
+<script>
+// ── Mobile menu toggle ──
+(function() {
+  const btn = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  const mmLogin = document.getElementById('mm-open-auth');
+  const navLogin = document.getElementById('open-auth');
+  if (!btn || !menu) return;
+
+  function openMenu() {
+    document.body.classList.add('menu-open');
+    btn.setAttribute('aria-expanded', 'true');
+    menu.setAttribute('aria-hidden', 'false');
+  }
+  function closeMenu() {
+    document.body.classList.remove('menu-open');
+    btn.setAttribute('aria-expanded', 'false');
+    menu.setAttribute('aria-hidden', 'true');
+  }
+
+  btn.addEventListener('click', function() {
+    document.body.classList.contains('menu-open') ? closeMenu() : openMenu();
+  });
+
+  // Close on link click
+  menu.querySelectorAll('a[href]').forEach(function(a) {
+    a.addEventListener('click', closeMenu);
+  });
+
+  // Forward auth click from mobile menu to existing auth button
+  if (mmLogin && navLogin) {
+    mmLogin.addEventListener('click', function(e) {
+      e.preventDefault();
+      closeMenu();
+      setTimeout(function() { navLogin.click(); }, 80);
+    });
+  }
+
+  // Close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeMenu();
+  });
+})();
+</script>
 <script src="app.js"></script>
 </body>
 </html>
