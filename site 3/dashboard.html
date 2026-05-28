@@ -388,6 +388,12 @@
 <div id="pw-change-form" style="display:none; margin-top:16px; padding:16px;
      background:#111; border:1px solid #333; border-radius:12px;">
   <label style="display:block; font-size:.85rem; color:#888; margin-bottom:6px;">
+    Password attuale
+  </label>
+  <input id="pw-attuale" type="password" placeholder="Password attuale"
+    style="width:100%; padding:10px 12px; background:#1a1a1a; border:1px solid #444;
+           border-radius:8px; color:white; font-size:.95rem; box-sizing:border-box; margin-bottom:10px;">
+  <label style="display:block; font-size:.85rem; color:#888; margin-bottom:6px;">
     Nuova password (min. 8 caratteri)
   </label>
   <input id="pw-new" type="password" placeholder="Nuova password"
@@ -780,25 +786,42 @@ document.getElementById('btn-pw-salva').addEventListener('click', async () => {
   btn.textContent = 'Salvataggio…'; btn.disabled = true;
 
   try {
+    // Re-autentica l'utente prima di cambiare la password
+    const user     = firebase.auth().currentUser;
+    const email    = user.email;
+    const pwAttuale = document.getElementById('pw-attuale')?.value;
+
+    if (!pwAttuale) {
+      err.textContent = 'Inserisci la password attuale per confermare.';
+      err.style.display = 'block';
+      btn.textContent = 'Salva password'; btn.disabled = false;
+      return;
+    }
+
+    const credential = firebase.auth.EmailAuthProvider.credential(email, pwAttuale);
+    await user.reauthenticateWithCredential(credential);
+
+    // Ora cambia la password su Firebase Auth
+    await user.updatePassword(pw1);
+
+    // Aggiorna anche l'hash per il gestionale
     const hash = await sha256(pw1);
-    await firebase.auth().currentUser?.updatePassword(pw1);
-  await dbPassword.collection('impostazioni').doc('ristorante').set(
+    await dbPassword.collection('impostazioni').doc('ristorante').set(
       { accessPassword: hash, accessPasswordUpdatedAt: new Date().toISOString() },
       { merge: true }
     );
 
-
     document.getElementById('pw-change-form').style.display = 'none';
-    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-new').value    = '';
     document.getElementById('pw-confirm').value = '';
+    document.getElementById('pw-attuale').value = '';
+    alert('✅ Password aggiornata.');
 
-    // Feedback visivo nella riga sicurezza
-    const meta = document.querySelector('.db-sec-row .db-sec-meta');
-    if (meta && meta.textContent.includes('Cambiata')) meta.textContent = 'Cambiata adesso ✓';
-
-    alert('✅ Password aggiornata. Diventerà attiva al prossimo accesso al gestionale.');
   } catch(e) {
-    err.textContent = 'Errore salvataggio: ' + e.message;
+    let msg = 'Errore salvataggio: ' + e.message;
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
+      msg = 'Password attuale non corretta.';
+    err.textContent = msg;
     err.style.display = 'block';
   }
 
