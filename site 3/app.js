@@ -259,7 +259,6 @@
   const moreBtn = $('#btn-more-photos');
   if (moreBtn) {
     moreBtn.addEventListener('click', () => {
-      // Subtle feedback — toast-style note. User will add real photos later.
       const old = moreBtn.querySelector('span:nth-child(2)');
       const original = old.textContent;
       moreBtn.classList.add('loading');
@@ -270,7 +269,8 @@
       }, 1800);
     });
   }
-/* ── Hamburger mobile nav ── */
+
+  /* ── Hamburger mobile nav ── */
   const hamburger = $('#hamburger');
   const mobileNav = document.createElement('div');
   mobileNav.className = 'mobile-nav';
@@ -300,6 +300,7 @@
       document.body.style.overflow = '';
     });
   });
+
   /* ── Auth modal ── */
   const overlay = $('#auth-overlay');
   const openBtn = $('#open-auth');
@@ -325,12 +326,14 @@
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   };
- document.getElementById('mobile-open-auth')?.addEventListener('click', () => {
+
+  document.getElementById('mobile-open-auth')?.addEventListener('click', () => {
     document.body.classList.remove('nav-open');
     mobileNav.classList.remove('open');
     document.body.style.overflow = '';
     openAuth('login');
   });
+
   const setTab = (which) => {
     tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === which));
     tabsRoot?.setAttribute('data-active', which);
@@ -343,7 +346,6 @@
   openBtn?.addEventListener('click', (e) => { e.preventDefault(); openAuth('login'); });
   closeBtn?.addEventListener('click', closeAuth);
   successClose?.addEventListener('click', () => {
-    // After signup success, take them to the dashboard
     window.location.href = 'dashboard.html';
   });
   overlay?.addEventListener('click', (e) => { if (e.target === overlay) closeAuth(); });
@@ -407,8 +409,7 @@
         submit.classList.remove('loading');
         submit.querySelector('span').textContent = originalLabel;
 
-        // Persist user data so dashboard can read it
-     if (which === 'login') {
+        if (which === 'login') {
           // Controlla se l'account esiste
           try {
             const existing = JSON.parse(localStorage.getItem('plateup-auth') || 'null');
