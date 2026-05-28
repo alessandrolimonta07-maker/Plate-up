@@ -364,7 +364,7 @@
 
   // Form submit handlers
   forms.forEach((form) => {
-    form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const which = form.dataset.form;
       const submit = form.querySelector('.auth-submit');
@@ -398,55 +398,53 @@
         }
       }
 
-      // Simulate request
+// Firebase Auth reale
       submit.disabled = true;
       submit.classList.add('loading');
       const originalLabel = submit.querySelector('span').textContent;
       submit.querySelector('span').textContent = which === 'login' ? 'Accesso…' : 'Creazione…';
 
-      setTimeout(() => {
+      const resetBtn = () => {
         submit.disabled = false;
         submit.classList.remove('loading');
         submit.querySelector('span').textContent = originalLabel;
+      };
 
+      try {
         if (which === 'login') {
-          // Controlla se l'account esiste
-          try {
-            const existing = JSON.parse(localStorage.getItem('plateup-auth') || 'null');
-            if (!existing || existing.email !== email) {
-              err.textContent = 'Nessun account trovato con questa email. Crea un account prima.';
-              err.classList.add('show');
-              return;
-            }
-            // Aggiorna timestamp ultimo accesso
-            existing.ts = Date.now();
-            localStorage.setItem('plateup-auth', JSON.stringify(existing));
-          } catch (_) {}
+          await firebase.auth().signInWithEmailAndPassword(email, pw);
           window.location.href = 'dashboard.html';
-          return;
-        }
 
-        // Signup: salva i dati del nuovo account
-        try {
-          const payload = {
+        } else {
+          // Signup: crea account e salva profilo su Firestore
+          const cred = await firebase.auth().createUserWithEmailAndPassword(email, pw);
+          const uid  = cred.user.uid;
+          await firebase.firestore().collection('users').doc(uid).set({
             email,
-            mode: 'signup',
-            ts: Date.now(),
-            firstname:  data.get('firstname')?.toString().trim() || '',
-            lastname:   data.get('lastname')?.toString().trim()  || '',
+            firstname:  data.get('firstname')?.toString().trim()  || '',
+            lastname:   data.get('lastname')?.toString().trim()   || '',
             restaurant: data.get('restaurant')?.toString().trim() || '',
-          };
-          localStorage.setItem('plateup-auth', JSON.stringify(payload));
-        } catch (_) {}
-
-        // For signup: show success state.
-        forms.forEach(f => f.classList.add('hidden'));
-        if (success && successMsg) {
-          successMsg.textContent = `Account creato per ${email}. Puoi accedere subito alla tua dashboard.`;
-          success.classList.remove('hidden');
+            createdAt:  new Date().toISOString()
+          });
+          resetBtn();
+          forms.forEach(f => f.classList.add('hidden'));
+          if (success && successMsg) {
+            successMsg.textContent = `Account creato per ${email}. Puoi accedere subito alla tua dashboard.`;
+            success.classList.remove('hidden');
+          }
         }
-      }, 900);
-    });
+      } catch(e) {
+        resetBtn();
+        let msg = 'Errore. Riprova.';
+        if (e.code === 'auth/user-not-found'  || e.code === 'auth/wrong-password') msg = 'Email o password non corretti.';
+        if (e.code === 'auth/email-already-in-use') msg = 'Email già registrata. Accedi invece di registrarti.';
+        if (e.code === 'auth/weak-password')        msg = 'Password troppo debole (minimo 6 caratteri).';
+        if (e.code === 'auth/invalid-email')        msg = 'Email non valida.';
+        err.textContent = msg;
+        err.classList.add('show');
+      }
+      
+});
   });
 
 })();

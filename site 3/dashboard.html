@@ -12,6 +12,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 </head>
 <body class="is-dashboard">
 
@@ -497,22 +498,46 @@
 </footer>
 
 <script>
-  // ── Populate dashboard from localStorage ──
-  (() => {
-    let user = {};
-    try { user = JSON.parse(localStorage.getItem('plateup-auth') || '{}'); } catch(_) {}
 
-    // If not logged in, redirect home
-    if (!user.email) { window.location.href = 'index.html'; return; }
+  firebase.initializeApp({
+    apiKey:            "AIzaSyBnyv_oGllgaE_W8C0ZStlkoAF284xpaZ4",
+    authDomain:        "plateup-55.firebaseapp.com",
+    projectId:         "plateup-55",
+    storageBucket:     "plateup-55.firebasestorage.app",
+    messagingSenderId: "864695974692",
+    appId:             "1:864695974692:web:4b05dfb356750f7b9bd1b1"
+});
+const dbPlateup = firebase.firestore();
+  // ── Firebase Auth + carica profilo da Firestore ──
+const appRistorante = firebase.initializeApp({
+    apiKey: "AIzaSyCyV3u7qQSQRvyxnYJXI34ELdAgL0rrt1g",
+    authDomain: "prova-60305.firebaseapp.com",
+    projectId: "prova-60305",
+    storageBucket: "prova-60305.firebasestorage.app",
+    messagingSenderId: "613358808495",
+    appId: "1:613358808495:web:aa5fb5d610a5ec1dbed35a"
+}, 'ristorante');
+const dbPassword = appRistorante.firestore();
 
-    const firstname  = user.firstname  || '';
-    const lastname   = user.lastname   || '';
-    const restaurant = user.restaurant || '';
-    const email      = user.email      || '';
+  firebase.auth().onAuthStateChanged(async (fbUser) => {
+    if (!fbUser) { window.location.href = 'index.html'; return; }
+
+    let profile = {};
+    try {
+      const snap = await dbPlateup.collection('users').doc(fbUser.uid).get();
+      if (snap.exists) profile = snap.data();
+    } catch(e) { console.warn('Errore caricamento profilo:', e); }
+
+    const firstname  = profile.firstname  || '';
+    const lastname   = profile.lastname   || '';
+    const restaurant = profile.restaurant || '';
+    const email      = fbUser.email       || '';
     const fullName   = [firstname, lastname].filter(Boolean).join(' ') || email;
     const initials   = [firstname[0], lastname[0]].filter(Boolean).join('').toUpperCase() || email[0]?.toUpperCase() || '?';
 
-    // Header avatar + name
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+
+    // Header
     const avatarEl = document.getElementById('db-avatar-initials');
     const nameEl   = document.getElementById('db-account-name');
     if (avatarEl) avatarEl.textContent = initials;
@@ -530,51 +555,49 @@
     if (footName)  footName.textContent  = fullName;
     if (footEmail) footEmail.textContent = email;
 
-    // Profile form fields
-    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    // Campi profilo
     set('field-firstname',  firstname);
     set('field-lastname',   lastname);
     set('field-email',      email);
     set('field-restaurant', restaurant);
+    set('field-phone',      profile.phone   || '');
+    set('field-address',    profile.address || '');
 
-    // Demo activation state
-    const demoStart = user.demoActivatedAt ? new Date(user.demoActivatedAt) : null;
-    const pending   = document.getElementById('db-plan-pending');
-    const active    = document.getElementById('db-plan-active');
-    const planTag   = document.getElementById('db-plan-tag');
+    // Fatturazione
+    const billing = profile.billing || {};
+    set('field-ragione',   billing.ragione  || '');
+    set('field-piva',      billing.piva     || '');
+    set('field-cf',        billing.cf       || '');
+    set('field-sdi',       billing.sdi      || '');
+    set('field-email-amm', billing.emailAmm || '');
+
+    // Stato demo
+    const demoStart  = profile.demoActivatedAt ? new Date(profile.demoActivatedAt) : null;
+    const pending    = document.getElementById('db-plan-pending');
+    const active     = document.getElementById('db-plan-active');
+    const planTag    = document.getElementById('db-plan-tag');
 
     if (demoStart) {
-      // Demo è attiva
-      if (pending) pending.style.display = 'none';
-      if (active)  active.style.display  = '';
-      if (planTag) planTag.textContent = 'demo attiva';
-
-      const expire = new Date(demoStart.getTime() + 30 * 24 * 60 * 60 * 1000);
+      if (pending)  pending.style.display  = 'none';
+      if (active)   active.style.display   = '';
+      if (planTag)  planTag.textContent    = 'demo attiva';
+      const expire   = new Date(demoStart.getTime() + 30 * 24 * 60 * 60 * 1000);
       const daysLeft = Math.max(0, Math.ceil((expire - Date.now()) / (24 * 60 * 60 * 1000)));
-
       const startEl    = document.getElementById('db-demo-start');
       const expireEl   = document.getElementById('db-demo-expire');
       const daysLeftEl = document.getElementById('db-demo-days-left');
-
       if (startEl)    startEl.textContent    = demoStart.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
       if (expireEl)   expireEl.textContent   = expire.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
       if (daysLeftEl) daysLeftEl.textContent = daysLeft > 0 ? `ancora ${daysLeft} giorni` : 'scaduta';
     } else {
-      // Demo non ancora attivata
-      if (pending) pending.style.display = '';
-      if (active)  active.style.display  = 'none';
-      if (planTag) planTag.textContent = 'in attesa';
+      if (pending)  pending.style.display  = '';
+      if (active)   active.style.display   = 'none';
+      if (planTag)  planTag.textContent    = 'in attesa';
     }
-    // Populate billing fields from localStorage
-    const billing = user.billing || {};
-    const setB = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
-    setB('field-ragione',   billing.ragione);
-    setB('field-piva',      billing.piva);
-    setB('field-cf',        billing.cf);
-    setB('field-sdi',       billing.sdi);
-    setB('field-email-amm', billing.emailAmm);
 
-  })();
+    // Rende disponibile l'uid globalmente per gli altri script
+    window._plateupUid = fbUser.uid;
+  });
 </script>
 
 <script>
@@ -591,14 +614,16 @@ document.getElementById('modal-demo-annulla')?.addEventListener('click', () => {
 });
 
 // Conferma e attiva
-document.getElementById('modal-demo-conferma')?.addEventListener('click', () => {
+document.getElementById('modal-demo-conferma')?.addEventListener('click', async () => {
     document.getElementById('modal-demo').style.display = 'none';
     try {
-        const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
-        user.demoActivatedAt = Date.now();
-        localStorage.setItem('plateup-auth', JSON.stringify(user));
+        const uid = window._plateupUid;
+        if (!uid) return;
+        await dbPlateup.collection('users').doc(uid).update({
+            demoActivatedAt: new Date().toISOString()
+        });
         window.location.reload();
-    } catch(_) {}
+    } catch(e) { console.error('Errore attivazione demo:', e); }
 });
 
 // Chiudi cliccando fuori
@@ -608,9 +633,10 @@ document.getElementById('modal-demo')?.addEventListener('click', (e) => {
 });
   
   // ── Logout ──
-  document.getElementById('db-logout')?.addEventListener('click', () => {
-    try { localStorage.removeItem('plateup-auth'); } catch(_) {}
-  });
+document.getElementById('db-logout')?.addEventListener('click', async () => {
+    await firebase.auth().signOut();
+    window.location.href = 'index.html';
+});
 
   // ── Sidebar active state on scroll ──
   const navItems = document.querySelectorAll('.db-nav-item');
@@ -648,80 +674,52 @@ document.getElementById('modal-demo')?.addEventListener('click', (e) => {
   // ── Salva modifiche profilo → localStorage ──
   document.querySelectorAll('.db-btn-primary').forEach((b) => {
     if (!b.textContent.trim().startsWith('Salva')) return;
-    b.addEventListener('click', () => {
-      try {
-        const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
+  b.addEventListener('click', async () => {
+    const uid = window._plateupUid;
+    if (!uid) return;
 
-        // Profilo
-        const fn = document.getElementById('field-firstname');
-        const ln = document.getElementById('field-lastname');
-        const em = document.getElementById('field-email');
-        const rs = document.getElementById('field-restaurant');
-        const ph = document.getElementById('field-phone');
-        const ad = document.getElementById('field-address');
-        if (fn) user.firstname  = fn.value;
-        if (ln) user.lastname   = ln.value;
-        if (em) user.email      = em.value;
-        if (rs) user.restaurant = rs.value;
-        if (ph) user.phone      = ph.value;
-        if (ad) user.address    = ad.value;
+    const fn  = document.getElementById('field-firstname')?.value  || '';
+    const ln  = document.getElementById('field-lastname')?.value   || '';
+    const rs  = document.getElementById('field-restaurant')?.value || '';
+    const ph  = document.getElementById('field-phone')?.value      || '';
+    const ad  = document.getElementById('field-address')?.value    || '';
+    const ra  = document.getElementById('field-ragione')?.value    || '';
+    const pi  = document.getElementById('field-piva')?.value       || '';
+    const cf  = document.getElementById('field-cf')?.value         || '';
+    const sdi = document.getElementById('field-sdi')?.value        || '';
+    const ea  = document.getElementById('field-email-amm')?.value  || '';
 
-        // Fatturazione
-        const ra  = document.getElementById('field-ragione');
-        const pi  = document.getElementById('field-piva');
-        const cf  = document.getElementById('field-cf');
-        const sdi = document.getElementById('field-sdi');
-        const ea  = document.getElementById('field-email-amm');
-        if (ra || pi || cf || sdi || ea) {
-          user.billing = user.billing || {};
-          if (ra)  user.billing.ragione   = ra.value;
-          if (pi)  user.billing.piva      = pi.value;
-          if (cf)  user.billing.cf        = cf.value;
-          if (sdi) user.billing.sdi       = sdi.value;
-          if (ea)  user.billing.emailAmm  = ea.value;
-        }
+    try {
+        await dbPlateup.collection('users').doc(uid).update({
+            firstname:  fn, lastname:  ln,
+            restaurant: rs, phone:     ph, address: ad,
+            billing: { ragione: ra, piva: pi, cf, sdi, emailAmm: ea }
+        });
 
-        localStorage.setItem('plateup-auth', JSON.stringify(user));
-      } catch(_) {}
+        // Feedback visivo
+        const saved = b.closest('.db-card')?.querySelector('.db-saved, #profilo-status');
+        if (saved) { saved.textContent = 'salvato ✓'; saved.style.color = '#6fd49a'; setTimeout(() => { saved.textContent = '—'; saved.style.color = ''; }, 3000); }
 
-      // Feedback visivo
-      const saved = b.closest('.db-card')?.querySelector('.db-saved');
-      if (saved) {
-        saved.textContent = 'salvato adesso ✓';
-        saved.style.color = '#6fd49a';
-        setTimeout(() => { saved.textContent = ''; saved.style.color = ''; }, 3000);
-      }
-
-      // Aggiorna nome/avatar in tempo reale
-      const fn2 = document.getElementById('field-firstname')?.value || '';
-      const ln2 = document.getElementById('field-lastname')?.value  || '';
-      const rs2 = document.getElementById('field-restaurant')?.value || '';
-      const full = [fn2, ln2].filter(Boolean).join(' ');
-      const init = [fn2[0], ln2[0]].filter(Boolean).join('').toUpperCase();
-      const nameEl   = document.getElementById('db-account-name');
-      const avatarEl = document.getElementById('db-avatar-initials');
-      const footName = document.getElementById('db-foot-name');
-      const localeMark = document.getElementById('db-locale-mark');
-      const localeName = document.getElementById('db-locale-name');
-      if (nameEl && full)    nameEl.textContent   = full;
-      if (avatarEl && init)  avatarEl.textContent = init;
-      if (footName && full)  footName.textContent = full;
-      if (localeMark && rs2) localeMark.textContent = rs2[0]?.toUpperCase() || '?';
-      if (localeName && rs2) localeName.textContent = rs2;
-    });
+        // Aggiorna UI in tempo reale
+        const full = [fn, ln].filter(Boolean).join(' ');
+        const init = [fn[0], ln[0]].filter(Boolean).join('').toUpperCase();
+        const nameEl   = document.getElementById('db-account-name');
+        const avatarEl = document.getElementById('db-avatar-initials');
+        const footName = document.getElementById('db-foot-name');
+        const localeMark = document.getElementById('db-locale-mark');
+        const localeName = document.getElementById('db-locale-name');
+        if (nameEl && full)    nameEl.textContent   = full;
+        if (avatarEl && init)  avatarEl.textContent = init;
+        if (footName && full)  footName.textContent = full;
+        if (localeMark && rs)  localeMark.textContent = rs[0]?.toUpperCase() || '?';
+        if (localeName && rs)  localeName.textContent = rs;
+   } catch(e) {
+        alert('Errore salvataggio: ' + e.message);
+    }
   });
+});
 </script>
 <script>
-// ── Firebase init (stesso progetto del ristorante) ──
-firebase.initializeApp({
-  apiKey: "AIzaSyCyV3u7qQSQRvyxnYJXI34ELdAgL0rrt1g",
-  authDomain: "prova-60305.firebaseapp.com",
-  projectId: "prova-60305",
-  storageBucket: "prova-60305.firebasestorage.app",
-  messagingSenderId: "613358808495",
-  appId: "1:613358808495:web:aa5fb5d610a5ec1dbed35a"
-});
-const dbPassword = firebase.firestore();
 
 // SHA-256 helper
 async function sha256(str) {
@@ -763,92 +761,11 @@ document.getElementById('btn-pw-salva').addEventListener('click', async () => {
 
   try {
     const hash = await sha256(pw1);
-    await dbPW.collection('impostazioni').doc('ristorante').set(
+  await dbPassword.collection('impostazioni').doc('ristorante').set(
       { accessPassword: hash, accessPasswordUpdatedAt: new Date().toISOString() },
       { merge: true }
     );
-    // Salva anche in localStorage come cache offline
-    const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
-    user.accessPasswordHash = hash;
-    localStorage.setItem('plateup-auth', JSON.stringify(user));
 
-    document.getElementById('pw-change-form').style.display = 'none';
-    document.getElementById('pw-new').value = '';
-    document.getElementById('pw-confirm').value = '';
-
-    // Feedback visivo nella riga sicurezza
-    const meta = document.querySelector('.db-sec-row .db-sec-meta');
-    if (meta && meta.textContent.includes('Cambiata')) meta.textContent = 'Cambiata adesso ✓';
-
-    alert('✅ Password aggiornata. Diventerà attiva al prossimo accesso al gestionale.');
-  } catch(e) {
-    err.textContent = 'Errore salvataggio: ' + e.message;
-    err.style.display = 'block';
-  }
-
-  btn.textContent = 'Salva password'; btn.disabled = false;
-});
-</script>
-<script>
-// ── Firebase init (stesso progetto del ristorante) ──
-firebase.initializeApp({
-apiKey: "AIzaSyCyV3u7qQSQRvyxnYJXI34ELdAgL0rrt1g",
-authDomain: "prova-60305.firebaseapp.com",
-projectId: "prova-60305",
-storageBucket: "prova-60305.firebasestorage.app",
-messagingSenderId: "613358808495",
-appId: "1:613358808495:web:aa5fb5d610a5ec1dbed35a"
-});
-const dbPW = firebase.firestore();
-
-// SHA-256 helper
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-// Mostra/nascondi form
-document.getElementById('btn-cambia-pw').addEventListener('click', () => {
-  const f = document.getElementById('pw-change-form');
-  f.style.display = f.style.display === 'none' ? 'block' : 'none';
-});
-document.getElementById('btn-pw-cancel').addEventListener('click', () => {
-  document.getElementById('pw-change-form').style.display = 'none';
-  document.getElementById('pw-new').value = '';
-  document.getElementById('pw-confirm').value = '';
-  document.getElementById('pw-change-err').style.display = 'none';
-});
-
-// Salva nuova password
-document.getElementById('btn-pw-salva').addEventListener('click', async () => {
-  const err = document.getElementById('pw-change-err');
-  err.style.display = 'none';
-
-  const pw1 = document.getElementById('pw-new').value;
-  const pw2 = document.getElementById('pw-confirm').value;
-
-  if (pw1.length < 8) {
-    err.textContent = 'La password deve essere di almeno 8 caratteri.';
-    err.style.display = 'block'; return;
-  }
-  if (pw1 !== pw2) {
-    err.textContent = 'Le password non coincidono.';
-    err.style.display = 'block'; return;
-  }
-
-  const btn = document.getElementById('btn-pw-salva');
-  btn.textContent = 'Salvataggio…'; btn.disabled = true;
-
-  try {
-    const hash = await sha256(pw1);
-    await dbPW.collection('impostazioni').doc('ristorante').set(
-      { accessPassword: hash, accessPasswordUpdatedAt: new Date().toISOString() },
-      { merge: true }
-    );
-    // Salva anche in localStorage come cache offline
-    const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
-    user.accessPasswordHash = hash;
-    localStorage.setItem('plateup-auth', JSON.stringify(user));
 
     document.getElementById('pw-change-form').style.display = 'none';
     document.getElementById('pw-new').value = '';
@@ -885,13 +802,14 @@ document.getElementById('btn-pw-salva').addEventListener('click', async () => {
   });
 
   document.getElementById('btn-salva-profilo')?.addEventListener('click', () => {
-    try {
-        const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
-        user.firstname  = document.getElementById('field-firstname')?.value  || '';
-        user.lastname   = document.getElementById('field-lastname')?.value   || '';
-        user.restaurant = document.getElementById('field-restaurant')?.value || '';
-        localStorage.setItem('plateup-auth', JSON.stringify(user));
-    } catch(_) {}
+   const uid = window._plateupUid;
+if (uid) {
+    dbPlateup.collection('users').doc(uid).update({
+        firstname:  document.getElementById('field-firstname')?.value  || '',
+        lastname:   document.getElementById('field-lastname')?.value   || '',
+        restaurant: document.getElementById('field-restaurant')?.value || ''
+    }).catch(e => console.warn('Errore salvataggio profilo:', e));
+}
     PROFILO_FIELDS.forEach(id => {
         const el = document.getElementById(id); if (el) el.setAttribute('readonly', '');
     });
