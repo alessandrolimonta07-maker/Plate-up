@@ -9,6 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="dashboard.css">
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body class="is-dashboard">
 
@@ -320,7 +323,26 @@
             <div class="db-sec-name">Password</div>
             <div class="db-sec-meta">Cambiata 47 giorni fa</div>
           </div>
-          <button class="db-btn-ghost">Cambia password</button>
+          <button class="db-btn-ghost" id="btn-cambia-pw">Cambia password</button>
+
+<!-- mini-form password, nascosto di default -->
+<div id="pw-change-form" style="display:none; margin-top:16px; padding:16px;
+     background:#111; border:1px solid #333; border-radius:12px;">
+  <label style="display:block; font-size:.85rem; color:#888; margin-bottom:6px;">
+    Nuova password (min. 8 caratteri)
+  </label>
+  <input id="pw-new" type="password" placeholder="Nuova password"
+    style="width:100%; padding:10px 12px; background:#1a1a1a; border:1px solid #444;
+           border-radius:8px; color:white; font-size:.95rem; box-sizing:border-box; margin-bottom:10px;">
+  <input id="pw-confirm" type="password" placeholder="Conferma password"
+    style="width:100%; padding:10px 12px; background:#1a1a1a; border:1px solid #444;
+           border-radius:8px; color:white; font-size:.95rem; box-sizing:border-box; margin-bottom:10px;">
+  <div id="pw-change-err" style="color:#ff7a7a; font-size:.82rem; margin-bottom:8px; display:none;"></div>
+  <div style="display:flex; gap:10px;">
+    <button id="btn-pw-salva" class="db-btn-primary" style="flex:1;">Salva password</button>
+    <button id="btn-pw-cancel" class="db-btn-ghost" style="flex:1;">Annulla</button>
+  </div>
+</div>
         </div>
         <div class="db-sec-row">
           <div>
@@ -612,6 +634,161 @@
     });
   });
 </script>
+<script>
+// ── Firebase init (stesso progetto del ristorante) ──
+firebase.initializeApp({
+  apiKey: "AIzaSyCyV3u7qQSQRvyxnYJXI34ELdAgL0rrt1g",
+  authDomain: "prova-60305.firebaseapp.com",
+  projectId: "prova-60305",
+  storageBucket: "prova-60305.firebasestorage.app",
+  messagingSenderId: "613358808495",
+  appId: "1:613358808495:web:aa5fb5d610a5ec1dbed35a"
+});
+const dbPW = firebase.firestore();
 
+// SHA-256 helper
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// Mostra/nascondi form
+document.getElementById('btn-cambia-pw').addEventListener('click', () => {
+  const f = document.getElementById('pw-change-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+});
+document.getElementById('btn-pw-cancel').addEventListener('click', () => {
+  document.getElementById('pw-change-form').style.display = 'none';
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-confirm').value = '';
+  document.getElementById('pw-change-err').style.display = 'none';
+});
+
+// Salva nuova password
+document.getElementById('btn-pw-salva').addEventListener('click', async () => {
+  const err = document.getElementById('pw-change-err');
+  err.style.display = 'none';
+
+  const pw1 = document.getElementById('pw-new').value;
+  const pw2 = document.getElementById('pw-confirm').value;
+
+  if (pw1.length < 8) {
+    err.textContent = 'La password deve essere di almeno 8 caratteri.';
+    err.style.display = 'block'; return;
+  }
+  if (pw1 !== pw2) {
+    err.textContent = 'Le password non coincidono.';
+    err.style.display = 'block'; return;
+  }
+
+  const btn = document.getElementById('btn-pw-salva');
+  btn.textContent = 'Salvataggio…'; btn.disabled = true;
+
+  try {
+    const hash = await sha256(pw1);
+    await dbPW.collection('impostazioni').doc('ristorante').set(
+      { accessPassword: hash, accessPasswordUpdatedAt: new Date().toISOString() },
+      { merge: true }
+    );
+    // Salva anche in localStorage come cache offline
+    const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
+    user.accessPasswordHash = hash;
+    localStorage.setItem('plateup-auth', JSON.stringify(user));
+
+    document.getElementById('pw-change-form').style.display = 'none';
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-confirm').value = '';
+
+    // Feedback visivo nella riga sicurezza
+    const meta = document.querySelector('.db-sec-row .db-sec-meta');
+    if (meta && meta.textContent.includes('Cambiata')) meta.textContent = 'Cambiata adesso ✓';
+
+    alert('✅ Password aggiornata. Diventerà attiva al prossimo accesso al gestionale.');
+  } catch(e) {
+    err.textContent = 'Errore salvataggio: ' + e.message;
+    err.style.display = 'block';
+  }
+
+  btn.textContent = 'Salva password'; btn.disabled = false;
+});
+</script>
+<script>
+// ── Firebase init (stesso progetto del ristorante) ──
+firebase.initializeApp({
+apiKey: "AIzaSyCyV3u7qQSQRvyxnYJXI34ELdAgL0rrt1g",
+authDomain: "prova-60305.firebaseapp.com",
+projectId: "prova-60305",
+storageBucket: "prova-60305.firebasestorage.app",
+messagingSenderId: "613358808495",
+appId: "1:613358808495:web:aa5fb5d610a5ec1dbed35a"
+});
+const dbPW = firebase.firestore();
+
+// SHA-256 helper
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// Mostra/nascondi form
+document.getElementById('btn-cambia-pw').addEventListener('click', () => {
+  const f = document.getElementById('pw-change-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+});
+document.getElementById('btn-pw-cancel').addEventListener('click', () => {
+  document.getElementById('pw-change-form').style.display = 'none';
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-confirm').value = '';
+  document.getElementById('pw-change-err').style.display = 'none';
+});
+
+// Salva nuova password
+document.getElementById('btn-pw-salva').addEventListener('click', async () => {
+  const err = document.getElementById('pw-change-err');
+  err.style.display = 'none';
+
+  const pw1 = document.getElementById('pw-new').value;
+  const pw2 = document.getElementById('pw-confirm').value;
+
+  if (pw1.length < 8) {
+    err.textContent = 'La password deve essere di almeno 8 caratteri.';
+    err.style.display = 'block'; return;
+  }
+  if (pw1 !== pw2) {
+    err.textContent = 'Le password non coincidono.';
+    err.style.display = 'block'; return;
+  }
+
+  const btn = document.getElementById('btn-pw-salva');
+  btn.textContent = 'Salvataggio…'; btn.disabled = true;
+
+  try {
+    const hash = await sha256(pw1);
+    await dbPW.collection('impostazioni').doc('ristorante').set(
+      { accessPassword: hash, accessPasswordUpdatedAt: new Date().toISOString() },
+      { merge: true }
+    );
+    // Salva anche in localStorage come cache offline
+    const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
+    user.accessPasswordHash = hash;
+    localStorage.setItem('plateup-auth', JSON.stringify(user));
+
+    document.getElementById('pw-change-form').style.display = 'none';
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-confirm').value = '';
+
+    // Feedback visivo nella riga sicurezza
+    const meta = document.querySelector('.db-sec-row .db-sec-meta');
+    if (meta && meta.textContent.includes('Cambiata')) meta.textContent = 'Cambiata adesso ✓';
+
+    alert('✅ Password aggiornata. Diventerà attiva al prossimo accesso al gestionale.');
+  } catch(e) {
+    err.textContent = 'Errore salvataggio: ' + e.message;
+    err.style.display = 'block';
+  }
+
+  btn.textContent = 'Salva password'; btn.disabled = false;
+});
+</script>
 </body>
 </html>
