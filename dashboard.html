@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account · PlateUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="dashboard.css">
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+</head>
+<body class="is-dashboard">
+
+<div class="grain"></div>
+
+<!-- ── TOP BAR ── -->
+<header class="db-nav">
+  <a href="index.html" class="db-logo">
+    <span class="logo-mark">◆</span>
+    <span class="logo-text">PlateUp</span>
+  </a>
+
+  <div class="db-locale">
+    <span class="db-locale-mark" id="db-locale-mark">?</span>
+    <div class="db-locale-info">
+      <span class="db-locale-name" id="db-locale-name">Il tuo locale</span>
+      <span class="db-locale-meta mono">— · attivazione in corso</span>
+    </div>
+  </div>
+
+  <div class="db-nav-right">
+    <a href="index.html" class="db-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Torna al sito</span>
+    </a>
+    <div class="db-account">
+      <div class="db-avatar" id="db-avatar-initials">--</div>
+      <div class="db-account-info">
+        <span class="db-account-name" id="db-account-name">—</span>
+        <span class="db-account-role mono">owner</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="db-hero">
+  <p class="db-greet mono"><span class="dot"></span> Account &amp; fatturazione</p>
+  <h1 class="db-title">Il tuo <em>account.</em></h1>
+  <p class="db-lede">Gestisci profilo, piano, pagamenti e sicurezza. Tutto da qui, in qualsiasi momento.</p>
+</section>
+
+<!-- ── LAYOUT: sidebar + content ── -->
+<div class="db-layout">
+
+  <aside class="db-side-nav">
+    <a href="#profilo" class="db-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 22v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg>
+      <span>Profilo</span>
+    </a>
+    <a href="#piano" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+      <span>Piano &amp; rinnovi</span>
+      <span class="db-nav-pill">Elite</span>
+    </a>
+    <a href="#fatturazione" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 11h20"/></svg>
+      <span>Fatturazione</span>
+    </a>
+    <a href="#pagamenti" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 14h6M9 18h6"/></svg>
+      <span>Storico pagamenti</span>
+    </a>
+    <a href="#sicurezza" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <span>Sicurezza</span>
+    </a>
+    <a href="#notifiche" class="db-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      <span>Notifiche</span>
+    </a>
+    <div class="db-nav-divider"></div>
+    <a href="#danger" class="db-nav-item danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 11v6M14 11v6M5 6h14l-1 14H6zM9 6V3h6v3"/></svg>
+      <span>Area pericolosa</span>
+    </a>
+  </aside>
+
+  <main class="db-content">
+
+    <!-- ── PROFILO ── -->
+    <section class="db-card" id="profilo">
+      <header class="db-card-head">
+        <div>
+          <h2>Profilo</h2>
+          <p class="db-card-sub">Informazioni di base del tuo account.</p>
+        </div>
+      </header>
+
+      <div class="db-form-grid">
+        <label class="db-field">
+          <span>Nome</span>
+          <input type="text" id="field-firstname" value="" readonly>
+        </label>
+        <label class="db-field">
+          <span>Cognome</span>
+          <input type="text" id="field-lastname" value="" readonly>
+        </label>
+        <label class="db-field full">
+          <span>Email <span class="db-verified mono">✓ verificata</span></span>
+          <div class="db-input-row">
+            <input type="text" id="field-email" value="" readonly>
+            <button class="db-link-btn">Cambia</button>
+          </div>
+        </label>
+        <label class="db-field full">
+          <span>Telefono</span>
+          <input type="tel" id="field-phone" value="" placeholder="+39 …" readonly>
+        </label>
+        <label class="db-field full">
+          <span>Nome del locale</span>
+          <input type="text" id="field-restaurant" value="" readonly>
+        </label>
+        <label class="db-field full">
+          <span>Indirizzo</span>
+          <input type="text" id="field-address" value="" placeholder="Via …, CAP Città" readonly>
+        </label>
+      </div>
+
+
+      <footer class="db-card-foot" id="profilo-footer">
+    <span class="db-saved mono" id="profilo-status">—</span>
+    <button class="db-btn-ghost" id="btn-modifica-profilo">✏️ Modifica</button>
+    <button class="db-btn-primary" id="btn-salva-profilo" style="display:none">Salva modifiche</button>
+    <button class="db-btn-ghost" id="btn-annulla-profilo" style="display:none">Annulla</button>
+
+    <div id="modal-demo" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:2000; align-items:center; justify-content:center;">
+  <div style="background:#1c1f26; border:1px solid #2f3340; border-top:2px solid #d4af37; border-radius:18px; padding:2rem 2rem 1.5rem; max-width:400px; width:90%; text-align:center;">
+    <div style="font-size:2.2rem; margin-bottom:.8rem;">🚀</div>
+    <h3 style="color:white; margin:0 0 .6rem; font-size:1.2rem;">Attiva la demo gratuita</h3>
+    <p style="color:#9ca3af; margin:0 0 1.6rem; font-size:.9rem; line-height:1.65;">
+      Avrai <strong style="color:#d4af37;">30 giorni</strong> per esplorare tutte le funzionalità di PlateUp completamente gratis.<br>
+      Non è richiesta nessuna carta di credito.
+    </p>
+    <div style="display:flex; gap:.8rem; justify-content:center;">
+      <button id="modal-demo-annulla" class="db-btn-ghost" style="flex:1;">Annulla</button>
+      <button id="modal-demo-conferma" class="db-btn-primary" style="flex:1;"><span>Sì, attiva</span></button>
+    </div>
+  </div>
+</div>
+</footer>
+    </section>
+
+    <!-- ── PIANO ── -->
+  <section class="db-card plan-card" id="piano">
+  <header class="db-card-head">
+    <div>
+      <h2>Piano &amp; rinnovi</h2>
+      <p class="db-card-sub">Il piano attivo e quando viene rinnovato.</p>
+    </div>
+    <span class="db-card-tag mono" id="db-plan-tag">in attesa</span>
+  </header>
+
+  <!-- STATO: demo non ancora attivata -->
+  <div id="db-plan-pending">
+    <div class="db-plan-hero">
+      <div class="db-plan-info">
+        <span class="db-plan-eyebrow mono">piano attuale</span>
+        <div class="db-plan-name">Demo gratuita</div>
+        <div class="db-plan-price">
+          <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
+        </div>
+        <ul class="db-plan-bullets">
+          <li>Accesso completo per 30 giorni</li>
+          <li>Menù digitale multilingua</li>
+          <li>Ordini e gestione tavoli live</li>
+          <li>Supporto onboarding incluso</li>
+        </ul>
+      </div>
+      <div class="db-plan-stats">
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">stato</span>
+          <span class="db-plan-stat-val" style="color:#d4af37">In attesa</span>
+          <span class="db-plan-stat-sub">la demo non è ancora stata attivata</span>
+        </div>
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">scadenza demo</span>
+          <span class="db-plan-stat-val">—</span>
+          <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.85rem; opacity:.55; margin:0 0 1.5rem; font-family:monospace;">
+      ◆ La tua demo partirà quando il team PlateUp completa il tuo onboarding. Riceverai una notifica.
+    </p>
+    <div class="db-plan-actions">
+      <button class="db-btn-primary" onclick="window.location.href='index.html#prezzi'">
+        <span>Scegli un piano</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <button class="db-btn-ghost" id="btn-attiva-demo">Prova demo</button>
+      <button class="db-btn-ghost" onclick="window.location.href='index.html#prezzi'">Confronta piani</button>
+    </div>
+  </div>
+
+  <!-- STATO: demo attiva -->
+  <div id="db-plan-active" style="display:none">
+    <div class="db-plan-hero">
+      <div class="db-plan-info">
+        <span class="db-plan-eyebrow mono">piano attuale</span>
+        <div class="db-plan-name">Demo gratuita</div>
+        <div class="db-plan-price">
+          <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
+        </div>
+        <ul class="db-plan-bullets">
+          <li>Accesso completo per 30 giorni</li>
+          <li>Menù digitale multilingua</li>
+          <li>Ordini e gestione tavoli live</li>
+          <li>Supporto onboarding incluso</li>
+        </ul>
+      </div>
+      <div class="db-plan-stats">
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">stato</span>
+          <span class="db-plan-stat-val" style="color:#6fd49a">Attiva</span>
+          <span class="db-plan-stat-sub">nessun addebito in corso</span>
+        </div>
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">attiva dal</span>
+          <span class="db-plan-stat-val" id="db-demo-start">—</span>
+          <span class="db-plan-stat-sub" id="db-demo-days-left"></span>
+        </div>
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">scadenza</span>
+          <span class="db-plan-stat-val" id="db-demo-expire">—</span>
+          <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Piani disponibili dopo la demo -->
+    <div style="margin-top:2rem; border-top:1px solid #2f3340; padding-top:1.5rem;">
+      <p style="font-size:.82rem; color:#9ca3af; font-family:monospace; margin:0 0 1rem;">
+        ◆ Passa a un piano prima della scadenza per non perdere accesso
+      </p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem;">
+        <!-- Starter -->
+        <div style="background:#1a1d24; border:1px solid #2f3340; border-radius:14px; padding:1.2rem;">
+          <div style="font-size:.75rem; color:#9ca3af; font-family:monospace; margin-bottom:.4rem;">Lite</div>
+          <div style="font-size:1.6rem; font-weight:700; color:white;">€69<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
+          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
+            <li>Fino a 30 tavoli</li>
+            <li>Menu digitale</li>
+            <li>Ordini live</li>
+          </ul>
+          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+        </div>
+        <!-- Pro -->
+        <div style="background:#1a1d24; border:1.5px solid #d4af37; border-radius:14px; padding:1.2rem; position:relative;">
+          <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#d4af37; color:#0e1117; font-size:.7rem; font-weight:700; font-family:monospace; padding:2px 10px; border-radius:20px;">Più scelto</div>
+          <div style="font-size:.75rem; color:#d4af37; font-family:monospace; margin-bottom:.4rem;">Pro</div>
+          <div style="font-size:1.6rem; font-weight:700; color:white;">€119<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
+          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
+            <li>Tavoli illimitati</li>
+            <li>Analytics avanzate</li>
+            <li>Turni staff</li>
+          </ul>
+          <button class="db-btn-primary" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+        </div>
+        <!-- Elite -->
+        <div style="background:#1a1d24; border:1px solid #2f3340; border-radius:14px; padding:1.2rem;">
+          <div style="font-size:.75rem; color:#9ca3af; font-family:monospace; margin-bottom:.4rem;">VIP</div>
+          <div style="font-size:1.6rem; font-weight:700; color:white;">€199<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
+          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
+            <li>Multi-locale</li>
+            <li>API accesso</li>
+            <li>Supporto dedicato</li>
+          </ul>
+          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+    <!-- ── FATTURAZIONE ── -->
+    <section class="db-card" id="fatturazione">
+      <header class="db-card-head">
+        <div>
+          <h2>Dati di fatturazione</h2>
+          <p class="db-card-sub">Le informazioni che compaiono in fattura.</p>
+        </div>
+      </header>
+
+      <div class="db-form-grid">
+        <label class="db-field full">
+          <span>Ragione sociale</span>
+          <input type="text" id="field-ragione" value="" placeholder="Es. Trattoria Mario S.r.l.">
+        </label>
+        <label class="db-field">
+          <span>Partita IVA</span>
+          <input type="text" id="field-piva" value="" placeholder="Es. 03452890135">
+        </label>
+        <label class="db-field">
+          <span>Codice fiscale</span>
+          <input type="text" id="field-cf" value="" placeholder="Es. RSSMRA85L01F205Z">
+        </label>
+        <label class="db-field">
+          <span>Codice SDI / PEC</span>
+          <input type="text" id="field-sdi" value="" placeholder="Es. M5UXCR1">
+        </label>
+        <label class="db-field">
+          <span>Email amministrativa</span>
+          <input type="email" id="field-email-amm" value="" placeholder="amministrazione@iltuolocale.it">
+        </label>
+      </div>
+
+      <div class="db-pay-method">
+        <span class="db-pay-eyebrow mono">metodo di pagamento</span>
+        <div class="db-pay-row">
+          <div class="db-pay-card" style="opacity:.45">
+            <span class="db-pay-brand">—</span>
+            <span class="db-pay-mask">nessuna carta aggiunta</span>
+            <span class="db-pay-exp mono"></span>
+          </div>
+          <button class="db-link-btn">Aggiungi carta</button>
+        </div>
+      </div>
+
+      <footer class="db-card-foot">
+        <span class="db-saved mono"></span>
+        <button class="db-btn-primary">Salva dati fatturazione</button>
+      </footer>
+    </section>
+
+    <!-- ── PAGAMENTI ── -->
+    <section class="db-card" id="pagamenti">
+      <header class="db-card-head">
+        <div>
+          <h2>Storico pagamenti</h2>
+          <p class="db-card-sub">Tutte le fatture e i pagamenti del tuo account.</p>
+        </div>
+        <button class="db-btn-ghost small">Scarica tutto (CSV)</button>
+      </header>
+
+      <div class="db-table">
+        <div class="db-tr db-th">
+          <span>Data</span>
+          <span>Descrizione</span>
+          <span>Importo</span>
+          <span>Stato</span>
+          <span></span>
+        </div>
+        <div class="db-tr" style="opacity:.5; pointer-events:none;">
+          <span class="mono">—</span>
+          <span>Nessun pagamento ancora</span>
+          <span class="db-amt">—</span>
+          <span class="db-status">—</span>
+          <span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SICUREZZA ── -->
+    <section class="db-card" id="sicurezza">
+      <header class="db-card-head">
+        <div>
+          <h2>Sicurezza</h2>
+          <p class="db-card-sub">Password e accesso al tuo account.</p>
+        </div>
+      </header>
+
+      <div class="db-sec-list">
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Password</div>
+            <div class="db-sec-meta">Cambiata 47 giorni fa</div>
+          </div>
+          <button class="db-btn-ghost" id="btn-cambia-pw">Cambia password</button>
+
+<!-- mini-form password, nascosto di default -->
+<div id="pw-change-form" style="display:none; margin-top:16px; padding:16px;
+     background:#111; border:1px solid #333; border-radius:12px;">
+  <label style="display:block; font-size:.85rem; color:#888; margin-bottom:6px;">
+    Nuova password (min. 8 caratteri)
+  </label>
+  <input id="pw-new" type="password" placeholder="Nuova password"
+    style="width:100%; padding:10px 12px; background:#1a1a1a; border:1px solid #444;
+           border-radius:8px; color:white; font-size:.95rem; box-sizing:border-box; margin-bottom:10px;">
+  <input id="pw-confirm" type="password" placeholder="Conferma password"
+    style="width:100%; padding:10px 12px; background:#1a1a1a; border:1px solid #444;
+           border-radius:8px; color:white; font-size:.95rem; box-sizing:border-box; margin-bottom:10px;">
+  <div id="pw-change-err" style="color:#ff7a7a; font-size:.82rem; margin-bottom:8px; display:none;"></div>
+  <div style="display:flex; gap:10px;">
+    <button id="btn-pw-salva" class="db-btn-primary" style="flex:1;">Salva password</button>
+    <button id="btn-pw-cancel" class="db-btn-ghost" style="flex:1;">Annulla</button>
+  </div>
+</div>
+        </div>
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Autenticazione a due fattori <span class="db-rec mono">consigliata</span></div>
+            <div class="db-sec-meta">Aggiungi un livello extra di sicurezza al login.</div>
+          </div>
+          <button class="db-btn-primary small">Attiva 2FA</button>
+        </div>
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Sessioni attive</div>
+            <div class="db-sec-meta">2 dispositivi · MacBook (Como, ora) · iPhone (Como, 2h fa)</div>
+          </div>
+          <button class="db-btn-ghost">Gestisci</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── NOTIFICHE ── -->
+    <section class="db-card" id="notifiche">
+      <header class="db-card-head">
+        <div>
+          <h2>Notifiche</h2>
+          <p class="db-card-sub">Cosa vuoi ricevere via email.</p>
+        </div>
+      </header>
+
+      <div class="db-toggle-list">
+        <label class="db-toggle-row">
+          <div>
+            <div class="db-toggle-name">Riepilogo giornaliero</div>
+            <div class="db-toggle-meta">Ricevi a fine giornata un riepilogo di incassi e coperti.</div>
+          </div>
+          <span class="db-switch on"><span class="db-switch-thumb"></span></span>
+        </label>
+        <label class="db-toggle-row">
+          <div>
+            <div class="db-toggle-name">Nuove prenotazioni</div>
+            <div class="db-toggle-meta">Email quando arriva una prenotazione online.</div>
+          </div>
+          <span class="db-switch on"><span class="db-switch-thumb"></span></span>
+        </label>
+        <label class="db-toggle-row">
+          <div>
+            <div class="db-toggle-name">Promozioni PlateUp</div>
+            <div class="db-toggle-meta">Novità, sconti e nuove funzioni.</div>
+          </div>
+          <span class="db-switch"><span class="db-switch-thumb"></span></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- ── AREA PERICOLOSA ── -->
+    <section class="db-card danger" id="danger">
+      <header class="db-card-head">
+        <div>
+          <h2 style="color:#ff7a7a">Area pericolosa</h2>
+          <p class="db-card-sub">Azioni irreversibili. Procedi con attenzione.</p>
+        </div>
+      </header>
+
+      <div class="db-sec-list">
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Sospendi abbonamento</div>
+            <div class="db-sec-meta">Metti in pausa il piano fino a 3 mesi.</div>
+          </div>
+          <button class="db-btn-ghost">Sospendi</button>
+        </div>
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Disdici abbonamento</div>
+            <div class="db-sec-meta">Resta attivo fino al 28 dicembre 2026. Nessun addebito futuro.</div>
+          </div>
+          <button class="db-btn-danger">Disdici piano</button>
+        </div>
+        <div class="db-sec-row">
+          <div>
+            <div class="db-sec-name">Elimina account</div>
+            <div class="db-sec-meta">Cancellazione definitiva. I dati non sono recuperabili.</div>
+          </div>
+          <button class="db-btn-danger ghost">Elimina account</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="db-foot">
+  <span>Loggato come <strong id="db-foot-name">—</strong> · <span class="mono" id="db-foot-email">—</span></span>
+  <span class="db-foot-dot">·</span>
+  <a href="index.html" id="db-logout">Esci</a>
+</footer>
+
+<script>
+
+  firebase.initializeApp({
+    apiKey:            "AIzaSyBnyv_oGllgaE_W8C0ZStlkoAF284xpaZ4",
+    authDomain:        "plateup-55.firebaseapp.com",
+    projectId:         "plateup-55",
+    storageBucket:     "plateup-55.firebasestorage.app",
+    messagingSenderId: "864695974692",
+    appId:             "1:864695974692:web:4b05dfb356750f7b9bd1b1"
+});
+const dbPlateup = firebase.firestore();
+  // ── Firebase Auth + carica profilo da Firestore ──
+const appRistorante = firebase.initializeApp({
+    apiKey: "AIzaSyCyV3u7qQSQRvyxnYJXI34ELdAgL0rrt1g",
+    authDomain: "prova-60305.firebaseapp.com",
+    projectId: "prova-60305",
+    storageBucket: "prova-60305.firebasestorage.app",
+    messagingSenderId: "613358808495",
+    appId: "1:613358808495:web:aa5fb5d610a5ec1dbed35a"
+}, 'ristorante');
+const dbPassword = appRistorante.firestore();
+
+  firebase.auth().onAuthStateChanged(async (fbUser) => {
+    if (!fbUser) { window.location.href = 'index.html'; return; }
+
+    let profile = {};
+    try {
+      const snap = await dbPlateup.collection('users').doc(fbUser.uid).get();
+      if (snap.exists) profile = snap.data();
+    } catch(e) { console.warn('Errore caricamento profilo:', e); }
+
+    const firstname  = profile.firstname  || '';
+    const lastname   = profile.lastname   || '';
+    const restaurant = profile.restaurant || '';
+    const email      = fbUser.email       || '';
+    const fullName   = [firstname, lastname].filter(Boolean).join(' ') || email;
+    const initials   = [firstname[0], lastname[0]].filter(Boolean).join('').toUpperCase() || email[0]?.toUpperCase() || '?';
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+
+    // Header
+    const avatarEl = document.getElementById('db-avatar-initials');
+    const nameEl   = document.getElementById('db-account-name');
+    if (avatarEl) avatarEl.textContent = initials;
+    if (nameEl)   nameEl.textContent   = fullName;
+
+    // Locale badge
+    const localeMark = document.getElementById('db-locale-mark');
+    const localeName = document.getElementById('db-locale-name');
+    if (localeMark) localeMark.textContent = restaurant ? restaurant[0].toUpperCase() : '?';
+    if (localeName) localeName.textContent = restaurant || 'Il tuo locale';
+
+    // Footer
+    const footName  = document.getElementById('db-foot-name');
+    const footEmail = document.getElementById('db-foot-email');
+    if (footName)  footName.textContent  = fullName;
+    if (footEmail) footEmail.textContent = email;
+
+    // Campi profilo
+    set('field-firstname',  firstname);
+    set('field-lastname',   lastname);
+    set('field-email',      email);
+    set('field-restaurant', restaurant);
+    set('field-phone',      profile.phone   || '');
+    set('field-address',    profile.address || '');
+
+    // Fatturazione
+    const billing = profile.billing || {};
+    set('field-ragione',   billing.ragione  || '');
+    set('field-piva',      billing.piva     || '');
+    set('field-cf',        billing.cf       || '');
+    set('field-sdi',       billing.sdi      || '');
+    set('field-email-amm', billing.emailAmm || '');
+
+    // Stato demo
+    const demoStart  = profile.demoActivatedAt ? new Date(profile.demoActivatedAt) : null;
+    const pending    = document.getElementById('db-plan-pending');
+    const active     = document.getElementById('db-plan-active');
+    const planTag    = document.getElementById('db-plan-tag');
+
+    if (demoStart) {
+      if (pending)  pending.style.display  = 'none';
+      if (active)   active.style.display   = '';
+      if (planTag)  planTag.textContent    = 'demo attiva';
+      const expire   = new Date(demoStart.getTime() + 30 * 24 * 60 * 60 * 1000);
+      const daysLeft = Math.max(0, Math.ceil((expire - Date.now()) / (24 * 60 * 60 * 1000)));
+      const startEl    = document.getElementById('db-demo-start');
+      const expireEl   = document.getElementById('db-demo-expire');
+      const daysLeftEl = document.getElementById('db-demo-days-left');
+      if (startEl)    startEl.textContent    = demoStart.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+      if (expireEl)   expireEl.textContent   = expire.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+      if (daysLeftEl) daysLeftEl.textContent = daysLeft > 0 ? `ancora ${daysLeft} giorni` : 'scaduta';
+    } else {
+      if (pending)  pending.style.display  = '';
+      if (active)   active.style.display   = 'none';
+      if (planTag)  planTag.textContent    = 'in attesa';
+    }
+
+    // Rende disponibile l'uid globalmente per gli altri script
+    window._plateupUid = fbUser.uid;
+  });
+</script>
+
+<script>
+  // ── Attiva demo ──
+// Apre il modal di conferma
+document.getElementById('btn-attiva-demo')?.addEventListener('click', () => {
+    const m = document.getElementById('modal-demo');
+    if (m) { m.style.display = 'flex'; }
+});
+
+// Annulla
+document.getElementById('modal-demo-annulla')?.addEventListener('click', () => {
+    document.getElementById('modal-demo').style.display = 'none';
+});
+
+// Conferma e attiva
+document.getElementById('modal-demo-conferma')?.addEventListener('click', async () => {
+    document.getElementById('modal-demo').style.display = 'none';
+    try {
+        const uid = window._plateupUid;
+        if (!uid) return;
+        await dbPlateup.collection('users').doc(uid).update({
+            demoActivatedAt: new Date().toISOString()
+        });
+        window.location.reload();
+    } catch(e) { console.error('Errore attivazione demo:', e); }
+});
+
+// Chiudi cliccando fuori
+document.getElementById('modal-demo')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('modal-demo'))
+        document.getElementById('modal-demo').style.display = 'none';
+});
+  
+  // ── Logout ──
+document.getElementById('db-logout')?.addEventListener('click', async () => {
+    await firebase.auth().signOut();
+    window.location.href = 'index.html';
+});
+
+  // ── Sidebar active state on scroll ──
+  const navItems = document.querySelectorAll('.db-nav-item');
+  const sections = document.querySelectorAll('.db-content > .db-card');
+  if (sections.length) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          navItems.forEach((n) => n.classList.toggle('active', n.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -55% 0px' });
+    sections.forEach((s) => io.observe(s));
+  }
+
+  // ── Smooth scroll on sidebar clicks ──
+  navItems.forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (!id || id.length < 2) return;
+      const t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      const y = t.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+  });
+
+  // ── Toggle switches ──
+  document.querySelectorAll('.db-switch').forEach((sw) => {
+    sw.addEventListener('click', () => sw.classList.toggle('on'));
+  });
+
+  // ── Salva modifiche profilo → localStorage ──
+  document.querySelectorAll('.db-btn-primary').forEach((b) => {
+    if (!b.textContent.trim().startsWith('Salva')) return;
+  b.addEventListener('click', async () => {
+    const uid = window._plateupUid;
+    if (!uid) return;
+
+    const fn  = document.getElementById('field-firstname')?.value  || '';
+    const ln  = document.getElementById('field-lastname')?.value   || '';
+    const rs  = document.getElementById('field-restaurant')?.value || '';
+    const ph  = document.getElementById('field-phone')?.value      || '';
+    const ad  = document.getElementById('field-address')?.value    || '';
+    const ra  = document.getElementById('field-ragione')?.value    || '';
+    const pi  = document.getElementById('field-piva')?.value       || '';
+    const cf  = document.getElementById('field-cf')?.value         || '';
+    const sdi = document.getElementById('field-sdi')?.value        || '';
+    const ea  = document.getElementById('field-email-amm')?.value  || '';
+
+    try {
+        await dbPlateup.collection('users').doc(uid).update({
+            firstname:  fn, lastname:  ln,
+            restaurant: rs, phone:     ph, address: ad,
+            billing: { ragione: ra, piva: pi, cf, sdi, emailAmm: ea }
+        });
+
+        // Feedback visivo
+        const saved = b.closest('.db-card')?.querySelector('.db-saved, #profilo-status');
+        if (saved) { saved.textContent = 'salvato ✓'; saved.style.color = '#6fd49a'; setTimeout(() => { saved.textContent = '—'; saved.style.color = ''; }, 3000); }
+
+        // Aggiorna UI in tempo reale
+        const full = [fn, ln].filter(Boolean).join(' ');
+        const init = [fn[0], ln[0]].filter(Boolean).join('').toUpperCase();
+        const nameEl   = document.getElementById('db-account-name');
+        const avatarEl = document.getElementById('db-avatar-initials');
+        const footName = document.getElementById('db-foot-name');
+        const localeMark = document.getElementById('db-locale-mark');
+        const localeName = document.getElementById('db-locale-name');
+        if (nameEl && full)    nameEl.textContent   = full;
+        if (avatarEl && init)  avatarEl.textContent = init;
+        if (footName && full)  footName.textContent = full;
+        if (localeMark && rs)  localeMark.textContent = rs[0]?.toUpperCase() || '?';
+        if (localeName && rs)  localeName.textContent = rs;
+   } catch(e) {
+        alert('Errore salvataggio: ' + e.message);
+    }
+  });
+});
+</script>
+<script>
+
+// SHA-256 helper
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// Mostra/nascondi form
+document.getElementById('btn-cambia-pw').addEventListener('click', () => {
+  const f = document.getElementById('pw-change-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+});
+document.getElementById('btn-pw-cancel').addEventListener('click', () => {
+  document.getElementById('pw-change-form').style.display = 'none';
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-confirm').value = '';
+  document.getElementById('pw-change-err').style.display = 'none';
+});
+
+// Salva nuova password
+document.getElementById('btn-pw-salva').addEventListener('click', async () => {
+  const err = document.getElementById('pw-change-err');
+  err.style.display = 'none';
+
+  const pw1 = document.getElementById('pw-new').value;
+  const pw2 = document.getElementById('pw-confirm').value;
+
+  if (pw1.length < 8) {
+    err.textContent = 'La password deve essere di almeno 8 caratteri.';
+    err.style.display = 'block'; return;
+  }
+  if (pw1 !== pw2) {
+    err.textContent = 'Le password non coincidono.';
+    err.style.display = 'block'; return;
+  }
+
+  const btn = document.getElementById('btn-pw-salva');
+  btn.textContent = 'Salvataggio…'; btn.disabled = true;
+
+  try {
+    const hash = await sha256(pw1);
+  await dbPassword.collection('impostazioni').doc('ristorante').set(
+      { accessPassword: hash, accessPasswordUpdatedAt: new Date().toISOString() },
+      { merge: true }
+    );
+
+
+    document.getElementById('pw-change-form').style.display = 'none';
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-confirm').value = '';
+
+    // Feedback visivo nella riga sicurezza
+    const meta = document.querySelector('.db-sec-row .db-sec-meta');
+    if (meta && meta.textContent.includes('Cambiata')) meta.textContent = 'Cambiata adesso ✓';
+
+    alert('✅ Password aggiornata. Diventerà attiva al prossimo accesso al gestionale.');
+  } catch(e) {
+    err.textContent = 'Errore salvataggio: ' + e.message;
+    err.style.display = 'block';
+  }
+
+  btn.textContent = 'Salva password'; btn.disabled = false;
+});
+</script>
+<script>
+  const PROFILO_FIELDS = ['field-firstname','field-lastname','field-email','field-phone','field-restaurant','field-address'];
+  let _profiloBackup = {};
+
+  document.getElementById('btn-modifica-profilo')?.addEventListener('click', () => {
+    _profiloBackup = {};
+    PROFILO_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { _profiloBackup[id] = el.value; el.removeAttribute('readonly'); }
+    });
+    document.getElementById('btn-modifica-profilo').style.display = 'none';
+    document.getElementById('btn-salva-profilo').style.display = '';
+    document.getElementById('btn-annulla-profilo').style.display = '';
+    document.getElementById('profilo-status').textContent = 'modifica in corso…';
+    document.getElementById('field-firstname')?.focus();
+  });
+
+  document.getElementById('btn-salva-profilo')?.addEventListener('click', () => {
+   const uid = window._plateupUid;
+if (uid) {
+    dbPlateup.collection('users').doc(uid).update({
+        firstname:  document.getElementById('field-firstname')?.value  || '',
+        lastname:   document.getElementById('field-lastname')?.value   || '',
+        restaurant: document.getElementById('field-restaurant')?.value || ''
+    }).catch(e => console.warn('Errore salvataggio profilo:', e));
+}
+    PROFILO_FIELDS.forEach(id => {
+        const el = document.getElementById(id); if (el) el.setAttribute('readonly', '');
+    });
+    document.getElementById('btn-modifica-profilo').style.display = '';
+    document.getElementById('btn-salva-profilo').style.display = 'none';
+    document.getElementById('btn-annulla-profilo').style.display = 'none';
+    document.getElementById('profilo-status').textContent = 'salvato ✓';
+    setTimeout(() => { document.getElementById('profilo-status').textContent = '—'; }, 3000);
+  });
+
+  document.getElementById('btn-annulla-profilo')?.addEventListener('click', () => {
+    PROFILO_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.value = _profiloBackup[id] || ''; el.setAttribute('readonly', ''); }
+    });
+    document.getElementById('btn-modifica-profilo').style.display = '';
+    document.getElementById('btn-salva-profilo').style.display = 'none';
+    document.getElementById('btn-annulla-profilo').style.display = 'none';
+    document.getElementById('profilo-status').textContent = '—';
+  });
+
+  
+</script>
+</body>
+</html>
