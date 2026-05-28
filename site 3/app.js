@@ -270,7 +270,36 @@
       }, 1800);
     });
   }
+/* ── Hamburger mobile nav ── */
+  const hamburger = $('#hamburger');
+  const mobileNav = document.createElement('div');
+  mobileNav.className = 'mobile-nav';
+  mobileNav.innerHTML = `
+    <a href="#features" class="nav-link">Funzioni</a>
+    <a href="#how" class="nav-link">Come funziona</a>
+    <a href="#pricing" class="nav-link">Piani</a>
+    <a href="#gallery" class="nav-link">Locali</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="#contact" class="btn-primary">
+      <span>Prenota demo</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <p class="mobile-login" id="mobile-open-auth">Hai già un account? <span>Accedi →</span></p>
+  `;
+  document.body.appendChild(mobileNav);
 
+  hamburger?.addEventListener('click', () => {
+    document.body.classList.toggle('nav-open');
+    mobileNav.classList.toggle('open');
+    document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+  });
+  mobileNav.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', () => {
+      document.body.classList.remove('nav-open');
+      mobileNav.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
   /* ── Auth modal ── */
   const overlay = $('#auth-overlay');
   const openBtn = $('#open-auth');
@@ -296,7 +325,12 @@
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   };
-
+ document.getElementById('mobile-open-auth')?.addEventListener('click', () => {
+    document.body.classList.remove('nav-open');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+    openAuth('login');
+  });
   const setTab = (which) => {
     tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === which));
     tabsRoot?.setAttribute('data-active', which);
@@ -374,32 +408,40 @@
         submit.querySelector('span').textContent = originalLabel;
 
         // Persist user data so dashboard can read it
-        try {
-          const existing = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
-          const payload = { email, mode: which, ts: Date.now() };
-          if (which === 'signup') {
-            payload.firstname  = data.get('firstname')?.toString().trim() || '';
-            payload.lastname   = data.get('lastname')?.toString().trim()  || '';
-            payload.restaurant = data.get('restaurant')?.toString().trim() || '';
-          } else {
-            // On login keep existing profile data if present
-            payload.firstname  = existing.firstname  || '';
-            payload.lastname   = existing.lastname   || '';
-            payload.restaurant = existing.restaurant || '';
-          }
-          localStorage.setItem('plateup-auth', JSON.stringify(payload));
-        } catch (_) {}
-
-        // For login: redirect straight to the dashboard.
-        if (which === 'login') {
+     if (which === 'login') {
+          // Controlla se l'account esiste
+          try {
+            const existing = JSON.parse(localStorage.getItem('plateup-auth') || 'null');
+            if (!existing || existing.email !== email) {
+              err.textContent = 'Nessun account trovato con questa email. Crea un account prima.';
+              err.classList.add('show');
+              return;
+            }
+            // Aggiorna timestamp ultimo accesso
+            existing.ts = Date.now();
+            localStorage.setItem('plateup-auth', JSON.stringify(existing));
+          } catch (_) {}
           window.location.href = 'dashboard.html';
           return;
         }
 
-        // For signup: show success state with email confirmation message.
+        // Signup: salva i dati del nuovo account
+        try {
+          const payload = {
+            email,
+            mode: 'signup',
+            ts: Date.now(),
+            firstname:  data.get('firstname')?.toString().trim() || '',
+            lastname:   data.get('lastname')?.toString().trim()  || '',
+            restaurant: data.get('restaurant')?.toString().trim() || '',
+          };
+          localStorage.setItem('plateup-auth', JSON.stringify(payload));
+        } catch (_) {}
+
+        // For signup: show success state.
         forms.forEach(f => f.classList.add('hidden'));
         if (success && successMsg) {
-          successMsg.textContent = `Account creato per ${email}. Ti abbiamo inviato un'email di conferma — clicca sul link per attivare il tuo locale.`;
+          successMsg.textContent = `Account creato per ${email}. Puoi accedere subito alla tua dashboard.`;
           success.classList.remove('hidden');
         }
       }, 900);
