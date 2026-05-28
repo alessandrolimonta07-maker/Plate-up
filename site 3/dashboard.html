@@ -619,9 +619,9 @@ document.getElementById('modal-demo-conferma')?.addEventListener('click', async 
     try {
         const uid = window._plateupUid;
         if (!uid) return;
-        await dbPlateup.collection('users').doc(uid).update({
-            demoActivatedAt: new Date().toISOString()
-        });
+        await dbPlateup.collection('users').doc(uid).set({
+    demoActivatedAt: new Date().toISOString()
+}, { merge: true });
         window.location.reload();
     } catch(e) { console.error('Errore attivazione demo:', e); }
 });
@@ -690,11 +690,11 @@ document.getElementById('db-logout')?.addEventListener('click', async () => {
     const ea  = document.getElementById('field-email-amm')?.value  || '';
 
     try {
-        await dbPlateup.collection('users').doc(uid).update({
-            firstname:  fn, lastname:  ln,
-            restaurant: rs, phone:     ph, address: ad,
-            billing: { ragione: ra, piva: pi, cf, sdi, emailAmm: ea }
-        });
+        await dbPlateup.collection('users').doc(uid).set({
+    firstname:  fn, lastname:  ln,
+    restaurant: rs, phone:     ph, address: ad,
+    billing: { ragione: ra, piva: pi, cf, sdi, emailAmm: ea }
+}, { merge: true });
 
         // Feedback visivo
         const saved = b.closest('.db-card')?.querySelector('.db-saved, #profilo-status');
@@ -804,11 +804,11 @@ document.getElementById('btn-pw-salva').addEventListener('click', async () => {
   document.getElementById('btn-salva-profilo')?.addEventListener('click', () => {
    const uid = window._plateupUid;
 if (uid) {
-    dbPlateup.collection('users').doc(uid).update({
-        firstname:  document.getElementById('field-firstname')?.value  || '',
-        lastname:   document.getElementById('field-lastname')?.value   || '',
-        restaurant: document.getElementById('field-restaurant')?.value || ''
-    }).catch(e => console.warn('Errore salvataggio profilo:', e));
+   dbPlateup.collection('users').doc(uid).set({
+    firstname:  document.getElementById('field-firstname')?.value  || '',
+    lastname:   document.getElementById('field-lastname')?.value   || '',
+    restaurant: document.getElementById('field-restaurant')?.value || ''
+}, { merge: true }).catch(e => console.warn('Errore salvataggio profilo:', e));
 }
     PROFILO_FIELDS.forEach(id => {
         const el = document.getElementById(id); if (el) el.setAttribute('readonly', '');
