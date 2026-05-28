@@ -104,131 +104,189 @@
       <div class="db-form-grid">
         <label class="db-field">
           <span>Nome</span>
-          <input type="text" id="field-firstname" value="">
+          <input type="text" id="field-firstname" value="" readonly>
         </label>
         <label class="db-field">
           <span>Cognome</span>
-          <input type="text" id="field-lastname" value="">
+          <input type="text" id="field-lastname" value="" readonly>
         </label>
         <label class="db-field full">
           <span>Email <span class="db-verified mono">✓ verificata</span></span>
           <div class="db-input-row">
-            <input type="email" id="field-email" value="">
+            <input type="text" id="field-email" value="" readonly>
             <button class="db-link-btn">Cambia</button>
           </div>
         </label>
         <label class="db-field full">
           <span>Telefono</span>
-          <input type="tel" id="field-phone" value="" placeholder="+39 …">
+          <input type="tel" id="field-phone" value="" placeholder="+39 …" readonly>
         </label>
         <label class="db-field full">
           <span>Nome del locale</span>
-          <input type="text" id="field-restaurant" value="">
+          <input type="text" id="field-restaurant" value="" readonly>
         </label>
         <label class="db-field full">
           <span>Indirizzo</span>
-          <input type="text" id="field-address" value="" placeholder="Via …, CAP Città">
+          <input type="text" id="field-address" value="" placeholder="Via …, CAP Città" readonly>
         </label>
       </div>
 
-      <footer class="db-card-foot">
-        <span class="db-saved mono">salvato 2 min fa</span>
-        <button class="db-btn-primary">Salva modifiche</button>
-      </footer>
+
+      <footer class="db-card-foot" id="profilo-footer">
+    <span class="db-saved mono" id="profilo-status">—</span>
+    <button class="db-btn-ghost" id="btn-modifica-profilo">✏️ Modifica</button>
+    <button class="db-btn-primary" id="btn-salva-profilo" style="display:none">Salva modifiche</button>
+    <button class="db-btn-ghost" id="btn-annulla-profilo" style="display:none">Annulla</button>
+
+    <div id="modal-demo" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:2000; align-items:center; justify-content:center;">
+  <div style="background:#1c1f26; border:1px solid #2f3340; border-top:2px solid #d4af37; border-radius:18px; padding:2rem 2rem 1.5rem; max-width:400px; width:90%; text-align:center;">
+    <div style="font-size:2.2rem; margin-bottom:.8rem;">🚀</div>
+    <h3 style="color:white; margin:0 0 .6rem; font-size:1.2rem;">Attiva la demo gratuita</h3>
+    <p style="color:#9ca3af; margin:0 0 1.6rem; font-size:.9rem; line-height:1.65;">
+      Avrai <strong style="color:#d4af37;">30 giorni</strong> per esplorare tutte le funzionalità di PlateUp completamente gratis.<br>
+      Non è richiesta nessuna carta di credito.
+    </p>
+    <div style="display:flex; gap:.8rem; justify-content:center;">
+      <button id="modal-demo-annulla" class="db-btn-ghost" style="flex:1;">Annulla</button>
+      <button id="modal-demo-conferma" class="db-btn-primary" style="flex:1;"><span>Sì, attiva</span></button>
+    </div>
+  </div>
+</div>
+</footer>
     </section>
 
     <!-- ── PIANO ── -->
-    <section class="db-card plan-card" id="piano">
-      <header class="db-card-head">
-        <div>
-          <h2>Piano &amp; rinnovi</h2>
-          <p class="db-card-sub">Il piano attivo e quando viene rinnovato.</p>
-        </div>
-        <span class="db-card-tag mono" id="db-plan-tag">in attesa</span>
-      </header>
+  <section class="db-card plan-card" id="piano">
+  <header class="db-card-head">
+    <div>
+      <h2>Piano &amp; rinnovi</h2>
+      <p class="db-card-sub">Il piano attivo e quando viene rinnovato.</p>
+    </div>
+    <span class="db-card-tag mono" id="db-plan-tag">in attesa</span>
+  </header>
 
-      <!-- STATO: demo non ancora attivata -->
-      <div id="db-plan-pending">
-        <div class="db-plan-hero">
-          <div class="db-plan-info">
-            <span class="db-plan-eyebrow mono">piano attuale</span>
-            <div class="db-plan-name">Demo gratuita</div>
-            <div class="db-plan-price">
-              <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
-            </div>
-            <ul class="db-plan-bullets">
-              <li>Accesso completo per 30 giorni</li>
-              <li>Menù digitale multilingua</li>
-              <li>Ordini e gestione tavoli live</li>
-              <li>Supporto onboarding incluso</li>
-            </ul>
-          </div>
-          <div class="db-plan-stats">
-            <div class="db-plan-stat">
-              <span class="db-plan-stat-lbl mono">stato</span>
-              <span class="db-plan-stat-val" style="color:#d4af37">In attesa</span>
-              <span class="db-plan-stat-sub">la demo non è ancora stata attivata</span>
-            </div>
-            <div class="db-plan-stat">
-              <span class="db-plan-stat-lbl mono">scadenza demo</span>
-              <span class="db-plan-stat-val">—</span>
-              <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
-            </div>
-          </div>
+  <!-- STATO: demo non ancora attivata -->
+  <div id="db-plan-pending">
+    <div class="db-plan-hero">
+      <div class="db-plan-info">
+        <span class="db-plan-eyebrow mono">piano attuale</span>
+        <div class="db-plan-name">Demo gratuita</div>
+        <div class="db-plan-price">
+          <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
         </div>
-        <p style="font-size:.85rem; opacity:.55; margin: 0 0 1.5rem; font-family: monospace;">
-          ◆ La tua demo partirà quando il team PlateUp completa il tuo onboarding. Riceverai una notifica.
-        </p>
-        <div class="db-plan-actions">
-          <button class="db-btn-primary">
-            <span>Scegli un piano</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
-          <button class="db-btn-ghost" id="btn-attiva-demo">Prova demo</button>
-          <button class="db-btn-ghost">Confronta piani</button>
+        <ul class="db-plan-bullets">
+          <li>Accesso completo per 30 giorni</li>
+          <li>Menù digitale multilingua</li>
+          <li>Ordini e gestione tavoli live</li>
+          <li>Supporto onboarding incluso</li>
+        </ul>
+      </div>
+      <div class="db-plan-stats">
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">stato</span>
+          <span class="db-plan-stat-val" style="color:#d4af37">In attesa</span>
+          <span class="db-plan-stat-sub">la demo non è ancora stata attivata</span>
         </div>
-      <div id="db-plan-active" style="display:none">
-        <div class="db-plan-hero">
-          <div class="db-plan-info">
-            <span class="db-plan-eyebrow mono">piano attuale</span>
-            <div class="db-plan-name">Demo gratuita</div>
-            <div class="db-plan-price">
-              <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
-            </div>
-            <ul class="db-plan-bullets">
-              <li>Accesso completo per 30 giorni</li>
-              <li>Menù digitale multilingua</li>
-              <li>Ordini e gestione tavoli live</li>
-              <li>Supporto onboarding incluso</li>
-            </ul>
-          </div>
-          <div class="db-plan-stats">
-            <div class="db-plan-stat">
-              <span class="db-plan-stat-lbl mono">stato</span>
-              <span class="db-plan-stat-val" style="color:#6fd49a">Attiva</span>
-              <span class="db-plan-stat-sub">nessun addebito in corso</span>
-            </div>
-            <div class="db-plan-stat">
-              <span class="db-plan-stat-lbl mono">attiva dal</span>
-              <span class="db-plan-stat-val" id="db-demo-start">—</span>
-              <span class="db-plan-stat-sub" id="db-demo-days-left"></span>
-            </div>
-            <div class="db-plan-stat">
-              <span class="db-plan-stat-lbl mono">scadenza</span>
-              <span class="db-plan-stat-val" id="db-demo-expire">—</span>
-              <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
-            </div>
-          </div>
-        </div>
-        <div class="db-plan-actions">
-          <button class="db-btn-primary">
-            <span>Scegli un piano</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
-          <button class="db-btn-ghost">Confronta piani</button>
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">scadenza demo</span>
+          <span class="db-plan-stat-val">—</span>
+          <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
         </div>
       </div>
-    </section>
+    </div>
+    <p style="font-size:.85rem; opacity:.55; margin:0 0 1.5rem; font-family:monospace;">
+      ◆ La tua demo partirà quando il team PlateUp completa il tuo onboarding. Riceverai una notifica.
+    </p>
+    <div class="db-plan-actions">
+      <button class="db-btn-primary" onclick="window.location.href='index.html#prezzi'">
+        <span>Scegli un piano</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <button class="db-btn-ghost" id="btn-attiva-demo">Prova demo</button>
+      <button class="db-btn-ghost" onclick="window.location.href='index.html#prezzi'">Confronta piani</button>
+    </div>
+  </div>
+
+  <!-- STATO: demo attiva -->
+  <div id="db-plan-active" style="display:none">
+    <div class="db-plan-hero">
+      <div class="db-plan-info">
+        <span class="db-plan-eyebrow mono">piano attuale</span>
+        <div class="db-plan-name">Demo gratuita</div>
+        <div class="db-plan-price">
+          <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
+        </div>
+        <ul class="db-plan-bullets">
+          <li>Accesso completo per 30 giorni</li>
+          <li>Menù digitale multilingua</li>
+          <li>Ordini e gestione tavoli live</li>
+          <li>Supporto onboarding incluso</li>
+        </ul>
+      </div>
+      <div class="db-plan-stats">
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">stato</span>
+          <span class="db-plan-stat-val" style="color:#6fd49a">Attiva</span>
+          <span class="db-plan-stat-sub">nessun addebito in corso</span>
+        </div>
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">attiva dal</span>
+          <span class="db-plan-stat-val" id="db-demo-start">—</span>
+          <span class="db-plan-stat-sub" id="db-demo-days-left"></span>
+        </div>
+        <div class="db-plan-stat">
+          <span class="db-plan-stat-lbl mono">scadenza</span>
+          <span class="db-plan-stat-val" id="db-demo-expire">—</span>
+          <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Piani disponibili dopo la demo -->
+    <div style="margin-top:2rem; border-top:1px solid #2f3340; padding-top:1.5rem;">
+      <p style="font-size:.82rem; color:#9ca3af; font-family:monospace; margin:0 0 1rem;">
+        ◆ Passa a un piano prima della scadenza per non perdere accesso
+      </p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem;">
+        <!-- Starter -->
+        <div style="background:#1a1d24; border:1px solid #2f3340; border-radius:14px; padding:1.2rem;">
+          <div style="font-size:.75rem; color:#9ca3af; font-family:monospace; margin-bottom:.4rem;">Lite</div>
+          <div style="font-size:1.6rem; font-weight:700; color:white;">€69<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
+          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
+            <li>Fino a 30 tavoli</li>
+            <li>Menu digitale</li>
+            <li>Ordini live</li>
+          </ul>
+          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+        </div>
+        <!-- Pro -->
+        <div style="background:#1a1d24; border:1.5px solid #d4af37; border-radius:14px; padding:1.2rem; position:relative;">
+          <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#d4af37; color:#0e1117; font-size:.7rem; font-weight:700; font-family:monospace; padding:2px 10px; border-radius:20px;">Più scelto</div>
+          <div style="font-size:.75rem; color:#d4af37; font-family:monospace; margin-bottom:.4rem;">Pro</div>
+          <div style="font-size:1.6rem; font-weight:700; color:white;">€119<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
+          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
+            <li>Tavoli illimitati</li>
+            <li>Analytics avanzate</li>
+            <li>Turni staff</li>
+          </ul>
+          <button class="db-btn-primary" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+        </div>
+        <!-- Elite -->
+        <div style="background:#1a1d24; border:1px solid #2f3340; border-radius:14px; padding:1.2rem;">
+          <div style="font-size:.75rem; color:#9ca3af; font-family:monospace; margin-bottom:.4rem;">VIP</div>
+          <div style="font-size:1.6rem; font-weight:700; color:white;">€199<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
+          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
+            <li>Multi-locale</li>
+            <li>API accesso</li>
+            <li>Supporto dedicato</li>
+          </ul>
+          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
 
     <!-- ── FATTURAZIONE ── -->
     <section class="db-card" id="fatturazione">
@@ -521,15 +579,34 @@
 
 <script>
   // ── Attiva demo ──
-  document.getElementById('btn-attiva-demo')?.addEventListener('click', () => {
-    try {
-      const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
-      user.demoActivatedAt = Date.now();
-      localStorage.setItem('plateup-auth', JSON.stringify(user));
-      window.location.reload();
-    } catch(_) {}
-  });
+// Apre il modal di conferma
+document.getElementById('btn-attiva-demo')?.addEventListener('click', () => {
+    const m = document.getElementById('modal-demo');
+    if (m) { m.style.display = 'flex'; }
+});
 
+// Annulla
+document.getElementById('modal-demo-annulla')?.addEventListener('click', () => {
+    document.getElementById('modal-demo').style.display = 'none';
+});
+
+// Conferma e attiva
+document.getElementById('modal-demo-conferma')?.addEventListener('click', () => {
+    document.getElementById('modal-demo').style.display = 'none';
+    try {
+        const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
+        user.demoActivatedAt = Date.now();
+        localStorage.setItem('plateup-auth', JSON.stringify(user));
+        window.location.reload();
+    } catch(_) {}
+});
+
+// Chiudi cliccando fuori
+document.getElementById('modal-demo')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('modal-demo'))
+        document.getElementById('modal-demo').style.display = 'none';
+});
+  
   // ── Logout ──
   document.getElementById('db-logout')?.addEventListener('click', () => {
     try { localStorage.removeItem('plateup-auth'); } catch(_) {}
@@ -644,7 +721,7 @@ firebase.initializeApp({
   messagingSenderId: "613358808495",
   appId: "1:613358808495:web:aa5fb5d610a5ec1dbed35a"
 });
-const dbPW = firebase.firestore();
+const dbPassword = firebase.firestore();
 
 // SHA-256 helper
 async function sha256(str) {
@@ -789,6 +866,54 @@ document.getElementById('btn-pw-salva').addEventListener('click', async () => {
 
   btn.textContent = 'Salva password'; btn.disabled = false;
 });
+</script>
+<script>
+  const PROFILO_FIELDS = ['field-firstname','field-lastname','field-email','field-phone','field-restaurant','field-address'];
+  let _profiloBackup = {};
+
+  document.getElementById('btn-modifica-profilo')?.addEventListener('click', () => {
+    _profiloBackup = {};
+    PROFILO_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { _profiloBackup[id] = el.value; el.removeAttribute('readonly'); }
+    });
+    document.getElementById('btn-modifica-profilo').style.display = 'none';
+    document.getElementById('btn-salva-profilo').style.display = '';
+    document.getElementById('btn-annulla-profilo').style.display = '';
+    document.getElementById('profilo-status').textContent = 'modifica in corso…';
+    document.getElementById('field-firstname')?.focus();
+  });
+
+  document.getElementById('btn-salva-profilo')?.addEventListener('click', () => {
+    try {
+        const user = JSON.parse(localStorage.getItem('plateup-auth') || '{}');
+        user.firstname  = document.getElementById('field-firstname')?.value  || '';
+        user.lastname   = document.getElementById('field-lastname')?.value   || '';
+        user.restaurant = document.getElementById('field-restaurant')?.value || '';
+        localStorage.setItem('plateup-auth', JSON.stringify(user));
+    } catch(_) {}
+    PROFILO_FIELDS.forEach(id => {
+        const el = document.getElementById(id); if (el) el.setAttribute('readonly', '');
+    });
+    document.getElementById('btn-modifica-profilo').style.display = '';
+    document.getElementById('btn-salva-profilo').style.display = 'none';
+    document.getElementById('btn-annulla-profilo').style.display = 'none';
+    document.getElementById('profilo-status').textContent = 'salvato ✓';
+    setTimeout(() => { document.getElementById('profilo-status').textContent = '—'; }, 3000);
+  });
+
+  document.getElementById('btn-annulla-profilo')?.addEventListener('click', () => {
+    PROFILO_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.value = _profiloBackup[id] || ''; el.setAttribute('readonly', ''); }
+    });
+    document.getElementById('btn-modifica-profilo').style.display = '';
+    document.getElementById('btn-salva-profilo').style.display = 'none';
+    document.getElementById('btn-annulla-profilo').style.display = 'none';
+    document.getElementById('profilo-status').textContent = '—';
+  });
+
+  
 </script>
 </body>
 </html>
