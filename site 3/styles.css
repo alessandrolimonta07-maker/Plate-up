@@ -54,7 +54,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 body {
   background: var(--bg);
   color: var(--cream);
@@ -216,8 +216,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 @media (max-width: 900px) {
   .nav { padding: 8px 10px 8px 18px; gap: 12px; }
   .nav-center, .nav-right .nav-login { display: none; }
-  .nav-right .btn-magnetic span:first-child { display: none; }
-  .nav-right .btn-magnetic { padding: 8px 10px; }
+  .nav-right .btn-magnetic { display: none; }   /* ← rimosso completamente, c'è già nel mobile-nav */
 }
 
 /* ============================================
@@ -1013,7 +1012,28 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   .bento-5, .bento-6 { grid-column: span 12; }
 }
 @media (max-width: 640px) {
-  .bento > * { grid-column: span 12 !important; grid-row: auto !important; }
+  .bento {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding-bottom: 20px;
+    margin: 0 -4%;
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+  .bento > * {
+    flex: 0 0 84vw;
+    scroll-snap-align: start;
+    grid-column: unset !important;
+    grid-row: unset !important;
+    min-height: 300px;
+  }
+  /* scrollbar sottile come indicatore visivo */
+  .bento::-webkit-scrollbar { height: 3px; }
+  .bento::-webkit-scrollbar-track { background: var(--line); border-radius: 2px; }
+  .bento::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 }
 
 /* ============================================
@@ -1898,7 +1918,24 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   .plans { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 600px) {
-  .plans { grid-template-columns: 1fr; }
+  .plans {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding-bottom: 20px;
+    margin: 0 -4%;
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+  .plan {
+    flex: 0 0 84vw;
+    scroll-snap-align: start;
+  }
+  .plans::-webkit-scrollbar { height: 3px; }
+  .plans::-webkit-scrollbar-track { background: var(--line); border-radius: 2px; }
+  .plans::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 }
 
 /* ============================================
@@ -2188,6 +2225,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   position: relative;
   overflow: hidden;
   z-index: 1;
+  overflow: hidden;
 }
 .footer-top {
   display: grid;
@@ -2686,8 +2724,10 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   justify-content: center;
   gap: 5px;
   padding: 8px;
-  width: 36px;
-  height: 36px;
+  width: 44px;       /* ← minimo Apple per touch target */
+  height: 44px;      /* ← minimo Apple per touch target */
+  touch-action: manipulation;  /* ← elimina il 300ms delay iOS */
+  cursor: pointer;
 }
 .hamburger span {
   display: block;
@@ -2750,6 +2790,7 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
    ============================================ */
 
 @media (max-width: 768px) {
+
   .hero {
     padding: 120px 5% 50px;
   }
@@ -2798,6 +2839,23 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
 
   /* Footer cols — una colonna su mobile piccolo */
   .footer-cols { grid-template-columns: 1fr 1fr; gap: 20px; }
+.features::after,
+.pricing::after {
+  content: '← scorri →';
+  display: block;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: .65rem;
+  color: var(--muted);
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+}
+}
+@media (min-width: 641px) {
+  .features::after { display: none; }
+}
+@media (min-width: 601px) {
+  .pricing::after { display: none; }
 }
 
 @media (max-width: 480px) {
@@ -2806,4 +2864,8 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
   .footer-cols { grid-template-columns: 1fr; }
   .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 200px; }
   .g-1, .g-2, .g-3, .g-4, .g-5 { grid-column: span 1; grid-row: auto; }
+}
+@media (max-width: 640px) {
+  .how-right { display: none; }
+  .how-inner { grid-template-columns: 1fr; }
 }
