@@ -1020,8 +1020,9 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
     gap: 12px;
     padding-bottom: 20px;
     margin: 0 -4%;
-    padding-left: 4%;
-    padding-right: 4%;
+    scroll-padding-left: 4%;
+	padding-right: calc(4% + 16vw);
+    
   }
   .bento > * {
     flex: 0 0 84vw;
@@ -1051,7 +1052,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   gap: 80px;
   max-width: 1300px;
   margin: 0 auto;
-  align-items: start;
+ align-items: stretch;
 }
 
 .how-steps {
@@ -1926,8 +1927,8 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
     gap: 12px;
     padding-bottom: 20px;
     margin: 0 -4%;
-    padding-left: 4%;
-    padding-right: 4%;
+    scroll-padding-left: 4%;
+  padding-right: calc(4% + 16vw);
   }
   .plan {
     flex: 0 0 84vw;
@@ -2296,7 +2297,13 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 @media (max-width: 800px) {
   .footer-top { grid-template-columns: 1fr; gap: 40px; }
   .footer-cols { grid-template-columns: repeat(2, 1fr); gap: 28px; }
-  .footer-bot { flex-direction: column; gap: 12px; }
+  .footer-bot {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+  }
 }
 
 /* ============================================
@@ -2766,7 +2773,7 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
   border-bottom: 1px solid var(--line);
   transition: color .2s;
 }
-.mobile-nav .nav-link:last-of-type { border-bottom: none; }
+.mobile-nav a.nav-link:last-of-type { border-bottom: none; }
 .mobile-nav .nav-link:hover { color: var(--gold); }
 .mobile-nav .btn-primary {
   margin-top: 28px;
@@ -2776,10 +2783,33 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
 .mobile-nav .mobile-login {
   font-size: .9rem;
   color: var(--muted);
-  margin-top: 12px;
   cursor: pointer;
+  padding: 10px 22px;
+  border-radius: 100px;
+  border: 1px solid var(--line);
+  transition: color var(--d-fast) var(--t-fast);
 }
-.mobile-nav .mobile-login span { color: var(--gold); }
+.mobile-nav .mobile-login:hover { color: var(--cream); }
+
+.mobile-nav-auth {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 16px;
+  width: 100%;
+  justify-content: center;
+}
+.mobile-register {
+  padding: 10px 22px;
+  border: 1px solid rgba(212, 175, 55, .5);
+  border-radius: 100px;
+  font-size: .9rem;
+  color: var(--gold);
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--d-fast) var(--t-fast), color var(--d-fast) var(--t-fast);
+}
+.mobile-register:hover { background: var(--gold); color: var(--bg); }
 
 @media (max-width: 900px) {
   .hamburger { display: flex; }
@@ -2850,6 +2880,18 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
   margin-top: 8px;
   letter-spacing: 0.05em;
 }
+ .hero-scroll-hint {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    transition: opacity .4s;
+  }
+  .hero-scroll-hint.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 @media (min-width: 641px) {
   .features::after { display: none; }
@@ -2861,11 +2903,36 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
 @media (max-width: 480px) {
   .hero-title { font-size: clamp(2.8rem, 14vw, 5rem); }
   .sec-title   { font-size: clamp(2rem, 9vw, 3rem); }
-  .footer-cols { grid-template-columns: 1fr; }
+  .footer-cols { grid-template-columns: repeat(2, 1fr); gap: 20px; }
   .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 200px; }
   .g-1, .g-2, .g-3, .g-4, .g-5 { grid-column: span 1; grid-row: auto; }
 }
 @media (max-width: 640px) {
   .how-right { display: none; }
   .how-inner { grid-template-columns: 1fr; }
+}
+/* Dots paginazione scroll orizzontale */
+.scroll-dots {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+@media (max-width: 640px) {
+  .scroll-dots { display: flex; }
+}
+.scroll-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line-2);
+  transition: background .25s var(--t-fast), width .3s var(--t-eos);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.scroll-dot.active {
+  background: var(--gold);
+  width: 22px;
+  border-radius: 4px;
 }
