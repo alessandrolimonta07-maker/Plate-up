@@ -115,7 +115,6 @@
           <span>Email <span class="db-verified mono">✓ verificata</span></span>
           <div class="db-input-row">
             <input type="text" id="field-email" value="" readonly>
-            <button class="db-link-btn">Cambia</button>
           </div>
         </label>
         <label class="db-field full">
@@ -199,12 +198,12 @@
       ◆ La tua demo partirà quando il team PlateUp completa il tuo onboarding. Riceverai una notifica.
     </p>
     <div class="db-plan-actions">
-      <button class="db-btn-primary" onclick="window.location.href='index.html#prezzi'">
+      <button class="db-btn-primary" onclick="scegliPiano(this)"="window.location.href='index.html#prezzi'">
         <span>Scegli un piano</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
       <button class="db-btn-ghost" id="btn-attiva-demo">Prova demo</button>
-      <button class="db-btn-ghost" onclick="window.location.href='index.html#prezzi'">Confronta piani</button>
+      <button class="db-btn-ghost" onclick="scegliPiano(this)"="window.location.href='index.html#prezzi'">Confronta piani</button>
     </div>
   </div>
 
@@ -258,7 +257,7 @@
             <li>Menu digitale</li>
             <li>Ordini live</li>
           </ul>
-          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="scegliPiano(this)"="window.location.href='index.html#prezzi'">Scegli</button>
         </div>
         <!-- Pro -->
         <div style="background:#1a1d24; border:1.5px solid #d4af37; border-radius:14px; padding:1.2rem; position:relative;">
@@ -270,7 +269,7 @@
             <li>Analytics avanzate</li>
             <li>Turni staff</li>
           </ul>
-          <button class="db-btn-primary" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+          <button class="db-btn-primary" style="width:100%; font-size:.82rem;" onclick="scegliPiano(this)"="window.location.href='index.html#prezzi'">Scegli</button>
         </div>
         <!-- Elite -->
         <div style="background:#1a1d24; border:1px solid #2f3340; border-radius:14px; padding:1.2rem;">
@@ -281,7 +280,7 @@
             <li>API accesso</li>
             <li>Supporto dedicato</li>
           </ul>
-          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="window.location.href='index.html#prezzi'">Scegli</button>
+          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="scegliPiano(this)"="window.location.href='index.html#prezzi'">Scegli</button>
         </div>
       </div>
     </div>
@@ -301,23 +300,23 @@
       <div class="db-form-grid">
         <label class="db-field full">
           <span>Ragione sociale</span>
-          <input type="text" id="field-ragione" value="" placeholder="Es. Trattoria Mario S.r.l.">
+          <input type="text" id="field-ragione" value="" placeholder="Es. Trattoria Mario S.r.l." readonly>
         </label>
         <label class="db-field">
           <span>Partita IVA</span>
-          <input type="text" id="field-piva" value="" placeholder="Es. 03452890135">
+          <input type="text" id="field-piva" value="" placeholder="Es. 03452890135" readonly>
         </label>
         <label class="db-field">
           <span>Codice fiscale</span>
-          <input type="text" id="field-cf" value="" placeholder="Es. RSSMRA85L01F205Z">
+          <input type="text" id="field-cf" value="" placeholder="Es. RSSMRA85L01F205Z" readonly>
         </label>
         <label class="db-field">
           <span>Codice SDI / PEC</span>
-          <input type="text" id="field-sdi" value="" placeholder="Es. M5UXCR1">
+          <input type="text" id="field-sdi" value="" placeholder="Es. M5UXCR1" readonly>
         </label>
         <label class="db-field">
           <span>Email amministrativa</span>
-          <input type="email" id="field-email-amm" value="" placeholder="amministrazione@iltuolocale.it">
+          <input type="email" id="field-email-amm" value="" placeholder="amministrazione@iltuolocale.it" readonly>
         </label>
       </div>
 
@@ -329,14 +328,15 @@
             <span class="db-pay-mask">nessuna carta aggiunta</span>
             <span class="db-pay-exp mono"></span>
           </div>
-          <button class="db-link-btn">Aggiungi carta</button>
         </div>
       </div>
 
-      <footer class="db-card-foot">
-        <span class="db-saved mono"></span>
-        <button class="db-btn-primary">Salva dati fatturazione</button>
-      </footer>
+   <footer class="db-card-foot" id="fatturazione-footer">
+    <span class="db-saved mono" id="fatturazione-status">—</span>
+    <button class="db-btn-ghost" id="btn-modifica-fatturazione">✏️ Modifica</button>
+    <button class="db-btn-primary" id="btn-salva-fatturazione" style="display:none">Salva dati</button>
+    <button class="db-btn-ghost"  id="btn-annulla-fatturazione" style="display:none">Annulla</button>
+</footer>
     </section>
 
     <!-- ── PAGAMENTI ── -->
@@ -408,14 +408,14 @@
             <div class="db-sec-name">Autenticazione a due fattori <span class="db-rec mono">consigliata</span></div>
             <div class="db-sec-meta">Aggiungi un livello extra di sicurezza al login.</div>
           </div>
-          <button class="db-btn-primary small">Attiva 2FA</button>
+<button class="db-btn-primary small" onclick="alert('La doppia autenticazione sarà disponibile prossimamente.')">Attiva 2FA</button>
         </div>
         <div class="db-sec-row">
           <div>
             <div class="db-sec-name">Sessioni attive</div>
             <div class="db-sec-meta">2 dispositivi · MacBook (Como, ora) · iPhone (Como, 2h fa)</div>
           </div>
-          <button class="db-btn-ghost">Gestisci</button>
+          <button class="db-btn-ghost" onclick="alert('La gestione sessioni sarà disponibile prossimamente.')">Gestisci</button>
         </div>
       </div>
     </section>
@@ -536,6 +536,13 @@ const dbPassword = appRistorante.firestore();
     const initials   = [firstname[0], lastname[0]].filter(Boolean).join('').toUpperCase() || email[0]?.toUpperCase() || '?';
 
     const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+    
+    // Carica preferenze notifiche
+const notif = profile.notifications || {};
+const sw = document.querySelectorAll('.db-switch');
+if (sw[0]) sw[0].classList.toggle('on', notif.riepilogo    !== false);
+if (sw[1]) sw[1].classList.toggle('on', notif.prenotazioni !== false);
+if (sw[2]) sw[2].classList.toggle('on', notif.promo        === true);
 
     // Header
     const avatarEl = document.getElementById('db-avatar-initials');
@@ -667,9 +674,22 @@ document.getElementById('db-logout')?.addEventListener('click', async () => {
   });
 
   // ── Toggle switches ──
-  document.querySelectorAll('.db-switch').forEach((sw) => {
-    sw.addEventListener('click', () => sw.classList.toggle('on'));
-  });
+const switchKeys = ['riepilogo', 'prenotazioni', 'promo'];
+document.querySelectorAll('.db-switch').forEach((sw, i) => {
+    sw.addEventListener('click', () => {
+        sw.classList.toggle('on');
+        const uid = window._plateupUid;
+        if (!uid) return;
+        const key = switchKeys[i];
+        if (!key) return;
+        const updates = {};
+        updates[`notifications.${key}`] = sw.classList.contains('on');
+        dbPlateup.collection('users').doc(uid).set(
+            { notifications: { [key]: sw.classList.contains('on') } },
+            { merge: true }
+        ).catch(e => console.warn('Errore salvataggio notifica:', e));
+    });
+});
 
   // ── Salva modifiche profilo → localStorage ──
   document.querySelectorAll('.db-btn-primary').forEach((b) => {
@@ -761,6 +781,7 @@ document.getElementById('btn-pw-salva').addEventListener('click', async () => {
 
   try {
     const hash = await sha256(pw1);
+    await firebase.auth().currentUser?.updatePassword(pw1);
   await dbPassword.collection('impostazioni').doc('ristorante').set(
       { accessPassword: hash, accessPasswordUpdatedAt: new Date().toISOString() },
       { merge: true }
@@ -832,6 +853,87 @@ if (uid) {
   });
 
   
+</script>
+<script>
+function scegliPiano(btn) {
+    const uid = window._plateupUid;
+    if (!uid) { alert('Effettua il login per scegliere un piano.'); return; }
+
+    // Legge i dati di fatturazione dal profilo
+    dbPlateup.collection('users').doc(uid).get().then(snap => {
+        const profile = snap.exists ? snap.data() : {};
+        const billing = profile.billing || {};
+
+        if (!billing.ragione || !billing.piva) {
+            alert('⚠️ Prima di scegliere un piano compila i dati di fatturazione (ragione sociale e P.IVA).');
+            document.querySelector('#fatturazione').scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+
+        // Piano scelto — salva la richiesta su Firestore
+        const nomePiano = btn.closest('[style*="border"]')?.querySelector('[style*="font-size:1.6"]')?.previousElementSibling?.textContent
+                       || btn.textContent || 'Piano selezionato';
+
+        dbPlateup.collection('richieste_piano').add({
+            uid,
+            email:     profile.email || '',
+            locale:    profile.restaurant || '',
+            piano:     nomePiano,
+            richiestoIl: new Date().toISOString()
+        }).then(() => {
+            alert('✅ Richiesta inviata! Il team PlateUp ti contatterà entro 24 ore per attivare il piano.');
+        }).catch(e => alert('Errore: ' + e.message));
+    });
+}
+</script>
+<script>
+const FATT_FIELDS = ['field-ragione','field-piva','field-cf','field-sdi','field-email-amm'];
+let _fattBackup = {};
+
+document.getElementById('btn-modifica-fatturazione')?.addEventListener('click', () => {
+    _fattBackup = {};
+    FATT_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { _fattBackup[id] = el.value; el.removeAttribute('readonly'); }
+    });
+    document.getElementById('btn-modifica-fatturazione').style.display = 'none';
+    document.getElementById('btn-salva-fatturazione').style.display = '';
+    document.getElementById('btn-annulla-fatturazione').style.display = '';
+    document.getElementById('fatturazione-status').textContent = 'modifica in corso…';
+});
+
+document.getElementById('btn-salva-fatturazione')?.addEventListener('click', async () => {
+    const uid = window._plateupUid;
+    if (!uid) return;
+    const ra  = document.getElementById('field-ragione')?.value    || '';
+    const pi  = document.getElementById('field-piva')?.value       || '';
+    const cf  = document.getElementById('field-cf')?.value         || '';
+    const sdi = document.getElementById('field-sdi')?.value        || '';
+    const ea  = document.getElementById('field-email-amm')?.value  || '';
+    try {
+        await dbPlateup.collection('users').doc(uid).set(
+            { billing: { ragione: ra, piva: pi, cf, sdi, emailAmm: ea } },
+            { merge: true }
+        );
+        FATT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('readonly', ''); });
+        document.getElementById('btn-modifica-fatturazione').style.display = '';
+        document.getElementById('btn-salva-fatturazione').style.display = 'none';
+        document.getElementById('btn-annulla-fatturazione').style.display = 'none';
+        document.getElementById('fatturazione-status').textContent = 'salvato ✓';
+        setTimeout(() => { document.getElementById('fatturazione-status').textContent = '—'; }, 3000);
+    } catch(e) { alert('Errore: ' + e.message); }
+});
+
+document.getElementById('btn-annulla-fatturazione')?.addEventListener('click', () => {
+    FATT_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.value = _fattBackup[id] || ''; el.setAttribute('readonly', ''); }
+    });
+    document.getElementById('btn-modifica-fatturazione').style.display = '';
+    document.getElementById('btn-salva-fatturazione').style.display = 'none';
+    document.getElementById('btn-annulla-fatturazione').style.display = 'none';
+    document.getElementById('fatturazione-status').textContent = '—';
+});
 </script>
 </body>
 </html>
