@@ -756,3 +756,64 @@ body.is-dashboard > * { position: relative; z-index: 1; }
   .db-card { padding: 22px; }
   .db-foot { padding: 18px; }
 }
+
+/* ── PHONE (max 480px) ── */
+
+@media (max-width: 480px) {
+
+  /* Nav */
+  .db-nav { padding: 12px 14px; gap: 8px; }
+  .db-logo { font-size: 1.15rem; }
+  .db-locale { display: none; }
+
+  /* Hero */
+  .db-hero { padding: 24px 16px 20px; }
+  .db-greet { font-size: .75rem !important; }
+  .db-title { font-size: 1.5rem; }
+  .db-lede  { font-size: .82rem; }
+
+  /* Card */
+  .db-card { padding: 16px; }
+  .db-card-head h2 { font-size: 1rem; }
+
+  /* Card footer — bottoni vanno a capo */
+  .db-card-foot {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .db-card-foot .db-btn-primary,
+  .db-card-foot .db-btn-ghost {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    justify-content: center;
+  }
+  .db-card-foot .db-saved { width: 100%; order: -1; }
+
+  /* Piano — testo grande diventa leggibile */
+  .db-plan-name { font-size: 1.8rem; }
+  .db-plan-num  { font-size: 1.8rem; }
+  .db-plan-cur  { font-size: 1rem; }
+
+  /* Sicurezza / toggle rows — bottone va sotto il testo */
+  .db-sec-row, .db-toggle-row {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .db-sec-row > div, .db-toggle-row > div { width: 100%; }
+  .db-sec-row > button { align-self: flex-start; }
+
+  /* Side nav orizzontale — testo più piccolo */
+  .db-nav-item { font-size: .72rem; padding: 7px 10px; }
+
+  /* Campo form full width anche se inline */
+  .db-field { grid-column: 1 / -1 !important; }
+
+}
+
+/* ── Modal piani su telefono ── */
+@media (max-width: 600px) {
+  #modal-piani { padding: 1rem .5rem; align-items: flex-start; }
+  #modal-piani > div { padding: 1.2rem; border-radius: 14px; }
+  #modal-piani h3 { font-size: 1rem; }
+}
