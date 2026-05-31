@@ -194,9 +194,6 @@
         </div>
       </div>
     </div>
-    <p style="font-size:.85rem; opacity:.55; margin:0 0 1.5rem; font-family:monospace;">
-      ◆ La tua demo partirà quando il team PlateUp completa il tuo onboarding. Riceverai una notifica.
-    </p>
     <div class="db-plan-actions">
       <button class="db-btn-primary" onclick="scegliPiano(this)">
         <span>Scegli un piano</span>
@@ -475,21 +472,21 @@
             <div class="db-sec-name">Sospendi abbonamento</div>
             <div class="db-sec-meta">Metti in pausa il piano fino a 3 mesi.</div>
           </div>
-          <button class="db-btn-ghost">Sospendi</button>
+         <button class="db-btn-ghost" id="btn-sospendi">Sospendi</button>
         </div>
         <div class="db-sec-row">
           <div>
             <div class="db-sec-name">Disdici abbonamento</div>
             <div class="db-sec-meta">Resta attivo fino al 28 dicembre 2026. Nessun addebito futuro.</div>
           </div>
-          <button class="db-btn-danger">Disdici piano</button>
+       <button class="db-btn-danger">Disdici piano</button>
         </div>
         <div class="db-sec-row">
           <div>
             <div class="db-sec-name">Elimina account</div>
             <div class="db-sec-meta">Cancellazione definitiva. I dati non sono recuperabili.</div>
           </div>
-          <button class="db-btn-danger ghost">Elimina account</button>
+        <button class="db-btn-danger ghost" id="btn-elimina">Elimina account</button>
         </div>
       </div>
     </section>
@@ -959,6 +956,8 @@ document.getElementById('btn-annulla-fatturazione')?.addEventListener('click', (
     document.getElementById('fatturazione-status').textContent = '—';
 });
 
+
+</script>
 <!-- Modal confronta piani -->
 <div id="modal-piani" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:2000; align-items:flex-start; justify-content:center; overflow-y:auto; padding:2rem 1rem;">
   <div style="background:#1c1f26; border:1px solid #2f3340; border-radius:18px; padding:2rem; max-width:760px; width:100%; margin:auto;">
@@ -995,6 +994,44 @@ document.getElementById('btn-annulla-fatturazione')?.addEventListener('click', (
     </div>
   </div>
 </div>
+
+
+
+<script>
+document.getElementById('btn-sospendi')?.addEventListener('click', () => {
+    if (!confirm('Vuoi sospendere il tuo abbonamento?\nResterai attivo fino alla fine del periodo pagato.')) return;
+    const email = firebase.auth().currentUser?.email || '';
+    const subject = encodeURIComponent('Richiesta sospensione abbonamento PlateUp');
+    const body    = encodeURIComponent('Ciao PlateUp,\n\nVorrei sospendere il mio abbonamento.\n\nEmail account: ' + email + '\n\nGrazie');
+    window.location.href = 'mailto:info@plateup.it?subject=' + subject + '&body=' + body;
+});
+
+document.getElementById('btn-disdici')?.addEventListener('click', () => {
+    if (!confirm('Sei sicuro di voler disdire il piano?\nResterai attivo fino alla fine del periodo pagato. Nessun addebito futuro.')) return;
+    const email = firebase.auth().currentUser?.email || '';
+    const subject = encodeURIComponent('Richiesta disdetta piano PlateUp');
+    const body    = encodeURIComponent('Ciao PlateUp,\n\nVorrei disdire il mio piano.\n\nEmail account: ' + email + '\n\nGrazie');
+    window.location.href = 'mailto:info@plateup.it?subject=' + subject + '&body=' + body;
+});
+
+document.getElementById('btn-elimina')?.addEventListener('click', async () => {
+    const prima = confirm('Stai per eliminare definitivamente il tuo account.\nI dati non sono recuperabili.\n\nContinuare?');
+    if (!prima) return;
+    const seconda = confirm('Conferma finale: eliminare l\'account?');
+    if (!seconda) return;
+    try {
+        const uid = firebase.auth().currentUser?.uid;
+        if (uid) await dbPlateup.collection('users').doc(uid).delete();
+        await firebase.auth().currentUser.delete();
+        window.location.href = 'index.html';
+    } catch(e) {
+        if (e.code === 'auth/requires-recent-login') {
+            alert('Per eliminare l\'account devi prima fare logout e rientrare. Poi riprova.');
+        } else {
+            alert('Errore: ' + e.message);
+        }
+    }
+});
 </script>
 </body>
 </html>
