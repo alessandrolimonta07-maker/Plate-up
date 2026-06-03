@@ -35,9 +35,12 @@
     if (y > 100 && y > lastY) nav.classList.add('hidden');
     else nav.classList.remove('hidden');
     lastY = y;
+    const hint = document.querySelector('.hero-scroll-hint');
+    if (hint) hint.classList.toggle('hidden', y > window.innerHeight * 0.3);
   };
   window.addEventListener('scroll', onScroll, { passive: true });
-
+  onScroll(); // forza aggiornamento iniziale hint
+  
   /* ── Hero title word reveal ── */
   requestAnimationFrame(() => {
     $('.hero-title')?.classList.add('in');
@@ -280,11 +283,14 @@
     <a href="#pricing" class="nav-link">Piani</a>
     <a href="#gallery" class="nav-link">Locali</a>
     <a href="#faq" class="nav-link">FAQ</a>
+    <div class="mobile-nav-auth">
+      <button class="mobile-login" id="mobile-open-auth">Accedi</button>
+      <button class="mobile-register" id="mobile-open-signup">Registrati</button>
+    </div>
     <a href="#contact" class="btn-primary">
       <span>Prenota demo</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
-    <p class="mobile-login" id="mobile-open-auth">Hai già un account? <span>Accedi →</span></p>
   `;
   document.body.appendChild(mobileNav);
 
@@ -299,6 +305,12 @@
       mobileNav.classList.remove('open');
       document.body.style.overflow = '';
     });
+  });
+  document.getElementById('mobile-open-signup')?.addEventListener('click', () => {
+    document.body.classList.remove('nav-open');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+    openAuth('signup');
   });
 
   /* ── Auth modal ── */
@@ -344,6 +356,7 @@
   };
 
   openBtn?.addEventListener('click', (e) => { e.preventDefault(); openAuth('login'); });
+  document.getElementById('open-signup')?.addEventListener('click', (e) => { e.preventDefault(); openAuth('signup'); });
   closeBtn?.addEventListener('click', closeAuth);
   successClose?.addEventListener('click', () => {
     window.location.href = 'dashboard.html';
@@ -446,5 +459,28 @@ form.addEventListener('submit', async (e) => {
       
 });
   });
-
+/* ── Bento scroll dots (mobile only) ── */
+  const bentoEl = document.querySelector('.bento');
+  const bentoDotsEl = document.querySelector('.bento-dots');
+  if (bentoEl && bentoDotsEl) {
+    const cards = [...bentoEl.children];
+    cards.forEach((_, i) => {
+      const d = document.createElement('span');
+      d.className = 'scroll-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => {
+        cards[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      });
+      bentoDotsEl.appendChild(d);
+    });
+    const dots = [...bentoDotsEl.children];
+    const dotObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.intersectionRatio >= 0.5) {
+          const idx = cards.indexOf(e.target);
+          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        }
+      });
+    }, { root: bentoEl, threshold: 0.5 });
+    cards.forEach(c => dotObs.observe(c));
+  }
 })();
