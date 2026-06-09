@@ -188,7 +188,7 @@
     if (note) note.classList.toggle('show', mode === 'annual');
     // discount chips on each plan
     $$('[data-discount]').forEach((d) => d.classList.toggle('show', mode === 'annual'));
-    // "Massimo risparmio" pill (Elite only)
+    // "Massimo risparmio" pill 
     $$('[data-best]').forEach((b) => b.classList.toggle('show', mode === 'annual'));
     // update prices
     plans.forEach((plan) => {

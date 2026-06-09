@@ -54,7 +54,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 body {
   background: var(--bg);
   color: var(--cream);
@@ -63,7 +63,7 @@ body {
   line-height: 1.55;
   font-size: 16px;
   letter-spacing: -0.005em;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img { display: block; max-width: 100%; }
@@ -1640,14 +1640,13 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 }
 .billing-switch {
   position: relative;
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   margin: 0 auto 14px;
   padding: 5px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 100px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 .billing-note {
   text-align: center;
@@ -1708,10 +1707,12 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 
 .plans {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
-  max-width: 1300px;
+  max-width: 1060px;
   margin: 0 auto;
+  align-items: start;
+  padding-top: 20px;
 }
 .plan {
   position: relative;
@@ -1724,10 +1725,12 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   transition: border-color var(--d-fast) var(--t-fast), transform var(--d-eos) var(--t-eos);
 }
 .plan:hover { transform: translateY(-4px); border-color: var(--line-2); }
+.plan.featured:hover { transform: translateY(-12px); }
 .plan.featured {
   background: linear-gradient(180deg, var(--surface-2), var(--surface));
   border-color: rgba(212,168,90,.35);
   box-shadow: 0 20px 50px rgba(0,0,0,.3);
+  transform: translateY(-8px);
 }
 .plan.vip {
   background: linear-gradient(180deg, #1d1813, #100d0a);
@@ -1774,8 +1777,11 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 /* Sit lower if the plan has the "Più scelto" badge above it */
 .plan.featured .plan-discount { top: 30px; }
 
-/* "Massimo risparmio" pill — Elite only when annual */
+/* "Massimo risparmio" pill */
 .plan-best {
+  position: absolute;
+  top: 18px;
+  left: 18px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -1788,20 +1794,15 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   border-radius: 100px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: 14px;
-  width: fit-content;
   opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transform: translateY(-4px);
-  transition: opacity .3s, max-height .35s, transform .35s var(--t-eos), margin-bottom .3s;
+  transform: translateY(-4px) scale(.9);
+  transition: opacity .3s, transform .35s var(--t-eos);
   box-shadow: 0 6px 18px rgba(212, 175, 55, 0.25);
+  pointer-events: none;
 }
 .plan-best.show {
   opacity: 1;
-  max-height: 32px;
-  transform: translateY(0);
-  margin-bottom: 14px;
+  transform: translateY(0) scale(1);
 }
 
 .plan-head { margin-bottom: 24px; }
@@ -1940,13 +1941,12 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     gap: 12px;
-    padding-bottom: 20px;
+    padding: 0 4% 20px;
     margin: 0 -4%;
     scroll-padding-left: 4%;
-  padding-right: calc(4% + 16vw);
   }
   .plan {
-    flex: 0 0 84vw;
+    flex: 0 0 82vw;
     scroll-snap-align: start;
   }
   .plans::-webkit-scrollbar { height: 3px; }
@@ -2832,7 +2832,19 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
    MOBILE — GENERAL PADDING REDUCTION
    ============================================ */
 
+@media (max-width: 480px) {
+  /* già esistente: aggiungere dentro */
+  .bs-opt { padding: 9px 14px; font-size: .8rem; }
+  .billing-note .mono { font-size: .62rem !important; }
+}
+
 @media (max-width: 768px) {
+	body { overflow-x: hidden; }
+	  .billing-switch { max-width: calc(100vw - 32px); }
+	  .plans { grid-template-columns: 1fr; }
+	  .plan.featured { transform: none; }
+	  .plan.featured:hover { transform: translateY(-4px); }
+	  .plan-price .num { font-size: 2.4rem; }
 
   .hero {
     padding: 120px 5% 50px;
