@@ -1941,13 +1941,18 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     gap: 12px;
-    padding: 0 4% 20px;
+    padding: 14px 4% 20px;
     margin: 0 -4%;
     scroll-padding-left: 4%;
   }
   .plan {
     flex: 0 0 82vw;
     scroll-snap-align: start;
+    padding-top: 20px;
+  }
+  .plan-badge {
+    font-size: .58rem;
+    padding: 3px 9px;
   }
   .plans::-webkit-scrollbar { height: 3px; }
   .plans::-webkit-scrollbar-track { background: var(--line); border-radius: 2px; }
