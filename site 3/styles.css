@@ -594,7 +594,6 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
     gap: 12px;
     padding: 0 4% 16px;
     margin: 0 -4%;
@@ -1950,7 +1949,6 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
     gap: 12px;
     padding: 14px 4% 20px;
     margin: 0 -4%;

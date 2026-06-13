@@ -461,7 +461,7 @@ form.addEventListener('submit', async (e) => {
   });
 /* ── Bento scroll dots (mobile only) ── */
   const bentoEl = document.querySelector('.bento');
-  const bentoDotsEl = document.querySelector('.bento-dots');
+  const bentoDotsEl = document.querySelector('#bento-dots');
   if (bentoEl && bentoDotsEl) {
     const cards = [...bentoEl.children];
     cards.forEach((_, i) => {
@@ -482,5 +482,30 @@ form.addEventListener('submit', async (e) => {
       });
     }, { root: bentoEl, threshold: 0.5 });
     cards.forEach(c => dotObs.observe(c));
+  }
+
+  /* ── Plans scroll dots (mobile only) ── */
+  const plansEl = document.querySelector('.plans');
+  const plansDotsEl = document.querySelector('#plans-dots');
+  if (plansEl && plansDotsEl) {
+    const planCards = [...plansEl.children];
+    planCards.forEach((_, i) => {
+      const d = document.createElement('span');
+      d.className = 'scroll-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => {
+        planCards[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      });
+      plansDotsEl.appendChild(d);
+    });
+    const planDots = [...plansDotsEl.children];
+    const planDotObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.intersectionRatio >= 0.5) {
+          const idx = planCards.indexOf(e.target);
+          planDots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        }
+      });
+    }, { root: plansEl, threshold: 0.5 });
+    planCards.forEach(c => planDotObs.observe(c));
   }
 })();
