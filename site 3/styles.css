@@ -587,14 +587,23 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   position: relative;
   z-index: 1;
 }
-.bento {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: minmax(200px, auto);
-  gap: 14px;
-  max-width: 1400px;
-  margin: 0 auto;
-  scroll-snap-type: x mandatory;
+@media (max-width: 640px) {
+  .bento {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    gap: 12px;
+    padding: 0 4% 16px;
+    margin: 0 -4%;
+    scroll-padding-left: 4%;
+  }
+  .bento-card {
+    flex: 0 0 82vw;
+    scroll-snap-align: start;
+  }
 }
 
 .bento-card {
@@ -1938,8 +1947,10 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   .plans {
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
     gap: 12px;
     padding: 14px 4% 20px;
     margin: 0 -4%;
