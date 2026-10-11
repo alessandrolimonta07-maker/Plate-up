@@ -266,7 +266,7 @@
     <a href="#features" class="nav-link">Funzioni</a>
     <a href="#how" class="nav-link">Come funziona</a>
     <a href="#pricing" class="nav-link">Piani</a>
-    <a href="#gallery" class="nav-link">Locali</a>
+    <a href="#opzioni" class="nav-link">Sito e app</a>
     <a href="#faq" class="nav-link">FAQ</a>
     <div class="mobile-nav-auth">
       <button class="mobile-login" id="mobile-open-auth">Accedi</button>
@@ -351,7 +351,13 @@
 
   openBtn?.addEventListener('click', (e) => { e.preventDefault(); openAuth('login'); });
   // Tutti i "Richiedi / Prenota demo" aprono il modulo di richiesta
-  $$('[data-demo]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openAuth('demo'); }));
+  $$('[data-demo]').forEach((a) => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    openAuth('demo');
+    // dal tasto di un piano o di un'opzione: già selezionato nel modulo
+    const sel = document.querySelector('[data-form="demo"] select[name="piano"]');
+    if (sel) sel.value = a.dataset.piano && [...sel.options].some((o) => o.value === a.dataset.piano) ? a.dataset.piano : 'Non so ancora';
+  }));
   document.getElementById('open-signup')?.addEventListener('click', (e) => { e.preventDefault(); openAuth('signup'); });
   $$('[data-goto-tab]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); setTab(a.dataset.gotoTab); }));
   closeBtn?.addEventListener('click', closeAuth);

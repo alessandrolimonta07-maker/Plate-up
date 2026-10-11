@@ -32,6 +32,11 @@
   .db-piano-prezzo { font-size:1.8rem; color:var(--cream); font-family:var(--serif); }
   .db-piano-prezzo small { font-size:.8rem; color:var(--muted); font-family:var(--mono); }
   .db-piano ul { margin:.8rem 0 1.2rem; padding:0 0 0 1rem; color:var(--cream-2); font-size:.85rem; line-height:1.8; flex:1; }
+  .db-opzioni { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:.6rem; }
+  .db-opz { display:flex; justify-content:space-between; align-items:center; gap:.8rem; padding:.8rem 1rem; background:var(--bg); border:1px solid var(--line-2); border-radius:12px; }
+  .db-opz b { display:block; color:var(--cream); font-weight:500; font-size:.9rem; }
+  .db-opz span { color:var(--muted); font-size:.78rem; }
+  .db-opz button { flex:0 0 auto; }
   .db-pw-form { display:none; margin-top:16px; padding:16px; background:var(--bg); border:1px solid var(--line-2); border-radius:12px; width:100%; }
   .db-pw-form.open { display:block; }
   .db-pw-form input { width:100%; padding:11px 12px; background:var(--bg-2); border:1px solid var(--line-2); border-radius:10px; color:var(--cream); font-size:.95rem; margin-bottom:10px; }
@@ -325,11 +330,13 @@
 <div class="db-modal" id="modal-piani" role="dialog" aria-modal="true" aria-labelledby="modal-piani-titolo">
   <div class="db-modal-box">
     <div class="db-modal-head">
-      <h3 id="modal-piani-titolo">I piani PlateUp</h3>
+      <h3 id="modal-piani-titolo">Piani e opzioni PlateUp</h3>
       <button class="db-modal-x" data-chiudi aria-label="Chiudi">×</button>
     </div>
     <div class="db-piani" id="db-piani"></div>
-    <p class="db-nota" style="margin-top:1.2rem">Prezzi IVA esclusa, più €99 di attivazione (gratuita con VIP). Con il pagamento annuale il prezzo scende di circa il 17%. La richiesta ci arriva per email e ti ricontattiamo per attivarla.</p>
+    <h3 style="color:var(--cream); font-size:1.05rem; margin:1.8rem 0 .8rem;">Opzioni</h3>
+    <div class="db-opzioni" id="db-opzioni"></div>
+    <p class="db-nota" style="margin-top:1.2rem">Prezzi IVA esclusa. Attivazione €99 per Lite e Pro, gratuita per Menu e VIP. Con il pagamento annuale hai 2 mesi gratis. Il VIP ha durata minima 12 mesi. La richiesta ci arriva per email e ti ricontattiamo per attivarla.</p>
   </div>
 </div>
 
@@ -338,10 +345,21 @@
   const MAIL = 'plateupinfo@gmail.com';
   // Stessi piani e prezzi della home
   const PIANI = {
-    Lite: { prezzo: 69,  annuale: 58, voci: ['Menù digitale in 5 lingue + QR per tavolo', 'Ordini dal tavolo, live a cucina e bar', 'Gestione sala e tavoli', 'Chiamata cameriere'] },
-    Pro:  { prezzo: 119, annuale: 99, voci: ['Tutto Lite', 'Menù illimitati con orari', 'Prenotazioni con conferma WhatsApp', 'AI, statistiche e turni del personale'] },
-    VIP:  { prezzo: 199, annuale: null, voci: ['Tutto Pro', "Tablet in comodato d'uso", 'Wi-Fi installato da noi', 'Assistenza prioritaria'] }
+    Menu: { prezzo: 29,  annuale: 24,  voci: ['Menù digitale in 5 lingue', 'QR per ogni tavolo', 'Foto, allergeni e filtri', 'Prezzi ed esauriti dal telefono'] },
+    Lite: { prezzo: 69,  annuale: 58,  voci: ['Tutto Menu', 'Ordini dal tavolo, live a cucina e bar', 'Sala, tavoli e conti', 'Chiamata cameriere'] },
+    Pro:  { prezzo: 119, annuale: 99,  voci: ['Tutto Lite', 'Prenotazioni con conferma WhatsApp', 'Menù illimitati con orari', 'AI, statistiche e turni del personale'] },
+    VIP:  { prezzo: 199, annuale: 166, voci: ['Tutto Pro', '4 tablet e stampante in comodato', 'Wi-Fi installato e sito web inclusi', 'Assistenza prioritaria'] }
   };
+  // Stesse opzioni della home
+  const OPZIONI = [
+    ['Sito web del locale', '€400 una tantum + €10/mese (incluso nel VIP)'],
+    ["App del locale (iOS + Android)", '€990 una tantum + €49/mese (€590 con VIP)'],
+    ['Servizio fotografico (20 piatti)', '€150 una tantum'],
+    ['Collegamento al registratore di cassa', '€19/mese + €149 configurazione (in arrivo)'],
+    ['Tablet in più', '€9/mese a tablet, in comodato'],
+    ['Stampante comande in più', '€6/mese, in comodato'],
+    ['Wi-Fi installato', 'da €290 una tantum (incluso nel VIP)']
+  ];
   const $ = (id) => document.getElementById(id);
   const dataIt = (d) => d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
   const mail = (oggetto, testo) => {
@@ -402,7 +420,7 @@
       p.voci.forEach((v) => { const li = document.createElement('li'); li.textContent = v; lista.appendChild(li); });
       $('db-plan-tag').textContent = 'attivo';
       $('db-locale-meta').textContent = 'piano ' + nome;
-      $('btn-cambia-piano-txt').textContent = 'Cambia piano';
+      $('btn-cambia-piano-txt').textContent = 'Cambia piano o aggiungi opzioni';
     } else if (profilo.demoActivatedAt) {
       const inizio = new Date(profilo.demoActivatedAt);
       const fine = new Date(inizio.getTime() + 30 * 864e5);
@@ -500,9 +518,18 @@
       '<ul>' + p.voci.map((v) => '<li>' + v + '</li>').join('') + '</ul>' +
       '<button class="' + (nome === 'Pro' ? 'db-btn-primary' : 'db-btn-ghost') + '" style="width:100%" data-piano="' + nome + '">Richiedi ' + nome + '</button>' +
     '</div>').join('');
+  $('db-opzioni').innerHTML = OPZIONI.map(([n, p], i) =>
+    '<div class="db-opz"><div><b>' + n + '</b><span>' + p + '</span></div><button class="db-btn-ghost small" data-opzione="' + i + '">Richiedi</button></div>').join('');
   $('btn-cambia-piano').addEventListener('click', () => modal.classList.add('open'));
   modal.addEventListener('click', (e) => {
     if (e.target === modal || e.target.hasAttribute('data-chiudi')) return chiudiModal();
+    const opz = e.target.dataset && e.target.dataset.opzione;
+    if (opz !== undefined) {
+      chiudiModal();
+      const [n, p] = OPZIONI[+opz];
+      return mail('Richiesta opzione: ' + n + ' — ' + (profilo.restaurant || utente.email),
+        'Ciao PlateUp,\n\nvorrei aggiungere: ' + n + ' (' + p + ').\n\nLocale: ' + (profilo.restaurant || '') + '\nEmail account: ' + utente.email + '\nTelefono: ' + (profilo.phone || '') + '\n\nGrazie');
+    }
     const piano = e.target.dataset && e.target.dataset.piano;
     if (!piano) return;
     chiudiModal();

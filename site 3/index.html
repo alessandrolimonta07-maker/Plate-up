@@ -37,7 +37,7 @@
     <a href="#features" class="nav-link">Funzioni</a>
     <a href="#how" class="nav-link">Come funziona</a>
     <a href="#pricing" class="nav-link">Piani</a>
-    <a href="#gallery" class="nav-link">Locali</a>
+    <a href="#opzioni" class="nav-link">Sito e app</a>
     <a href="#faq" class="nav-link">FAQ</a>
   </div>
   <div class="nav-right">
@@ -525,13 +525,18 @@
 <section class="pricing" id="pricing">
   <header class="sec-header" data-reveal-block>
     <div class="sec-tag"><span class="dot"></span> Piani</div>
-    <h2 class="sec-title">Scegli il tuo <em>kit.</em></h2>
-    <p class="sec-lede">Tre piani. Cresci quando ti serve. Nessun vincolo sul mensile.</p>
+    <h2 class="sec-title">Parti piccolo.<br><em>Cresci quando vuoi.</em></h2>
+    <p class="sec-lede">Quattro piani, dal menù digitale al locale chiavi in mano. Prezzi + IVA, per locale.</p>
   </header>
+
+  <div class="launch-offer" data-reveal-block>
+    <span class="lo-tag mono">offerta di lancio</span>
+    <span><strong>Primo mese gratis</strong> su Lite e Pro · per i primi 20 locali <strong>il prezzo resta bloccato</strong> finché resti con noi</span>
+  </div>
 
   <div class="billing-switch" data-reveal-block>
     <button class="bs-opt active" data-billing="monthly">Mensile</button>
-    <button class="bs-opt" data-billing="annual">Annuale <span class="bs-save">−17%</span></button>
+    <button class="bs-opt" data-billing="annual">Annuale <span class="bs-save">2 mesi gratis</span></button>
     <span class="bs-thumb"></span>
   </div>
 
@@ -539,35 +544,55 @@
     <span class="mono">↑ prezzo mensile equivalente · si paga una volta l'anno · rinnovo annuale, disdetta entro la scadenza</span>
   </p>
 
-<div class="plans">
+<div class="plans four">
+
+  <article class="plan" data-plan="menu">
+    <div class="plan-discount" data-discount>−17%</div>
+    <div class="plan-head">
+      <div class="plan-name">Menu</div>
+      <div class="plan-tag">Per dire addio al menù di carta, da domani.</div>
+    </div>
+    <div class="plan-price-row">
+      <div class="plan-price"><span class="cur">€</span><span class="num" data-monthly="29" data-annual="24">29</span><span class="per">/mese</span></div>
+      <div class="plan-strike" data-strike-annual="348">—</div>
+    </div>
+    <div class="plan-setup mono">attivazione gratuita</div>
+    <a href="#contact" class="plan-cta" data-demo data-piano="Menu">Attiva Menu →</a>
+    <ul class="plan-feats">
+      <li class="cat">Incluso</li>
+      <li>✓ Menù digitale in 5 lingue</li>
+      <li>✓ QR per ogni tavolo, pronti da stampare</li>
+      <li>✓ Foto, allergeni e filtri</li>
+      <li>✓ Prezzi ed esauriti dal telefono, in tempo reale</li>
+      <li>✓ Caricamento del menù fatto da noi</li>
+      <li class="cat">Non incluso</li>
+      <li class="off">— Ordini dal tavolo</li>
+      <li class="off">— Comande a cucina e bar</li>
+    </ul>
+  </article>
 
   <article class="plan" data-plan="lite">
     <div class="plan-discount" data-discount>−17%</div>
     <div class="plan-head">
       <div class="plan-name">Lite</div>
-      <div class="plan-tag">Per smettere di usare carta e prendere comande a voce.</div>
+      <div class="plan-tag">Per smettere di prendere comande a voce.</div>
     </div>
     <div class="plan-price-row">
       <div class="plan-price"><span class="cur">€</span><span class="num" data-monthly="69" data-annual="58">69</span><span class="per">/mese</span></div>
       <div class="plan-strike" data-strike-annual="828">—</div>
     </div>
-    <div class="plan-setup mono">+ €99 attivazione + IVA</div>
-    <a href="mailto:plateupinfo@gmail.com?subject=Richiesta%20Sopralluogo%20Gratuito%20-%20Piano%20Lite&body=Buongiorno,%20vorrei%20fissare%20un%20sopralluogo%20per%20il%20piano%20Lite.%20Nome%20locale%3A" class="plan-cta">Fissa sopralluogo gratuito →</a>
+    <div class="plan-setup mono">+ €99 attivazione · primo mese gratis</div>
+    <a href="#contact" class="plan-cta" data-demo data-piano="Lite">Fissa sopralluogo gratuito →</a>
     <ul class="plan-feats">
-      <li class="cat">Incluso</li>
-      <li>✓ Menù digitale multilingua (5 lingue) + QR per ogni tavolo</li>
-      <li>✓ Ordini digitali al tavolo dal cliente</li>
-      <li>✓ Ordini live cucina & bar</li>
-      <li>✓ Gestione sala e tavoli</li>
+      <li class="cat">Tutto Menu, più</li>
+      <li>✓ Ordini dal tavolo, dal telefono del cliente o dal tablet</li>
+      <li>✓ Comande live a cucina e bar, con stampa</li>
+      <li>✓ Mappa della sala, tavoli e conti (separati o uniti)</li>
       <li>✓ Chiamata cameriere dal tavolo</li>
-      <li>✓ Admin dashboard — 1 menù</li>
+      <li>✓ Modalità cameriere per prendere gli ordini</li>
       <li class="cat">Non incluso</li>
-      <li class="off">— Menù illimitati con programmazione</li>
-      <li class="off">— Gestione prenotazioni</li>
-      <li class="off">— AI integrata</li>
-      <li class="off">— Analytics e statistiche</li>
-      <li class="off">— Gestione turni dipendenti</li>
-      <li class="off">— Personalizzazione grafica</li>
+      <li class="off">— Prenotazioni online</li>
+      <li class="off">— AI, statistiche e turni</li>
     </ul>
   </article>
 
@@ -576,50 +601,107 @@
     <div class="plan-discount" data-discount>−17%</div>
     <div class="plan-head">
       <div class="plan-name">Pro</div>
-      <div class="plan-tag">Per chi vuole che i clienti trovino il locale online e prenotino da soli.</div>
+      <div class="plan-tag">Per riempire il locale, non solo per servirlo.</div>
     </div>
     <div class="plan-price-row">
       <div class="plan-price"><span class="cur">€</span><span class="num" data-monthly="119" data-annual="99">119</span><span class="per">/mese</span></div>
       <div class="plan-strike" data-strike-annual="1428">—</div>
     </div>
-    <div class="plan-setup mono">+ €99 attivazione + IVA</div>
-    <a href="mailto:plateupinfo@gmail.com?subject=Richiesta%20Sopralluogo%20Gratuito%20-%20Piano%20Pro&body=Buongiorno,%20vorrei%20fissare%20un%20sopralluogo%20per%20il%20piano%20Pro.%20Nome%20locale%3A" class="plan-cta primary">Fissa sopralluogo gratuito →</a>
+    <div class="plan-setup mono">+ €99 attivazione · primo mese gratis</div>
+    <a href="#contact" class="plan-cta primary" data-demo data-piano="Pro">Fissa sopralluogo gratuito →</a>
     <ul class="plan-feats">
       <li class="cat">Tutto Lite, più</li>
-      <li>✓ Menù illimitati con programmazione per orario e giorno</li>
-      <li>✓ AI integrata — modifica menù, suggerimenti, ottimizzazioni</li>
-      <li>✓ Gestione prenotazioni con conferma automatica WhatsApp</li>
-      <li>✓ Analytics e statistiche dettagliate</li>
-      <li>✓ Gestione turni dipendenti — AI li crea in base alle prenotazioni</li>
-      <li>✓ Personalizzazione grafica del locale</li>
+      <li>✓ Prenotazioni online con conferma su WhatsApp</li>
+      <li>✓ Menù illimitati con orari (pranzo, cena, aperitivo)</li>
+      <li>✓ AI integrata: schede piatto, traduzioni, modifiche al menù</li>
+      <li>✓ Statistiche: piatti, orari, scontrino medio</li>
+      <li>✓ Turni del personale proposti dall'AI</li>
+      <li>✓ Grafica del menù con i colori del locale</li>
     </ul>
   </article>
 
   <article class="plan vip" data-plan="vip">
+    <div class="plan-discount" data-discount>−17%</div>
     <div class="plan-head">
       <div class="plan-name vip">VIP</div>
-      <div class="plan-tag gold">Tutto il Pro, con tablet in comodato d'uso e Wi-fi installato. Zero pensieri.</div>
+      <div class="plan-tag gold">Chiavi in mano: portiamo noi tablet, stampante e Wi-Fi. Tu apri.</div>
     </div>
     <div class="plan-price-row">
-      <div class="plan-price coming">In arrivo</div>
+      <div class="plan-price"><span class="cur">€</span><span class="num" data-monthly="199" data-annual="166">199</span><span class="per">/mese</span></div>
+      <div class="plan-strike" data-strike-annual="2388">—</div>
     </div>
-    <div class="plan-setup mono">attivazione gratuita</div>
-    <form class="waitlist" id="vip-waitlist">
-      <input type="email" placeholder="La tua email" required>
-      <button type="submit">Avvisami</button>
-      <div class="wl-ok">✓ Ti avvisiamo al lancio</div>
-    </form>
+    <div class="plan-setup mono">attivazione e installazione gratuite · 12 mesi</div>
+    <a href="#contact" class="plan-cta" data-demo data-piano="VIP">Fissa sopralluogo gratuito →</a>
     <ul class="plan-feats">
       <li class="cat">Tutto Pro, più</li>
-      <li>✓ Tablet in comodato d'uso</li>
-      <li>✓ Installazione Wi-fi dedicato</li>
-      <li>✓ Priorità assistenza</li>
-      <li>✓ Garanzia kasko su tutto l'hardware</li>
+      <li>✓ 4 tablet in comodato, già bloccati su PlateUp</li>
+      <li>✓ Stampante comande in comodato</li>
+      <li>✓ Wi-Fi installato e configurato da noi</li>
+      <li>✓ Sito web del locale incluso</li>
+      <li>✓ Assistenza prioritaria, risposta in giornata</li>
+      <li>✓ Hardware guasto? Lo sostituiamo noi</li>
     </ul>
   </article>
 
 </div>
 <div class="scroll-dots" id="plans-dots"></div>
+</section>
+
+<!-- ── OPZIONI ── -->
+<section class="extras" id="opzioni">
+  <header class="sec-header" data-reveal-block>
+    <div class="sec-tag"><span class="dot"></span> Opzioni</div>
+    <h2 class="sec-title">Il tuo locale,<br><em>anche fuori dal locale.</em></h2>
+    <p class="sec-lede">Da aggiungere a qualsiasi piano. Prezzi + IVA.</p>
+  </header>
+
+  <div class="extras-grid">
+    <article class="extra big" data-reveal-block>
+      <div class="extra-top"><span class="mono">sito web</span><span class="extra-incl mono">incluso nel VIP</span></div>
+      <h3>Il sito del tuo locale</h3>
+      <p>Pagine curate con foto, menù sempre aggiornato, orari, eventi e prenotazioni che arrivano dirette nel gestionale. In 5 lingue, con il tuo dominio.</p>
+      <div class="extra-price"><strong>€400</strong> una tantum <span>+ €10/mese dominio e hosting</span></div>
+      <a href="#contact" class="plan-cta" data-demo data-piano="Opzione: sito web">Lo voglio →</a>
+    </article>
+
+    <article class="extra big gold" data-reveal-block>
+      <div class="extra-top"><span class="mono">app iOS + Android</span><span class="extra-incl mono">con Pro o VIP</span></div>
+      <h3>L'app del tuo locale</h3>
+      <p>Sull'App Store e su Google Play con il tuo nome. Tessera fedeltà a punti, eventi, notifiche ai clienti, prenotazioni. E un'area riservata per te, per gestire tutto dal telefono.</p>
+      <div class="extra-price"><strong>€990</strong> una tantum <span>+ €49/mese · €590 con VIP</span></div>
+      <a href="#contact" class="plan-cta" data-demo data-piano="Opzione: app del locale">La voglio →</a>
+    </article>
+
+    <article class="extra" data-reveal-block>
+      <div class="extra-top"><span class="mono">foto</span></div>
+      <h3>Servizio fotografico</h3>
+      <p>Veniamo noi a fotografare fino a 20 piatti e li carichiamo già nel menù.</p>
+      <div class="extra-price"><strong>€150</strong> una tantum</div>
+    </article>
+
+    <article class="extra" data-reveal-block>
+      <div class="extra-top"><span class="mono">cassa</span><span class="extra-incl mono soon">in arrivo</span></div>
+      <h3>Collegamento al registratore</h3>
+      <p>Il conto chiuso in PlateUp esce come scontrino fiscale dalla tua cassa. Partiamo dai registratori Custom.</p>
+      <div class="extra-price"><strong>€19</strong>/mese <span>+ €149 configurazione</span></div>
+    </article>
+
+    <article class="extra" data-reveal-block>
+      <div class="extra-top"><span class="mono">hardware</span><span class="extra-incl mono">incluso nel VIP</span></div>
+      <h3>Tablet e stampanti</h3>
+      <p>In comodato, già configurati e bloccati su PlateUp. Se si rompono li sostituiamo.</p>
+      <div class="extra-price"><strong>€9</strong>/mese a tablet <span>· €6/mese a stampante · minimo 12 mesi</span></div>
+    </article>
+
+    <article class="extra" data-reveal-block>
+      <div class="extra-top"><span class="mono">rete</span><span class="extra-incl mono">incluso nel VIP</span></div>
+      <h3>Wi-Fi installato</h3>
+      <p>Sopralluogo, apparati mesh e configurazione: copertura in sala, dehors e cucina.</p>
+      <div class="extra-price">da <strong>€290</strong> una tantum</div>
+    </article>
+  </div>
+
+  <p class="extras-note mono">hai più locali? dal secondo in poi −20% sul piano</p>
 </section>
 
 <!-- ── GALLERY ── -->
@@ -684,6 +766,14 @@
       <div class="faq-a">No. La dashboard è pensata per chi non ha tempo da perdere in sala: cambi prezzi e segni esauriti dallo smartphone. La prima configurazione <strong>la facciamo insieme a te</strong>, in tutti i piani.</div>
     </details>
     <details class="faq-item">
+      <summary>Che hardware mi serve?<span class="faq-x">+</span></summary>
+      <div class="faq-a">Per il menù basta il telefono dei clienti. Per gli ordini vanno bene i tablet o i telefoni che hai già; per stampare le comande serve una stampante termica USB. Se non vuoi pensarci, con il <strong>VIP</strong> tablet, stampante e Wi-Fi li portiamo e installiamo noi, in comodato.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Ci sono vincoli di durata?<span class="faq-x">+</span></summary>
+      <div class="faq-a">Menu, Lite e Pro mensili: nessun vincolo, disdici quando vuoi. Il <strong>VIP</strong> e l'hardware in comodato hanno una durata minima di 12 mesi, perché gli apparecchi li compriamo e li installiamo noi.</div>
+    </details>
+    <details class="faq-item">
       <summary>Posso usare PlateUp se ho già un POS?<span class="faq-x">+</span></summary>
       <div class="faq-a">Sì. PlateUp lavora a fianco della tua cassa attuale, gestendo menù digitale, ordini e prenotazioni. Stiamo lavorando al collegamento diretto con i registratori telematici (a partire da Custom): chiedici quale usi.</div>
     </details>
@@ -743,6 +833,7 @@
         <div class="fc-title mono">Prodotto</div>
         <a href="#features">Funzioni</a>
         <a href="#pricing">Piani</a>
+        <a href="#opzioni">Sito e app</a>
         <a href="#how">Come funziona</a>
         <a href="#gallery">Locali</a>
         <a href="#faq">FAQ</a>
@@ -911,9 +1002,12 @@
         <span>Piano che ti interessa</span>
         <select name="piano">
           <option value="Non so ancora">Non so ancora</option>
+          <option value="Menu">Menu</option>
           <option value="Lite">Lite</option>
           <option value="Pro">Pro</option>
           <option value="VIP">VIP</option>
+          <option value="Opzione: sito web">Solo il sito web</option>
+          <option value="Opzione: app del locale">L'app del locale</option>
         </select>
       </label>
 
