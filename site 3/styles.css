@@ -3045,3 +3045,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .nav-link, .nav-login, .btn-magnetic span { white-space: nowrap; }
 /* L'indicatore "scroll" finiva sopra la riga dei numeri dell'hero */
 .hero-scroll-hint { display: none; }
+
+.auth-tabs.hidden { display: none; }
+.auth-demo-title { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; color: var(--cream); margin: 4px 0 6px; }

@@ -269,9 +269,10 @@
     <a href="#gallery" class="nav-link">Locali</a>
     <a href="#faq" class="nav-link">FAQ</a>
     <div class="mobile-nav-auth">
-      <button class="mobile-login" id="mobile-open-auth">Area clienti</button>
+      <button class="mobile-login" id="mobile-open-auth">Accedi</button>
+      <button class="mobile-register" id="mobile-open-signup">Registrati</button>
     </div>
-    <a href="#contact" class="btn-primary" id="mobile-open-signup">
+    <a href="#contact" class="btn-primary" id="mobile-open-demo">
       <span>Prenota demo</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
@@ -289,6 +290,13 @@
       mobileNav.classList.remove('open');
       document.body.style.overflow = '';
     });
+  });
+  document.getElementById('mobile-open-demo')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.body.classList.remove('nav-open');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+    openAuth('demo');
   });
   document.getElementById('mobile-open-signup')?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -334,6 +342,7 @@
   const setTab = (which) => {
     tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === which));
     tabsRoot?.setAttribute('data-active', which);
+    tabsRoot?.classList.toggle('hidden', which === 'demo');
     forms.forEach(f => f.classList.toggle('hidden', f.dataset.form !== which));
     success?.classList.add('hidden');
     // clear error state
@@ -342,7 +351,8 @@
 
   openBtn?.addEventListener('click', (e) => { e.preventDefault(); openAuth('login'); });
   // Tutti i "Richiedi / Prenota demo" aprono il modulo di richiesta
-  $$('[data-demo]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openAuth('signup'); }));
+  $$('[data-demo]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openAuth('demo'); }));
+  document.getElementById('open-signup')?.addEventListener('click', (e) => { e.preventDefault(); openAuth('signup'); });
   $$('[data-goto-tab]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); setTab(a.dataset.gotoTab); }));
   closeBtn?.addEventListener('click', closeAuth);
   successClose?.addEventListener('click', closeAuth);
@@ -416,8 +426,45 @@
       const val = (k) => (data.get(k) || '').toString().trim();
       const emailOk = (x) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x);
 
-      /* ── Richiesta demo ── */
+      /* ── Registrazione ristoratore ── */
       if (which === 'signup') {
+        if (!val('firstname') || !val('lastname') || !val('restaurant')) return errore('Compila nome, cognome e nome del locale.');
+        if (val('phone').replace(/\D/g, '').length < 8) return errore('Scrivi un numero di telefono valido.');
+        if (!emailOk(val('email'))) return errore("Inserisci un'email valida.");
+        if ((data.get('password') || '').toString().length < 8) return errore('La password deve avere almeno 8 caratteri.');
+        if (!form.querySelector('input[name="privacy"]').checked) return errore("Per creare l'account serve la presa visione dell'informativa privacy.");
+        if (!haFirebase()) return errore('Servizio non raggiungibile. Controlla la connessione e riprova.');
+        const submit = form.querySelector('.auth-submit');
+        const label = submit.querySelector('span');
+        submit.disabled = true; submit.classList.add('loading'); label.textContent = 'Creazione…';
+        try {
+          const cred = await firebase.auth().createUserWithEmailAndPassword(val('email'), data.get('password').toString());
+          await firebase.firestore().collection('users').doc(cred.user.uid).set({
+            email: val('email'),
+            firstname: val('firstname'),
+            lastname: val('lastname'),
+            restaurant: val('restaurant'),
+            phone: val('phone'),
+            createdAt: new Date().toISOString(),
+            privacyLettaIl: new Date().toISOString()
+          });
+          try { firebase.auth().languageCode = 'it'; await cred.user.sendEmailVerification(); } catch (_) {}
+          window.location.href = 'dashboard.html';
+        } catch (x) {
+          submit.disabled = false; submit.classList.remove('loading'); label.textContent = 'Crea account';
+          errore({
+            'auth/email-already-in-use': 'Questa email ha già un account: accedi oppure usa "Password dimenticata?".',
+            'auth/invalid-email': 'Email non valida.',
+            'auth/weak-password': 'Password troppo debole: usa almeno 8 caratteri.',
+            'auth/too-many-requests': 'Troppi tentativi. Riprova tra qualche minuto.',
+            'auth/network-request-failed': 'Connessione assente. Riprova.'
+          }[x.code] || 'Registrazione non riuscita. Riprova.');
+        }
+        return;
+      }
+
+      /* ── Richiesta demo ── */
+      if (which === 'demo') {
         if (!val('nome') || !val('locale') || !val('citta')) return errore('Compila nome, locale e città.');
         if (val('telefono').replace(/\D/g, '').length < 8) return errore('Scrivi un numero di telefono valido.');
         if (val('email') && !emailOk(val('email'))) return errore('Email non valida.');
