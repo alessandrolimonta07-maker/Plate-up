@@ -201,8 +201,8 @@
       if (per) per.textContent = mode === 'annual' ? '/mese · annuale' : '/mese';
       if (strike) {
         const annual = strike.dataset.strikeAnnual;
-        if (mode === 'annual' && annual) {
-          strike.textContent = '€' + annual + ' totale';
+        if (mode === 'annual' && annual && num.dataset.annual) {
+          strike.innerHTML = '€' + (num.dataset.annual * 12) + '/anno <s>€' + annual + '</s>';
           strike.classList.add('show');
         } else {
           strike.classList.remove('show');
@@ -258,21 +258,6 @@
     m.addEventListener('mouseleave', () => m.style.animationPlayState = 'running');
   }
 
-  /* ── "Vedi altre foto" button ── */
-  const moreBtn = $('#btn-more-photos');
-  if (moreBtn) {
-    moreBtn.addEventListener('click', () => {
-      const old = moreBtn.querySelector('span:nth-child(2)');
-      const original = old.textContent;
-      moreBtn.classList.add('loading');
-      old.textContent = 'Presto disponibili…';
-      setTimeout(() => {
-        old.textContent = original;
-        moreBtn.classList.remove('loading');
-      }, 1800);
-    });
-  }
-
   /* ── Hamburger mobile nav ── */
   const hamburger = $('#hamburger');
   const mobileNav = document.createElement('div');
@@ -281,13 +266,13 @@
     <a href="#features" class="nav-link">Funzioni</a>
     <a href="#how" class="nav-link">Come funziona</a>
     <a href="#pricing" class="nav-link">Piani</a>
-    <a href="#gallery" class="nav-link">Locali</a>
+    <a href="#opzioni" class="nav-link">Sito e app</a>
     <a href="#faq" class="nav-link">FAQ</a>
     <div class="mobile-nav-auth">
       <button class="mobile-login" id="mobile-open-auth">Accedi</button>
       <button class="mobile-register" id="mobile-open-signup">Registrati</button>
     </div>
-    <a href="#contact" class="btn-primary">
+    <a href="#contact" class="btn-primary" id="mobile-open-demo">
       <span>Prenota demo</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
@@ -306,7 +291,15 @@
       document.body.style.overflow = '';
     });
   });
-  document.getElementById('mobile-open-signup')?.addEventListener('click', () => {
+  document.getElementById('mobile-open-demo')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.body.classList.remove('nav-open');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+    openAuth('demo');
+  });
+  document.getElementById('mobile-open-signup')?.addEventListener('click', (e) => {
+    e.preventDefault();
     document.body.classList.remove('nav-open');
     mobileNav.classList.remove('open');
     document.body.style.overflow = '';
@@ -349,6 +342,7 @@
   const setTab = (which) => {
     tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === which));
     tabsRoot?.setAttribute('data-active', which);
+    tabsRoot?.classList.toggle('hidden', which === 'demo');
     forms.forEach(f => f.classList.toggle('hidden', f.dataset.form !== which));
     success?.classList.add('hidden');
     // clear error state
@@ -356,10 +350,60 @@
   };
 
   openBtn?.addEventListener('click', (e) => { e.preventDefault(); openAuth('login'); });
+  // Tutti i "Richiedi / Prenota demo" aprono il modulo di richiesta
+  $$('[data-demo]').forEach((a) => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    openAuth('demo');
+    // dal tasto di un piano o di un'opzione: già selezionato nel modulo
+    const sel = document.querySelector('[data-form="demo"] select[name="piano"]');
+    if (sel) sel.value = a.dataset.piano && [...sel.options].some((o) => o.value === a.dataset.piano) ? a.dataset.piano : 'Non so ancora';
+  }));
   document.getElementById('open-signup')?.addEventListener('click', (e) => { e.preventDefault(); openAuth('signup'); });
+  $$('[data-goto-tab]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); setTab(a.dataset.gotoTab); }));
   closeBtn?.addEventListener('click', closeAuth);
-  successClose?.addEventListener('click', () => {
-    window.location.href = 'dashboard.html';
+  successClose?.addEventListener('click', closeAuth);
+
+  const mostraEsito = (titolo, msg) => {
+    forms.forEach(f => f.classList.add('hidden'));
+    const t = $('[data-success-title]');
+    if (t) t.textContent = titolo;
+    if (successMsg) successMsg.textContent = msg;
+    success?.classList.remove('hidden');
+  };
+  const haFirebase = () => typeof window.firebase !== 'undefined' && firebase.apps && firebase.apps.length;
+
+  // Password dimenticata: mail di reset da Firebase
+  $('#auth-forgot')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const form = $('[data-form="login"]');
+    const err = form.querySelector('[data-form-error]');
+    const email = form.querySelector('input[name="email"]').value.trim();
+    err.classList.remove('show');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      err.textContent = 'Scrivi la tua email qui sopra, poi premi "Password dimenticata?".';
+      err.classList.add('show');
+      return;
+    }
+    if (!haFirebase()) { err.textContent = 'Servizio non raggiungibile. Riprova tra poco.'; err.classList.add('show'); return; }
+    try {
+      firebase.auth().languageCode = 'it';
+      await firebase.auth().sendPasswordResetEmail(email);
+    } catch (x) {
+      if (x.code === 'auth/invalid-email') { err.textContent = 'Email non valida.'; err.classList.add('show'); return; }
+      if (x.code === 'auth/too-many-requests') { err.textContent = 'Troppi tentativi. Riprova più tardi.'; err.classList.add('show'); return; }
+      // per gli altri casi (es. email non registrata) non diciamo se l'account esiste
+    }
+    mostraEsito('Controlla la posta', `Se ${email} è registrata, ti abbiamo mandato un link per scegliere una nuova password (guarda anche nello spam).`);
+  });
+
+  // Lista d'attesa VIP
+  $('#vip-waitlist')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const mail = f.querySelector('input').value.trim();
+    const body = encodeURIComponent('Voglio essere avvisato quando il piano VIP è disponibile.\nLa mia email: ' + mail);
+    window.location.href = 'mailto:plateupinfo@gmail.com?subject=' + encodeURIComponent("Lista d'attesa piano VIP") + '&body=' + body;
+    f.querySelector('.wl-ok')?.classList.add('show');
   });
   overlay?.addEventListener('click', (e) => { if (e.target === overlay) closeAuth(); });
   document.addEventListener('keydown', (e) => {
@@ -377,88 +421,118 @@
 
   // Form submit handlers
   forms.forEach((form) => {
-form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const which = form.dataset.form;
-      const submit = form.querySelector('.auth-submit');
       const err = form.querySelector('[data-form-error]');
+      const errore = (m) => { err.textContent = m; err.classList.add('show'); };
       err.classList.remove('show');
       err.textContent = '';
-
-      // Basic validation
       const data = new FormData(form);
-      const email = data.get('email')?.toString().trim();
-      const pw = data.get('password')?.toString();
+      const val = (k) => (data.get(k) || '').toString().trim();
+      const emailOk = (x) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x);
 
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        err.textContent = 'Inserisci un\'email valida.';
-        err.classList.add('show');
-        return;
-      }
-      if (!pw || pw.length < (which === 'signup' ? 8 : 1)) {
-        err.textContent = which === 'signup'
-          ? 'La password deve essere di almeno 8 caratteri.'
-          : 'Inserisci la password.';
-        err.classList.add('show');
-        return;
-      }
+      /* ── Registrazione ristoratore ── */
       if (which === 'signup') {
-        const tos = form.querySelector('input[name="tos"]');
-        if (tos && !tos.checked) {
-          err.textContent = 'Devi accettare i termini per continuare.';
-          err.classList.add('show');
-          return;
+        if (!val('firstname') || !val('lastname') || !val('restaurant')) return errore('Compila nome, cognome e nome del locale.');
+        if (val('phone').replace(/\D/g, '').length < 8) return errore('Scrivi un numero di telefono valido.');
+        if (!emailOk(val('email'))) return errore("Inserisci un'email valida.");
+        if ((data.get('password') || '').toString().length < 8) return errore('La password deve avere almeno 8 caratteri.');
+        if (!form.querySelector('input[name="privacy"]').checked) return errore("Per creare l'account serve la presa visione dell'informativa privacy.");
+        if (!haFirebase()) return errore('Servizio non raggiungibile. Controlla la connessione e riprova.');
+        const submit = form.querySelector('.auth-submit');
+        const label = submit.querySelector('span');
+        submit.disabled = true; submit.classList.add('loading'); label.textContent = 'Creazione…';
+        try {
+          const cred = await firebase.auth().createUserWithEmailAndPassword(val('email'), data.get('password').toString());
+          await firebase.firestore().collection('users').doc(cred.user.uid).set({
+            email: val('email'),
+            firstname: val('firstname'),
+            lastname: val('lastname'),
+            restaurant: val('restaurant'),
+            phone: val('phone'),
+            createdAt: new Date().toISOString(),
+            privacyLettaIl: new Date().toISOString()
+          });
+          try { firebase.auth().languageCode = 'it'; await cred.user.sendEmailVerification(); } catch (_) {}
+          window.location.href = 'dashboard.html';
+        } catch (x) {
+          submit.disabled = false; submit.classList.remove('loading'); label.textContent = 'Crea account';
+          errore({
+            'auth/email-already-in-use': 'Questa email ha già un account: accedi oppure usa "Password dimenticata?".',
+            'auth/invalid-email': 'Email non valida.',
+            'auth/weak-password': 'Password troppo debole: usa almeno 8 caratteri.',
+            'auth/too-many-requests': 'Troppi tentativi. Riprova tra qualche minuto.',
+            'auth/network-request-failed': 'Connessione assente. Riprova.'
+          }[x.code] || 'Registrazione non riuscita. Riprova.');
         }
+        return;
       }
 
-// Firebase Auth reale
+      /* ── Richiesta demo ── */
+      if (which === 'demo') {
+        if (!val('nome') || !val('locale') || !val('citta')) return errore('Compila nome, locale e città.');
+        if (val('telefono').replace(/\D/g, '').length < 8) return errore('Scrivi un numero di telefono valido.');
+        if (val('email') && !emailOk(val('email'))) return errore('Email non valida.');
+        if (!form.querySelector('input[name="privacy"]').checked) return errore("Per inviare la richiesta serve il consenso all'informativa privacy.");
+        const testo = [
+          'Ciao PlateUp, vorrei una demo.',
+          '',
+          'Nome: ' + val('nome'),
+          'Locale: ' + val('locale') + ' (' + val('citta') + ')',
+          'Telefono: ' + val('telefono'),
+          val('email') ? 'Email: ' + val('email') : '',
+          'Piano che mi interessa: ' + val('piano')
+        ].filter((r, i) => r !== '' || i === 1).join('\n');
+        const via = (e.submitter && e.submitter.dataset.via) || 'whatsapp';
+        if (via === 'email') {
+          window.location.href = 'mailto:plateupinfo@gmail.com?subject=' + encodeURIComponent('Richiesta demo — ' + val('locale')) + '&body=' + encodeURIComponent(testo);
+        } else {
+          window.open('https://wa.me/393429730557?text=' + encodeURIComponent(testo), '_blank', 'noopener');
+        }
+        mostraEsito('Richiesta pronta', via === 'email'
+          ? "Si è aperta la tua app di posta con il messaggio già scritto: premi Invia. Se non si apre, scrivici a plateupinfo@gmail.com."
+          : 'Si è aperto WhatsApp con il messaggio già scritto: premi Invia. Ti ricontattiamo al più presto.');
+        return;
+      }
+
+      /* ── Accesso ── */
+      const email = val('email');
+      const pw = (data.get('password') || '').toString();
+      if (!emailOk(email)) return errore("Inserisci un'email valida.");
+      if (!pw) return errore('Inserisci la password.');
+      if (!haFirebase()) return errore('Servizio non raggiungibile. Controlla la connessione e riprova.');
+
+      const submit = form.querySelector('.auth-submit');
+      const label = submit.querySelector('span');
+      const originale = label.textContent;
       submit.disabled = true;
       submit.classList.add('loading');
-      const originalLabel = submit.querySelector('span').textContent;
-      submit.querySelector('span').textContent = which === 'login' ? 'Accesso…' : 'Creazione…';
-
-      const resetBtn = () => {
+      label.textContent = 'Accesso…';
+      try {
+        const ricorda = form.querySelector('input[name="remember"]')?.checked;
+        await firebase.auth().setPersistence(ricorda ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
+        await firebase.auth().signInWithEmailAndPassword(email, pw);
+        window.location.href = 'dashboard.html';
+      } catch (x) {
         submit.disabled = false;
         submit.classList.remove('loading');
-        submit.querySelector('span').textContent = originalLabel;
-      };
-
-      try {
-        if (which === 'login') {
-          await firebase.auth().signInWithEmailAndPassword(email, pw);
-          window.location.href = 'dashboard.html';
-
-        } else {
-          // Signup: crea account e salva profilo su Firestore
-          const cred = await firebase.auth().createUserWithEmailAndPassword(email, pw);
-          const uid  = cred.user.uid;
-          await firebase.firestore().collection('users').doc(uid).set({
-            email,
-            firstname:  data.get('firstname')?.toString().trim()  || '',
-            lastname:   data.get('lastname')?.toString().trim()   || '',
-            restaurant: data.get('restaurant')?.toString().trim() || '',
-            createdAt:  new Date().toISOString()
-          });
-          resetBtn();
-          forms.forEach(f => f.classList.add('hidden'));
-          if (success && successMsg) {
-            successMsg.textContent = `Account creato per ${email}. Puoi accedere subito alla tua dashboard.`;
-            success.classList.remove('hidden');
-          }
-        }
-      } catch(e) {
-        resetBtn();
-        let msg = 'Errore. Riprova.';
-        if (e.code === 'auth/user-not-found'  || e.code === 'auth/wrong-password') msg = 'Email o password non corretti.';
-        if (e.code === 'auth/email-already-in-use') msg = 'Email già registrata. Accedi invece di registrarti.';
-        if (e.code === 'auth/weak-password')        msg = 'Password troppo debole (minimo 6 caratteri).';
-        if (e.code === 'auth/invalid-email')        msg = 'Email non valida.';
-        err.textContent = msg;
-        err.classList.add('show');
+        label.textContent = originale;
+        const msg = {
+          'auth/user-not-found': 'Email o password non corretti.',
+          'auth/wrong-password': 'Email o password non corretti.',
+          'auth/invalid-credential': 'Email o password non corretti.',
+          'auth/invalid-login-credentials': 'Email o password non corretti.',
+          'auth/invalid-email': 'Email non valida.',
+          'auth/user-disabled': 'Account disattivato. Scrivici a plateupinfo@gmail.com.',
+          'auth/too-many-requests': 'Troppi tentativi. Riprova tra qualche minuto o usa "Password dimenticata?".',
+          'auth/network-request-failed': 'Connessione assente. Riprova.'
+        }[x.code] || 'Accesso non riuscito. Riprova.';
+        errore(msg);
       }
-      
-});
+    });
   });
+
 /* ── Bento scroll dots (mobile only) ── */
   const bentoEl = document.querySelector('.bento');
   const bentoDotsEl = document.querySelector('#bento-dots');

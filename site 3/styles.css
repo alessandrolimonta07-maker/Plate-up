@@ -11,7 +11,7 @@
   --line-2:    rgba(255, 255, 255, 0.12);
   --cream:     #ffffff;
   --cream-2:   #c9cdd6;
-  --muted:     #6b7280;
+  --muted:     #8b93a1;   /* più leggibile su fondo scuro (contrasto AA) */
   --gold:      #d4af37;
   --gold-deep: #b8941f;
   --gold-dim:  rgba(212, 175, 55, 0.12);
@@ -2979,4 +2979,115 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
   background: var(--gold);
   width: 22px;
   border-radius: 4px;
+}
+
+
+/* ============================================
+   Sistemazione ottobre 2026
+   ============================================ */
+
+/* Galleria: 4 schermate reali (tolta la foto non nostra) */
+.g-4 { grid-column: span 6; }
+@media (max-width: 900px) { .g-4 { grid-column: span 2; } }
+@media (max-width: 600px) { .g-4 { grid-column: span 1; } }
+/* Su telefono/tablet non esiste l'hover: la didascalia resta sempre visibile */
+@media (hover: none) { .g-overlay { opacity: 1; } }
+.g-slot { cursor: default; }
+.gallery-note { text-align: center; color: var(--muted); font-size: .72rem; margin-top: 22px; }
+
+/* Grafici di esempio */
+.mock-note { font-size: .62rem; color: var(--muted); margin-top: 8px; text-align: right; opacity: .8; }
+
+/* Prezzo annuale: barrato solo il vecchio totale */
+.plan-strike { text-decoration: none; color: var(--cream-2); }
+.plan-strike s { color: #e57367; margin-left: 6px; }
+
+/* Modulo richiesta demo */
+.auth-field select {
+  width: 100%;
+  padding: 13px 14px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-family: var(--sans);
+  font-size: .92rem;
+  color: var(--cream);
+  outline: none;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+.auth-field select:focus { border-color: var(--gold); }
+.auth-send { display: grid; gap: 10px; }
+.auth-submit.ghost {
+  background: transparent;
+  color: var(--cream);
+  border: 1px solid var(--line-2);
+}
+.auth-submit.ghost:hover { border-color: var(--gold); color: var(--gold); }
+.auth-small { font-size: .8rem; color: var(--muted); text-align: center; margin-top: 14px; line-height: 1.5; }
+.auth-small a, .auth-check a, .faq-a a { color: var(--gold); }
+
+/* Accessibilità: niente animazioni per chi le ha disattivate */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .cursor-glow { display: none; }
+}
+/* Focus visibile da tastiera */
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Nav: le voci non vanno a capo */
+.nav-link, .nav-login, .btn-magnetic span { white-space: nowrap; }
+/* L'indicatore "scroll" finiva sopra la riga dei numeri dell'hero */
+.hero-scroll-hint { display: none; }
+
+.auth-tabs.hidden { display: none; }
+.auth-demo-title { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; color: var(--cream); margin: 4px 0 6px; }
+
+/* ── Piani: 4 colonne ── */
+.plans.four { grid-template-columns: repeat(4, 1fr); max-width: 1320px; }
+.plans.four .plan { padding: 30px 22px; }
+@media (max-width: 1180px) { .plans.four { grid-template-columns: repeat(2, 1fr); max-width: 760px; } .plans.four .plan.featured { transform: none; } }
+@media (max-width: 600px) { .plans.four .plan { flex: 0 0 86%; scroll-snap-align: center; } }
+
+.launch-offer {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 14px;
+  max-width: 760px; margin: 0 auto 28px; padding: 12px 18px;
+  border: 1px solid rgba(212,175,55,.35); border-radius: 100px;
+  background: var(--gold-dim); color: var(--cream-2); font-size: .9rem; text-align: center;
+}
+.launch-offer strong { color: var(--cream); font-weight: 500; }
+.lo-tag { font-size: .66rem; color: var(--bg); background: var(--gold); padding: 3px 10px; border-radius: 100px; }
+@media (max-width: 600px) { .launch-offer { border-radius: 18px; margin: 0 4% 24px; } }
+
+/* ── Opzioni (sito, app, foto, cassa, hardware, Wi-Fi) ── */
+.extras { padding: 110px 4%; position: relative; z-index: 1; }
+.extras-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; max-width: 1320px; margin: 0 auto; }
+.extra {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 26px 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--rad);
+}
+.extra.big { grid-column: span 2; padding: 32px 30px; }
+.extra.gold { background: linear-gradient(180deg, #1d1813, #100d0a); border-color: rgba(212,168,90,.45); }
+.extra-top { display: flex; justify-content: space-between; gap: 10px; font-size: .68rem; color: var(--gold); }
+.extra-incl { color: var(--muted); border: 1px solid var(--line-2); padding: 2px 9px; border-radius: 100px; white-space: nowrap; }
+.extra-incl.soon { color: var(--saffron); border-color: rgba(255,122,61,.35); }
+.extra h3 { font-family: var(--serif); font-weight: 400; color: var(--cream); font-size: 1.45rem; margin: 2px 0 0; letter-spacing: -0.01em; }
+.extra.big h3 { font-size: 2rem; }
+.extra p { color: var(--cream-2); font-size: .9rem; line-height: 1.6; flex: 1; margin: 0; }
+.extra-price { font-size: .85rem; color: var(--muted); }
+.extra-price strong { font-family: var(--serif); font-weight: 400; font-size: 1.6rem; color: var(--cream); }
+.extra .plan-cta { margin-top: 6px; align-self: flex-start; padding-left: 22px; padding-right: 22px; }
+.extras-note { text-align: center; color: var(--muted); font-size: .74rem; margin-top: 26px; }
+@media (max-width: 1100px) { .extras-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .extras { padding: 80px 4%; }
+  .extras-grid { grid-template-columns: 1fr; }
+  .extra.big { grid-column: auto; padding: 26px 22px; }
+  .extra.big h3 { font-size: 1.6rem; }
 }

@@ -4,17 +4,51 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Account · PlateUp</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0a0908">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0908'/%3E%3Cpath d='M16 6l10 10-10 10L6 16z' fill='%23d4af37'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="dashboard.css">
-
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<style>
+  /* finché non si sa chi è collegato, la pagina non mostra dati */
+  body.caricamento .db-layout, body.caricamento .db-foot { visibility: hidden; }
+  .db-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:2000; align-items:flex-start; justify-content:center; overflow-y:auto; padding:2rem 1rem; }
+  .db-modal.open { display:flex; }
+  .db-modal-box { background:var(--surface); border:1px solid var(--line-2); border-radius:18px; padding:2rem; max-width:820px; width:100%; margin:auto; }
+  .db-modal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
+  .db-modal-head h3 { color:var(--cream); margin:0; font-size:1.2rem; }
+  .db-modal-x { background:none; border:none; color:var(--muted); font-size:1.6rem; cursor:pointer; line-height:1; }
+  .db-piani { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1rem; }
+  .db-piano { background:var(--bg); border:1px solid var(--line-2); border-radius:14px; padding:1.4rem; position:relative; display:flex; flex-direction:column; }
+  .db-piano.top { border-color:var(--gold); }
+  .db-piano-badge { position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:var(--gold); color:#0e1117; font-size:.7rem; font-weight:700; font-family:var(--mono); padding:2px 10px; border-radius:20px; white-space:nowrap; }
+  .db-piano-nome { font-size:.75rem; color:var(--muted); font-family:var(--mono); margin-bottom:.4rem; }
+  .db-piano-prezzo { font-size:1.8rem; color:var(--cream); font-family:var(--serif); }
+  .db-piano-prezzo small { font-size:.8rem; color:var(--muted); font-family:var(--mono); }
+  .db-piano ul { margin:.8rem 0 1.2rem; padding:0 0 0 1rem; color:var(--cream-2); font-size:.85rem; line-height:1.8; flex:1; }
+  .db-opzioni { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:.6rem; }
+  .db-opz { display:flex; justify-content:space-between; align-items:center; gap:.8rem; padding:.8rem 1rem; background:var(--bg); border:1px solid var(--line-2); border-radius:12px; }
+  .db-opz b { display:block; color:var(--cream); font-weight:500; font-size:.9rem; }
+  .db-opz span { color:var(--muted); font-size:.78rem; }
+  .db-opz button { flex:0 0 auto; }
+  .db-pw-form { display:none; margin-top:16px; padding:16px; background:var(--bg); border:1px solid var(--line-2); border-radius:12px; width:100%; }
+  .db-pw-form.open { display:block; }
+  .db-pw-form input { width:100%; padding:11px 12px; background:var(--bg-2); border:1px solid var(--line-2); border-radius:10px; color:var(--cream); font-size:.95rem; margin-bottom:10px; }
+  .db-pw-form label { display:block; font-size:.8rem; color:var(--muted); margin-bottom:6px; }
+  .db-err { color:#ff7a7a; font-size:.85rem; margin-bottom:8px; display:none; }
+  .db-err.show { display:block; }
+  .db-nota { font-size:.85rem; color:var(--muted); line-height:1.6; }
+  .db-nota a { color:var(--gold); }
+  #sicurezza .db-sec-row { flex-wrap: wrap; }
+</style>
 </head>
-<body class="is-dashboard">
+<body class="is-dashboard caricamento">
 
 <div class="grain"></div>
 
@@ -29,7 +63,7 @@
     <span class="db-locale-mark" id="db-locale-mark">?</span>
     <div class="db-locale-info">
       <span class="db-locale-name" id="db-locale-name">Il tuo locale</span>
-      <span class="db-locale-meta mono">— · attivazione in corso</span>
+      <span class="db-locale-meta mono" id="db-locale-meta">—</span>
     </div>
   </div>
 
@@ -42,7 +76,7 @@
       <div class="db-avatar" id="db-avatar-initials">--</div>
       <div class="db-account-info">
         <span class="db-account-name" id="db-account-name">—</span>
-        <span class="db-account-role mono">owner</span>
+        <span class="db-account-role mono">titolare</span>
       </div>
     </div>
   </div>
@@ -52,7 +86,7 @@
 <section class="db-hero">
   <p class="db-greet mono"><span class="dot"></span> Account &amp; fatturazione</p>
   <h1 class="db-title">Il tuo <em>account.</em></h1>
-  <p class="db-lede">Gestisci profilo, piano, pagamenti e sicurezza. Tutto da qui, in qualsiasi momento.</p>
+  <p class="db-lede">Profilo, piano, dati di fatturazione e sicurezza del tuo account PlateUp.</p>
 </section>
 
 <!-- ── LAYOUT: sidebar + content ── -->
@@ -65,28 +99,20 @@
     </a>
     <a href="#piano" class="db-nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-      <span>Piano &amp; rinnovi</span>
+      <span>Piano</span>
     </a>
     <a href="#fatturazione" class="db-nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 11h20"/></svg>
       <span>Fatturazione</span>
     </a>
-    <a href="#pagamenti" class="db-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 14h6M9 18h6"/></svg>
-      <span>Storico pagamenti</span>
-    </a>
     <a href="#sicurezza" class="db-nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
       <span>Sicurezza</span>
     </a>
-    <a href="#notifiche" class="db-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-      <span>Notifiche</span>
-    </a>
     <div class="db-nav-divider"></div>
     <a href="#danger" class="db-nav-item danger">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 11v6M14 11v6M5 6h14l-1 14H6zM9 6V3h6v3"/></svg>
-      <span>Area pericolosa</span>
+      <span>Disdetta e account</span>
     </a>
   </aside>
 
@@ -104,263 +130,115 @@
       <div class="db-form-grid">
         <label class="db-field">
           <span>Nome</span>
-          <input type="text" id="field-firstname" value="" readonly>
+          <input type="text" id="field-firstname" readonly autocomplete="given-name">
         </label>
         <label class="db-field">
           <span>Cognome</span>
-          <input type="text" id="field-lastname" value="" readonly>
+          <input type="text" id="field-lastname" readonly autocomplete="family-name">
         </label>
         <label class="db-field full">
-          <span>Email <span class="db-verified mono">✓ verificata</span></span>
+          <span>Email di accesso <span class="db-verified mono" id="email-verificata"></span></span>
           <div class="db-input-row">
-            <input type="text" id="field-email" value="" readonly>
+            <input type="text" id="field-email" readonly>
           </div>
         </label>
         <label class="db-field full">
           <span>Telefono</span>
-          <input type="tel" id="field-phone" value="" placeholder="+39 …" readonly>
+          <input type="tel" id="field-phone" placeholder="+39 …" readonly autocomplete="tel">
         </label>
         <label class="db-field full">
           <span>Nome del locale</span>
-          <input type="text" id="field-restaurant" value="" readonly>
+          <input type="text" id="field-restaurant" readonly>
         </label>
         <label class="db-field full">
           <span>Indirizzo</span>
-          <input type="text" id="field-address" value="" placeholder="Via …, CAP Città" readonly>
+          <input type="text" id="field-address" placeholder="Via …, CAP Città" readonly autocomplete="street-address">
         </label>
       </div>
 
-
-      <footer class="db-card-foot" id="profilo-footer">
-    <span class="db-saved mono" id="profilo-status">—</span>
-    <button class="db-btn-ghost" id="btn-modifica-profilo">✏️ Modifica</button>
-    <button class="db-btn-primary" id="btn-salva-profilo" style="display:none">Salva modifiche</button>
-    <button class="db-btn-ghost" id="btn-annulla-profilo" style="display:none">Annulla</button>
-
-    <div id="modal-demo" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:2000; align-items:center; justify-content:center;">
-  <div style="background:#1c1f26; border:1px solid #2f3340; border-top:2px solid #d4af37; border-radius:18px; padding:2rem 2rem 1.5rem; max-width:400px; width:90%; text-align:center;">
-    <div style="font-size:2.2rem; margin-bottom:.8rem;">🚀</div>
-    <h3 style="color:white; margin:0 0 .6rem; font-size:1.2rem;">Attiva la demo gratuita</h3>
-    <p style="color:#9ca3af; margin:0 0 1.6rem; font-size:.9rem; line-height:1.65;">
-      Avrai <strong style="color:#d4af37;">30 giorni</strong> per esplorare tutte le funzionalità di PlateUp completamente gratis.<br>
-      Non è richiesta nessuna carta di credito.
-    </p>
-    <div style="display:flex; gap:.8rem; justify-content:center;">
-      <button id="modal-demo-annulla" class="db-btn-ghost" style="flex:1;">Annulla</button>
-      <button id="modal-demo-conferma" class="db-btn-primary" style="flex:1;"><span>Sì, attiva</span></button>
-    </div>
-  </div>
-</div>
-</footer>
+      <footer class="db-card-foot">
+        <span class="db-saved mono" id="profilo-status">—</span>
+        <button class="db-btn-ghost" id="btn-modifica-profilo">Modifica</button>
+        <button class="db-btn-primary" id="btn-salva-profilo" style="display:none">Salva modifiche</button>
+        <button class="db-btn-ghost" id="btn-annulla-profilo" style="display:none">Annulla</button>
+      </footer>
     </section>
 
-    <!-- ── PIANO ── -->
-  <section class="db-card plan-card" id="piano">
-  <header class="db-card-head">
-    <div>
-      <h2>Piano &amp; rinnovi</h2>
-      <p class="db-card-sub">Il piano attivo e quando viene rinnovato.</p>
-    </div>
-    <span class="db-card-tag mono" id="db-plan-tag">in attesa</span>
-  </header>
+    <!-- ── PIANO (lo stato lo impostiamo noi nel profilo: piano, pianoDal, rinnovo) ── -->
+    <section class="db-card plan-card" id="piano">
+      <header class="db-card-head">
+        <div>
+          <h2>Piano</h2>
+          <p class="db-card-sub">Il piano attivo e quando si rinnova.</p>
+        </div>
+        <span class="db-card-tag mono" id="db-plan-tag">—</span>
+      </header>
 
-  <!-- STATO: demo non ancora attivata -->
-  <div id="db-plan-pending">
-    <div class="db-plan-hero">
-      <div class="db-plan-info">
-        <span class="db-plan-eyebrow mono">piano attuale</span>
-        <div class="db-plan-name">Demo gratuita</div>
-        <div class="db-plan-price">
-          <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
+      <div class="db-plan-hero">
+        <div class="db-plan-info">
+          <span class="db-plan-eyebrow mono">piano attuale</span>
+          <div class="db-plan-name" id="db-plan-name">—</div>
+          <div class="db-plan-price" id="db-plan-price"></div>
+          <ul class="db-plan-bullets" id="db-plan-bullets"></ul>
         </div>
-        <ul class="db-plan-bullets">
-          <li>Accesso completo per 30 giorni</li>
-          <li>Menù digitale multilingua</li>
-          <li>Ordini e gestione tavoli live</li>
-          <li>Supporto onboarding incluso</li>
-        </ul>
-      </div>
-      <div class="db-plan-stats">
-        <div class="db-plan-stat">
-          <span class="db-plan-stat-lbl mono">stato</span>
-          <span class="db-plan-stat-val" style="color:#d4af37">In attesa</span>
-          <span class="db-plan-stat-sub">la demo non è ancora stata attivata</span>
-        </div>
-        <div class="db-plan-stat">
-          <span class="db-plan-stat-lbl mono">scadenza demo</span>
-          <span class="db-plan-stat-val">—</span>
-          <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
+        <div class="db-plan-stats">
+          <div class="db-plan-stat">
+            <span class="db-plan-stat-lbl mono">attivo dal</span>
+            <span class="db-plan-stat-val" id="db-plan-dal">—</span>
+          </div>
+          <div class="db-plan-stat">
+            <span class="db-plan-stat-lbl mono">prossimo rinnovo</span>
+            <span class="db-plan-stat-val" id="db-plan-rinnovo">—</span>
+            <span class="db-plan-stat-sub" id="db-plan-rinnovo-sub"></span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="db-plan-actions">
-      <button class="db-btn-primary" onclick="scegliPiano(this)">
-        <span>Scegli un piano</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
-      <button class="db-btn-ghost" id="btn-attiva-demo">Prova demo</button>
-      <button class="db-btn-ghost" onclick="confrontaPiani()">Confronta piani</button>
-    </div>
-  </div>
-
-  <!-- STATO: demo attiva -->
-  <div id="db-plan-active" style="display:none">
-    <div class="db-plan-hero">
-      <div class="db-plan-info">
-        <span class="db-plan-eyebrow mono">piano attuale</span>
-        <div class="db-plan-name">Demo gratuita</div>
-        <div class="db-plan-price">
-          <span class="db-plan-cur">€</span><span class="db-plan-num">0</span><span class="db-plan-per">/mese · 30 giorni</span>
-        </div>
-        <ul class="db-plan-bullets">
-          <li>Accesso completo per 30 giorni</li>
-          <li>Menù digitale multilingua</li>
-          <li>Ordini e gestione tavoli live</li>
-          <li>Supporto onboarding incluso</li>
-        </ul>
+      <div class="db-plan-actions">
+        <button class="db-btn-primary" id="btn-cambia-piano">
+          <span id="btn-cambia-piano-txt">Scegli un piano</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
       </div>
-      <div class="db-plan-stats">
-        <div class="db-plan-stat">
-          <span class="db-plan-stat-lbl mono">stato</span>
-          <span class="db-plan-stat-val" style="color:#6fd49a">Attiva</span>
-          <span class="db-plan-stat-sub">nessun addebito in corso</span>
-        </div>
-        <div class="db-plan-stat">
-          <span class="db-plan-stat-lbl mono">attiva dal</span>
-          <span class="db-plan-stat-val" id="db-demo-start">—</span>
-          <span class="db-plan-stat-sub" id="db-demo-days-left"></span>
-        </div>
-        <div class="db-plan-stat">
-          <span class="db-plan-stat-lbl mono">scadenza</span>
-          <span class="db-plan-stat-val" id="db-demo-expire">—</span>
-          <span class="db-plan-stat-sub">30 giorni dall'attivazione</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Piani disponibili dopo la demo -->
-    <div style="margin-top:2rem; border-top:1px solid #2f3340; padding-top:1.5rem;">
-      <p style="font-size:.82rem; color:#9ca3af; font-family:monospace; margin:0 0 1rem;">
-        ◆ Passa a un piano prima della scadenza per non perdere accesso
-      </p>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem;">
-        <!-- Starter -->
-        <div style="background:#1a1d24; border:1px solid #2f3340; border-radius:14px; padding:1.2rem;">
-          <div style="font-size:.75rem; color:#9ca3af; font-family:monospace; margin-bottom:.4rem;">Lite</div>
-          <div style="font-size:1.6rem; font-weight:700; color:white;">€69<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
-          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
-            <li>Fino a 30 tavoli</li>
-            <li>Menu digitale</li>
-            <li>Ordini live</li>
-          </ul>
-          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="scegliPiano(this)">Scegli</button>
-        </div>
-        <!-- Pro -->
-        <div style="background:#1a1d24; border:1.5px solid #d4af37; border-radius:14px; padding:1.2rem; position:relative;">
-          <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#d4af37; color:#0e1117; font-size:.7rem; font-weight:700; font-family:monospace; padding:2px 10px; border-radius:20px;">Più scelto</div>
-          <div style="font-size:.75rem; color:#d4af37; font-family:monospace; margin-bottom:.4rem;">Pro</div>
-          <div style="font-size:1.6rem; font-weight:700; color:white;">€119<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
-          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
-            <li>Tavoli illimitati</li>
-            <li>Analytics avanzate</li>
-            <li>Turni staff</li>
-          </ul>
-          <button class="db-btn-primary" style="width:100%; font-size:.82rem;" onclick="scegliPiano(this)">Scegli</button>
-        </div>
-        <!-- Elite -->
-        <div style="background:#1a1d24; border:1px solid #2f3340; border-radius:14px; padding:1.2rem;">
-          <div style="font-size:.75rem; color:#9ca3af; font-family:monospace; margin-bottom:.4rem;">VIP</div>
-          <div style="font-size:1.6rem; font-weight:700; color:white;">€199<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
-          <ul style="margin:.8rem 0 1rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.82rem; line-height:1.8;">
-            <li>Multi-locale</li>
-            <li>API accesso</li>
-            <li>Supporto dedicato</li>
-          </ul>
-          <button class="db-btn-ghost" style="width:100%; font-size:.82rem;" onclick="scegliPiano(this)">Scegli</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</section>
+    </section>
 
     <!-- ── FATTURAZIONE ── -->
     <section class="db-card" id="fatturazione">
       <header class="db-card-head">
         <div>
           <h2>Dati di fatturazione</h2>
-          <p class="db-card-sub">Le informazioni che compaiono in fattura.</p>
+          <p class="db-card-sub">Le informazioni che compaiono in fattura. Le fatture le ricevi tramite SDI.</p>
         </div>
       </header>
 
       <div class="db-form-grid">
         <label class="db-field full">
           <span>Ragione sociale</span>
-          <input type="text" id="field-ragione" value="" placeholder="Es. Trattoria Mario S.r.l." readonly>
+          <input type="text" id="field-ragione" placeholder="Es. Trattoria Mario S.r.l." readonly>
         </label>
         <label class="db-field">
           <span>Partita IVA</span>
-          <input type="text" id="field-piva" value="" placeholder="Es. 03452890135" readonly>
+          <input type="text" id="field-piva" placeholder="Es. 03452890135" readonly inputmode="numeric">
         </label>
         <label class="db-field">
           <span>Codice fiscale</span>
-          <input type="text" id="field-cf" value="" placeholder="Es. RSSMRA85L01F205Z" readonly>
+          <input type="text" id="field-cf" placeholder="Es. RSSMRA85L01F205Z" readonly>
         </label>
         <label class="db-field">
           <span>Codice SDI / PEC</span>
-          <input type="text" id="field-sdi" value="" placeholder="Es. M5UXCR1" readonly>
+          <input type="text" id="field-sdi" placeholder="Es. M5UXCR1" readonly>
         </label>
         <label class="db-field">
           <span>Email amministrativa</span>
-          <input type="email" id="field-email-amm" value="" placeholder="amministrazione@iltuolocale.it" readonly>
+          <input type="email" id="field-email-amm" placeholder="amministrazione@iltuolocale.it" readonly>
         </label>
       </div>
 
-      <div class="db-pay-method">
-        <span class="db-pay-eyebrow mono">metodo di pagamento</span>
-        <div class="db-pay-row">
-          <div class="db-pay-card" style="opacity:.45">
-            <span class="db-pay-brand">—</span>
-            <span class="db-pay-mask">nessuna carta aggiunta</span>
-            <span class="db-pay-exp mono"></span>
-          </div>
-        </div>
-      </div>
-
-   <footer class="db-card-foot" id="fatturazione-footer">
-    <span class="db-saved mono" id="fatturazione-status">—</span>
-    <button class="db-btn-ghost" id="btn-modifica-fatturazione">✏️ Modifica</button>
-    <button class="db-btn-primary" id="btn-salva-fatturazione" style="display:none">Salva dati</button>
-    <button class="db-btn-ghost"  id="btn-annulla-fatturazione" style="display:none">Annulla</button>
-</footer>
-    </section>
-
-    <!-- ── PAGAMENTI ── -->
-    <section class="db-card" id="pagamenti">
-      <header class="db-card-head">
-        <div>
-          <h2>Storico pagamenti</h2>
-          <p class="db-card-sub">Tutte le fatture e i pagamenti del tuo account.</p>
-        </div>
-        <button class="db-btn-ghost small">Scarica tutto (CSV)</button>
-      </header>
-
-      <div class="db-table">
-        <div class="db-tr db-th">
-          <span>Data</span>
-          <span>Descrizione</span>
-          <span>Importo</span>
-          <span>Stato</span>
-          <span></span>
-        </div>
-        <div class="db-tr" style="opacity:.5; pointer-events:none;">
-          <span class="mono">—</span>
-          <span>Nessun pagamento ancora</span>
-          <span class="db-amt">—</span>
-          <span class="db-status">—</span>
-          <span></span>
-        </div>
-      </div>
+      <footer class="db-card-foot">
+        <span class="db-saved mono" id="fatturazione-status">—</span>
+        <button class="db-btn-ghost" id="btn-modifica-fatturazione">Modifica</button>
+        <button class="db-btn-primary" id="btn-salva-fatturazione" style="display:none">Salva dati</button>
+        <button class="db-btn-ghost" id="btn-annulla-fatturazione" style="display:none">Annulla</button>
+      </footer>
     </section>
 
     <!-- ── SICUREZZA ── -->
@@ -376,92 +254,41 @@
         <div class="db-sec-row">
           <div>
             <div class="db-sec-name">Password</div>
-            <div class="db-sec-meta">Cambiata 47 giorni fa</div>
+            <div class="db-sec-meta">Almeno 8 caratteri. Non usare la stessa di altri siti.</div>
           </div>
           <button class="db-btn-ghost" id="btn-cambia-pw">Cambia password</button>
 
-<!-- mini-form password, nascosto di default -->
-<div id="pw-change-form" style="display:none; margin-top:16px; padding:16px;
-     background:#111; border:1px solid #333; border-radius:12px;">
-  <label style="display:block; font-size:.85rem; color:#888; margin-bottom:6px;">
-    Password attuale
-  </label>
-  <input id="pw-attuale" type="password" placeholder="Password attuale"
-    style="width:100%; padding:10px 12px; background:#1a1a1a; border:1px solid #444;
-           border-radius:8px; color:white; font-size:.95rem; box-sizing:border-box; margin-bottom:10px;">
-  <label style="display:block; font-size:.85rem; color:#888; margin-bottom:6px;">
-    Nuova password (min. 8 caratteri)
-  </label>
-  <input id="pw-new" type="password" placeholder="Nuova password"
-    style="width:100%; padding:10px 12px; background:#1a1a1a; border:1px solid #444;
-           border-radius:8px; color:white; font-size:.95rem; box-sizing:border-box; margin-bottom:10px;">
-  <input id="pw-confirm" type="password" placeholder="Conferma password"
-    style="width:100%; padding:10px 12px; background:#1a1a1a; border:1px solid #444;
-           border-radius:8px; color:white; font-size:.95rem; box-sizing:border-box; margin-bottom:10px;">
-  <div id="pw-change-err" style="color:#ff7a7a; font-size:.82rem; margin-bottom:8px; display:none;"></div>
-  <div style="display:flex; gap:10px;">
-    <button id="btn-pw-salva" class="db-btn-primary" style="flex:1;">Salva password</button>
-    <button id="btn-pw-cancel" class="db-btn-ghost" style="flex:1;">Annulla</button>
-  </div>
-</div>
+          <div class="db-pw-form" id="pw-change-form">
+            <label for="pw-attuale">Password attuale</label>
+            <input id="pw-attuale" type="password" autocomplete="current-password">
+            <label for="pw-new">Nuova password (min. 8 caratteri)</label>
+            <input id="pw-new" type="password" autocomplete="new-password">
+            <label for="pw-confirm">Ripeti la nuova password</label>
+            <input id="pw-confirm" type="password" autocomplete="new-password">
+            <div class="db-err" id="pw-change-err"></div>
+            <div style="display:flex; gap:10px;">
+              <button id="btn-pw-salva" class="db-btn-primary" style="flex:1;">Salva password</button>
+              <button id="btn-pw-cancel" class="db-btn-ghost" style="flex:1;">Annulla</button>
+            </div>
+          </div>
         </div>
         <div class="db-sec-row">
           <div>
-            <div class="db-sec-name">Autenticazione a due fattori <span class="db-rec mono">consigliata</span></div>
-            <div class="db-sec-meta">Aggiungi un livello extra di sicurezza al login.</div>
+            <div class="db-sec-name">Password dimenticata</div>
+            <div class="db-sec-meta">Ti mandiamo per email un link per sceglierne una nuova.</div>
           </div>
-<button class="db-btn-primary small" onclick="alert('La doppia autenticazione sarà disponibile prossimamente.')">Attiva 2FA</button>
-        </div>
-        <div class="db-sec-row">
-          <div>
-            <div class="db-sec-name">Sessioni attive</div>
-            <div class="db-sec-meta">2 dispositivi · MacBook (Como, ora) · iPhone (Como, 2h fa)</div>
-          </div>
-          <button class="db-btn-ghost" onclick="alert('La gestione sessioni sarà disponibile prossimamente.')">Gestisci</button>
+          <button class="db-btn-ghost" id="btn-reset-pw">Invia link</button>
         </div>
       </div>
+      <p class="db-nota" style="margin-top:14px">La password dell'area clienti è separata da quella del gestionale del locale. Per cambiare quella del gestionale scrivici a <a href="mailto:plateupinfo@gmail.com">plateupinfo@gmail.com</a>.</p>
     </section>
 
-    <!-- ── NOTIFICHE ── -->
-    <section class="db-card" id="notifiche">
-      <header class="db-card-head">
-        <div>
-          <h2>Notifiche</h2>
-          <p class="db-card-sub">Cosa vuoi ricevere via email.</p>
-        </div>
-      </header>
-
-      <div class="db-toggle-list">
-        <label class="db-toggle-row">
-          <div>
-            <div class="db-toggle-name">Riepilogo giornaliero</div>
-            <div class="db-toggle-meta">Ricevi a fine giornata un riepilogo di incassi e coperti.</div>
-          </div>
-          <span class="db-switch on"><span class="db-switch-thumb"></span></span>
-        </label>
-        <label class="db-toggle-row">
-          <div>
-            <div class="db-toggle-name">Nuove prenotazioni</div>
-            <div class="db-toggle-meta">Email quando arriva una prenotazione online.</div>
-          </div>
-          <span class="db-switch on"><span class="db-switch-thumb"></span></span>
-        </label>
-        <label class="db-toggle-row">
-          <div>
-            <div class="db-toggle-name">Promozioni PlateUp</div>
-            <div class="db-toggle-meta">Novità, sconti e nuove funzioni.</div>
-          </div>
-          <span class="db-switch"><span class="db-switch-thumb"></span></span>
-        </label>
-      </div>
-    </section>
-
-    <!-- ── AREA PERICOLOSA ── -->
+    <!-- ── DISDETTA E ACCOUNT ── -->
     <section class="db-card danger" id="danger">
       <header class="db-card-head">
         <div>
-          <h2 style="color:#ff7a7a">Area pericolosa</h2>
-          <p class="db-card-sub">Azioni irreversibili. Procedi con attenzione.</p>
+          <h2 style="color:#ff7a7a">Disdetta e account</h2>
+          <p class="db-card-sub">Queste richieste ci arrivano per email: ti rispondiamo noi per confermare.</p>
         </div>
       </header>
 
@@ -469,23 +296,23 @@
         <div class="db-sec-row">
           <div>
             <div class="db-sec-name">Sospendi abbonamento</div>
-            <div class="db-sec-meta">Metti in pausa il piano fino a 3 mesi.</div>
+            <div class="db-sec-meta">Per una chiusura stagionale o per ferie lunghe.</div>
           </div>
-         <button class="db-btn-ghost" id="btn-sospendi">Sospendi</button>
+          <button class="db-btn-ghost" id="btn-sospendi">Richiedi sospensione</button>
         </div>
         <div class="db-sec-row">
           <div>
             <div class="db-sec-name">Disdici abbonamento</div>
-            <div class="db-sec-meta">Resta attivo fino al 28 dicembre 2026. Nessun addebito futuro.</div>
+            <div class="db-sec-meta" id="disdetta-meta">Resta attivo fino alla fine del periodo pagato. Nessun addebito successivo.</div>
           </div>
-       <button class="db-btn-danger">Disdici piano</button>
+          <button class="db-btn-danger" id="btn-disdici">Richiedi disdetta</button>
         </div>
         <div class="db-sec-row">
           <div>
             <div class="db-sec-name">Elimina account</div>
-            <div class="db-sec-meta">Cancellazione definitiva. I dati non sono recuperabili.</div>
+            <div class="db-sec-meta">Cancella l'accesso all'area clienti e il tuo profilo. Non è reversibile.</div>
           </div>
-        <button class="db-btn-danger ghost" id="btn-elimina">Elimina account</button>
+          <button class="db-btn-danger ghost" id="btn-elimina">Elimina account</button>
         </div>
       </div>
     </section>
@@ -494,12 +321,56 @@
 </div>
 
 <footer class="db-foot">
-  <span>Loggato come <strong id="db-foot-name">—</strong> · <span class="mono" id="db-foot-email">—</span></span>
+  <span>Collegato come <strong id="db-foot-name">—</strong> · <span class="mono" id="db-foot-email">—</span></span>
   <span class="db-foot-dot">·</span>
   <a href="index.html" id="db-logout">Esci</a>
 </footer>
 
+<!-- ── Modal piani ── -->
+<div class="db-modal" id="modal-piani" role="dialog" aria-modal="true" aria-labelledby="modal-piani-titolo">
+  <div class="db-modal-box">
+    <div class="db-modal-head">
+      <h3 id="modal-piani-titolo">Piani e opzioni PlateUp</h3>
+      <button class="db-modal-x" data-chiudi aria-label="Chiudi">×</button>
+    </div>
+    <div class="db-piani" id="db-piani"></div>
+    <h3 style="color:var(--cream); font-size:1.05rem; margin:1.8rem 0 .8rem;">Opzioni</h3>
+    <div class="db-opzioni" id="db-opzioni"></div>
+    <p class="db-nota" style="margin-top:1.2rem">Prezzi IVA esclusa. Attivazione €99 per Lite e Pro, gratuita per Menu e VIP. Con il pagamento annuale hai 2 mesi gratis. Il VIP ha durata minima 12 mesi. La richiesta ci arriva per email e ti ricontattiamo per attivarla.</p>
+  </div>
+</div>
+
 <script>
+(() => {
+  const MAIL = 'plateupinfo@gmail.com';
+  // Stessi piani e prezzi della home
+  const PIANI = {
+    Menu: { prezzo: 29,  annuale: 24,  voci: ['Menù digitale in 5 lingue', 'QR per ogni tavolo', 'Foto, allergeni e filtri', 'Prezzi ed esauriti dal telefono'] },
+    Lite: { prezzo: 69,  annuale: 58,  voci: ['Tutto Menu', 'Ordini dal tavolo, live a cucina e bar', 'Sala, tavoli e conti', 'Chiamata cameriere'] },
+    Pro:  { prezzo: 119, annuale: 99,  voci: ['Tutto Lite', 'Prenotazioni con conferma WhatsApp', 'Menù illimitati con orari', 'AI, statistiche e turni del personale'] },
+    VIP:  { prezzo: 199, annuale: 166, voci: ['Tutto Pro', '4 tablet e stampante in comodato', 'Wi-Fi installato e sito web inclusi', 'Assistenza prioritaria'] }
+  };
+  // Stesse opzioni della home
+  const OPZIONI = [
+    ['Sito web del locale', '€400 una tantum + €10/mese (incluso nel VIP)'],
+    ["App del locale (iOS + Android)", '€990 una tantum + €49/mese (€590 con VIP)'],
+    ['Servizio fotografico (20 piatti)', '€150 una tantum'],
+    ['Collegamento al registratore di cassa', '€19/mese + €149 configurazione (in arrivo)'],
+    ['Tablet in più', '€9/mese a tablet, in comodato'],
+    ['Stampante comande in più', '€6/mese, in comodato'],
+    ['Wi-Fi installato', 'da €290 una tantum (incluso nel VIP)']
+  ];
+  const $ = (id) => document.getElementById(id);
+  const dataIt = (d) => d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+  const mail = (oggetto, testo) => {
+    window.location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(oggetto) + '&body=' + encodeURIComponent(testo);
+  };
+
+  if (!window.firebase) {
+    document.body.classList.remove('caricamento');
+    document.querySelector('.db-content').innerHTML = '<section class="db-card"><h2>Servizio non raggiungibile</h2><p class="db-nota">Controlla la connessione e ricarica la pagina.</p></section>';
+    return;
+  }
 
   firebase.initializeApp({
     apiKey:            "AIzaSyBnyv_oGllgaE_W8C0ZStlkoAF284xpaZ4",
@@ -508,529 +379,244 @@
     storageBucket:     "plateup-55.firebasestorage.app",
     messagingSenderId: "864695974692",
     appId:             "1:864695974692:web:4b05dfb356750f7b9bd1b1"
-});
-const dbPlateup = firebase.firestore();
-  // ── Firebase Auth + carica profilo da Firestore ──
-const appRistorante = firebase.initializeApp({
-    apiKey: "AIzaSyCyV3u7qQSQRvyxnYJXI34ELdAgL0rrt1g",
-    authDomain: "prova-60305.firebaseapp.com",
-    projectId: "prova-60305",
-    storageBucket: "prova-60305.firebasestorage.app",
-    messagingSenderId: "613358808495",
-    appId: "1:613358808495:web:aa5fb5d610a5ec1dbed35a"
-}, 'ristorante');
-const dbPassword = appRistorante.firestore();
-
-  firebase.auth().onAuthStateChanged(async (fbUser) => {
-    if (!fbUser) { window.location.href = 'index.html'; return; }
-
-    let profile = {};
-    try {
-      const snap = await dbPlateup.collection('users').doc(fbUser.uid).get();
-      if (snap.exists) profile = snap.data();
-    } catch(e) { console.warn('Errore caricamento profilo:', e); }
-
-    const firstname  = profile.firstname  || '';
-    const lastname   = profile.lastname   || '';
-    const restaurant = profile.restaurant || '';
-    const email      = fbUser.email       || '';
-    const fullName   = [firstname, lastname].filter(Boolean).join(' ') || email;
-    const initials   = [firstname[0], lastname[0]].filter(Boolean).join('').toUpperCase() || email[0]?.toUpperCase() || '?';
-
-    const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
-    
-    // Carica preferenze notifiche
-const notif = profile.notifications || {};
-const sw = document.querySelectorAll('.db-switch');
-if (sw[0]) sw[0].classList.toggle('on', notif.riepilogo    !== false);
-if (sw[1]) sw[1].classList.toggle('on', notif.prenotazioni !== false);
-if (sw[2]) sw[2].classList.toggle('on', notif.promo        === true);
-
-    // Header
-    const avatarEl = document.getElementById('db-avatar-initials');
-    const nameEl   = document.getElementById('db-account-name');
-    if (avatarEl) avatarEl.textContent = initials;
-    if (nameEl)   nameEl.textContent   = fullName;
-
-    // Locale badge
-    const localeMark = document.getElementById('db-locale-mark');
-    const localeName = document.getElementById('db-locale-name');
-    if (localeMark) localeMark.textContent = restaurant ? restaurant[0].toUpperCase() : '?';
-    if (localeName) localeName.textContent = restaurant || 'Il tuo locale';
-
-    // Footer
-    const footName  = document.getElementById('db-foot-name');
-    const footEmail = document.getElementById('db-foot-email');
-    if (footName)  footName.textContent  = fullName;
-    if (footEmail) footEmail.textContent = email;
-
-    // Campi profilo
-    set('field-firstname',  firstname);
-    set('field-lastname',   lastname);
-    set('field-email',      email);
-    set('field-restaurant', restaurant);
-    set('field-phone',      profile.phone   || '');
-    set('field-address',    profile.address || '');
-
-    // Fatturazione
-    const billing = profile.billing || {};
-    set('field-ragione',   billing.ragione  || '');
-    set('field-piva',      billing.piva     || '');
-    set('field-cf',        billing.cf       || '');
-    set('field-sdi',       billing.sdi      || '');
-    set('field-email-amm', billing.emailAmm || '');
-
-    // Stato demo
-    const demoStart  = profile.demoActivatedAt ? new Date(profile.demoActivatedAt) : null;
-    const pending    = document.getElementById('db-plan-pending');
-    const active     = document.getElementById('db-plan-active');
-    const planTag    = document.getElementById('db-plan-tag');
-
-    if (demoStart) {
-      if (pending)  pending.style.display  = 'none';
-      if (active)   active.style.display   = '';
-      if (planTag)  planTag.textContent    = 'demo attiva';
-      const expire   = new Date(demoStart.getTime() + 30 * 24 * 60 * 60 * 1000);
-      const daysLeft = Math.max(0, Math.ceil((expire - Date.now()) / (24 * 60 * 60 * 1000)));
-      const startEl    = document.getElementById('db-demo-start');
-      const expireEl   = document.getElementById('db-demo-expire');
-      const daysLeftEl = document.getElementById('db-demo-days-left');
-      if (startEl)    startEl.textContent    = demoStart.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-      if (expireEl)   expireEl.textContent   = expire.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-      if (daysLeftEl) daysLeftEl.textContent = daysLeft > 0 ? `ancora ${daysLeft} giorni` : 'scaduta';
-    } else {
-      if (pending)  pending.style.display  = '';
-      if (active)   active.style.display   = 'none';
-      if (planTag)  planTag.textContent    = 'in attesa';
-    }
-
-    // Rende disponibile l'uid globalmente per gli altri script
-    window._plateupUid = fbUser.uid;
   });
-</script>
+  const auth = firebase.auth();
+  auth.languageCode = 'it';
+  const db = firebase.firestore();
+  let utente = null;
+  let profilo = {};
+  const doc = () => db.collection('users').doc(utente.uid);
 
-<script>
-  // ── Attiva demo ──
-// Apre il modal di conferma
-document.getElementById('btn-attiva-demo')?.addEventListener('click', () => {
-    const m = document.getElementById('modal-demo');
-    if (m) { m.style.display = 'flex'; }
-});
+  // ── Dati sullo schermo ──
+  const mostraProfilo = () => {
+    const nome = profilo.firstname || '', cognome = profilo.lastname || '', locale = profilo.restaurant || '';
+    const email = utente.email || '';
+    const completo = [nome, cognome].filter(Boolean).join(' ') || email;
+    const iniziali = [nome[0], cognome[0]].filter(Boolean).join('').toUpperCase() || (email[0] || '?').toUpperCase();
+    $('db-avatar-initials').textContent = iniziali;
+    $('db-account-name').textContent = completo;
+    $('db-locale-mark').textContent = locale ? locale[0].toUpperCase() : '?';
+    $('db-locale-name').textContent = locale || 'Il tuo locale';
+    $('db-foot-name').textContent = completo;
+    $('db-foot-email').textContent = email;
+    $('email-verificata').textContent = utente.emailVerified ? '✓ verificata' : '';
+    const val = { 'field-firstname': nome, 'field-lastname': cognome, 'field-email': email, 'field-phone': profilo.phone || '',
+      'field-restaurant': locale, 'field-address': profilo.address || '' };
+    const b = profilo.billing || {};
+    Object.assign(val, { 'field-ragione': b.ragione || '', 'field-piva': b.piva || '', 'field-cf': b.cf || '', 'field-sdi': b.sdi || '', 'field-email-amm': b.emailAmm || '' });
+    Object.entries(val).forEach(([id, v]) => { if ($(id)) $(id).value = v; });
+  };
 
-// Annulla
-document.getElementById('modal-demo-annulla')?.addEventListener('click', () => {
-    document.getElementById('modal-demo').style.display = 'none';
-});
-
-// Conferma e attiva
-document.getElementById('modal-demo-conferma')?.addEventListener('click', async () => {
-    document.getElementById('modal-demo').style.display = 'none';
-    try {
-        const uid = window._plateupUid;
-        if (!uid) return;
-        await dbPlateup.collection('users').doc(uid).set({
-    demoActivatedAt: new Date().toISOString()
-}, { merge: true });
-        window.location.reload();
-    } catch(e) { console.error('Errore attivazione demo:', e); }
-});
-
-// Chiudi cliccando fuori
-document.getElementById('modal-demo')?.addEventListener('click', (e) => {
-    if (e.target === document.getElementById('modal-demo'))
-        document.getElementById('modal-demo').style.display = 'none';
-});
-  
-  // ── Logout ──
-document.getElementById('db-logout')?.addEventListener('click', async () => {
-    await firebase.auth().signOut();
-    window.location.href = 'index.html';
-});
-
-  // ── Sidebar active state on scroll ──
-  const navItems = document.querySelectorAll('.db-nav-item');
-  const sections = document.querySelectorAll('.db-content > .db-card');
-  if (sections.length) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          const id = e.target.id;
-          navItems.forEach((n) => n.classList.toggle('active', n.getAttribute('href') === '#' + id));
-        }
-      });
-    }, { rootMargin: '-30% 0px -55% 0px' });
-    sections.forEach((s) => io.observe(s));
-  }
-
-  // ── Smooth scroll on sidebar clicks ──
-  navItems.forEach((a) => {
-    a.addEventListener('click', (e) => {
-      const id = a.getAttribute('href');
-      if (!id || id.length < 2) return;
-      const t = document.querySelector(id);
-      if (!t) return;
-      e.preventDefault();
-      const y = t.getBoundingClientRect().top + window.scrollY - 90;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    });
-  });
-
-  // ── Toggle switches ──
-const switchKeys = ['riepilogo', 'prenotazioni', 'promo'];
-document.querySelectorAll('.db-switch').forEach((sw, i) => {
-    sw.addEventListener('click', () => {
-        sw.classList.toggle('on');
-        const uid = window._plateupUid;
-        if (!uid) return;
-        const key = switchKeys[i];
-        if (!key) return;
-        const updates = {};
-        updates[`notifications.${key}`] = sw.classList.contains('on');
-        dbPlateup.collection('users').doc(uid).set(
-            { notifications: { [key]: sw.classList.contains('on') } },
-            { merge: true }
-        ).catch(e => console.warn('Errore salvataggio notifica:', e));
-    });
-});
-
-  // ── Salva modifiche profilo → localStorage ──
-  document.querySelectorAll('.db-btn-primary').forEach((b) => {
-    if (!b.textContent.trim().startsWith('Salva')) return;
-  b.addEventListener('click', async () => {
-    const uid = window._plateupUid;
-    if (!uid) return;
-
-    const fn  = document.getElementById('field-firstname')?.value  || '';
-    const ln  = document.getElementById('field-lastname')?.value   || '';
-    const rs  = document.getElementById('field-restaurant')?.value || '';
-    const ph  = document.getElementById('field-phone')?.value      || '';
-    const ad  = document.getElementById('field-address')?.value    || '';
-    const ra  = document.getElementById('field-ragione')?.value    || '';
-    const pi  = document.getElementById('field-piva')?.value       || '';
-    const cf  = document.getElementById('field-cf')?.value         || '';
-    const sdi = document.getElementById('field-sdi')?.value        || '';
-    const ea  = document.getElementById('field-email-amm')?.value  || '';
-
-    try {
-        await dbPlateup.collection('users').doc(uid).set({
-    firstname:  fn, lastname:  ln,
-    restaurant: rs, phone:     ph, address: ad,
-    billing: { ragione: ra, piva: pi, cf, sdi, emailAmm: ea }
-}, { merge: true });
-
-        // Feedback visivo
-        const saved = b.closest('.db-card')?.querySelector('.db-saved, #profilo-status');
-        if (saved) { saved.textContent = 'salvato ✓'; saved.style.color = '#6fd49a'; setTimeout(() => { saved.textContent = '—'; saved.style.color = ''; }, 3000); }
-
-        // Aggiorna UI in tempo reale
-        const full = [fn, ln].filter(Boolean).join(' ');
-        const init = [fn[0], ln[0]].filter(Boolean).join('').toUpperCase();
-        const nameEl   = document.getElementById('db-account-name');
-        const avatarEl = document.getElementById('db-avatar-initials');
-        const footName = document.getElementById('db-foot-name');
-        const localeMark = document.getElementById('db-locale-mark');
-        const localeName = document.getElementById('db-locale-name');
-        if (nameEl && full)    nameEl.textContent   = full;
-        if (avatarEl && init)  avatarEl.textContent = init;
-        if (footName && full)  footName.textContent = full;
-        if (localeMark && rs)  localeMark.textContent = rs[0]?.toUpperCase() || '?';
-        if (localeName && rs)  localeName.textContent = rs;
-   } catch(e) {
-        alert('Errore salvataggio: ' + e.message);
-    }
-  });
-});
-</script>
-<script>
-
-// SHA-256 helper
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-// Mostra/nascondi form
-document.getElementById('btn-cambia-pw').addEventListener('click', () => {
-  const f = document.getElementById('pw-change-form');
-  f.style.display = f.style.display === 'none' ? 'block' : 'none';
-});
-document.getElementById('btn-pw-cancel').addEventListener('click', () => {
-  document.getElementById('pw-change-form').style.display = 'none';
-  document.getElementById('pw-new').value = '';
-  document.getElementById('pw-confirm').value = '';
-  document.getElementById('pw-change-err').style.display = 'none';
-});
-
-// Salva nuova password
-document.getElementById('btn-pw-salva').addEventListener('click', async () => {
-  const err = document.getElementById('pw-change-err');
-  err.style.display = 'none';
-
-  const pw1 = document.getElementById('pw-new').value;
-  const pw2 = document.getElementById('pw-confirm').value;
-
-  if (pw1.length < 8) {
-    err.textContent = 'La password deve essere di almeno 8 caratteri.';
-    err.style.display = 'block'; return;
-  }
-  if (pw1 !== pw2) {
-    err.textContent = 'Le password non coincidono.';
-    err.style.display = 'block'; return;
-  }
-
-  const btn = document.getElementById('btn-pw-salva');
-  btn.textContent = 'Salvataggio…'; btn.disabled = true;
-
-  try {
-    // Re-autentica l'utente prima di cambiare la password
-    const user     = firebase.auth().currentUser;
-    const email    = user.email;
-    const pwAttuale = document.getElementById('pw-attuale')?.value;
-
-    if (!pwAttuale) {
-      err.textContent = 'Inserisci la password attuale per confermare.';
-      err.style.display = 'block';
-      btn.textContent = 'Salva password'; btn.disabled = false;
+  const mostraPiano = () => {
+    const nome = profilo.piano && PIANI[profilo.piano] ? profilo.piano : null;
+    const annuale = profilo.pianoFatturazione === 'annuale';
+    const lista = $('db-plan-bullets');
+    lista.innerHTML = '';
+    if (nome) {
+      const p = PIANI[nome];
+      const prezzo = annuale && p.annuale ? p.annuale : p.prezzo;
+      $('db-plan-name').textContent = nome;
+      $('db-plan-price').innerHTML = '<span class="db-plan-cur">€</span><span class="db-plan-num">' + prezzo + '</span><span class="db-plan-per">/mese' + (annuale ? ' · annuale' : '') + ' + IVA</span>';
+      p.voci.forEach((v) => { const li = document.createElement('li'); li.textContent = v; lista.appendChild(li); });
+      $('db-plan-tag').textContent = 'attivo';
+      $('db-locale-meta').textContent = 'piano ' + nome;
+      $('btn-cambia-piano-txt').textContent = 'Cambia piano o aggiungi opzioni';
+    } else if (profilo.demoActivatedAt) {
+      const inizio = new Date(profilo.demoActivatedAt);
+      const fine = new Date(inizio.getTime() + 30 * 864e5);
+      $('db-plan-name').textContent = 'Demo';
+      $('db-plan-price').textContent = '';
+      $('db-plan-tag').textContent = fine > new Date() ? 'demo' : 'demo scaduta';
+      $('db-plan-dal').textContent = dataIt(inizio);
+      $('db-plan-rinnovo').textContent = dataIt(fine);
+      $('db-plan-rinnovo-sub').textContent = 'fine della demo';
+      $('db-locale-meta').textContent = 'demo';
       return;
+    } else {
+      $('db-plan-name').textContent = 'Nessun piano attivo';
+      $('db-plan-price').innerHTML = '<span class="db-plan-per" style="margin:0">Scegli un piano: ti ricontattiamo noi per attivarlo.</span>';
+      $('db-plan-tag').textContent = 'da attivare';
+      $('db-locale-meta').textContent = 'attivazione in corso';
     }
-
-    const credential = firebase.auth.EmailAuthProvider.credential(email, pwAttuale);
-    await user.reauthenticateWithCredential(credential);
-
-    // Ora cambia la password su Firebase Auth
-    await user.updatePassword(pw1);
-
-    // Aggiorna anche l'hash per il gestionale
-    const hash = await sha256(pw1);
-    await dbPassword.collection('impostazioni').doc('ristorante').set(
-      { accessPassword: hash, accessPasswordUpdatedAt: new Date().toISOString() },
-      { merge: true }
-    );
-
-    document.getElementById('pw-change-form').style.display = 'none';
-    document.getElementById('pw-new').value    = '';
-    document.getElementById('pw-confirm').value = '';
-    document.getElementById('pw-attuale').value = '';
-    alert('✅ Password aggiornata.');
-
-  } catch(e) {
-    let msg = 'Errore salvataggio: ' + e.message;
-    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
-      msg = 'Password attuale non corretta.';
-    err.textContent = msg;
-    err.style.display = 'block';
-  }
-
-  btn.textContent = 'Salva password'; btn.disabled = false;
-});
-</script>
-<script>
-  const PROFILO_FIELDS = ['field-firstname','field-lastname','field-email','field-phone','field-restaurant','field-address'];
-  let _profiloBackup = {};
-
-  document.getElementById('btn-modifica-profilo')?.addEventListener('click', () => {
-    _profiloBackup = {};
-    PROFILO_FIELDS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { _profiloBackup[id] = el.value; el.removeAttribute('readonly'); }
-    });
-    document.getElementById('btn-modifica-profilo').style.display = 'none';
-    document.getElementById('btn-salva-profilo').style.display = '';
-    document.getElementById('btn-annulla-profilo').style.display = '';
-    document.getElementById('profilo-status').textContent = 'modifica in corso…';
-    document.getElementById('field-firstname')?.focus();
-  });
-
-  document.getElementById('btn-salva-profilo')?.addEventListener('click', () => {
-   const uid = window._plateupUid;
-if (uid) {
-   dbPlateup.collection('users').doc(uid).set({
-    firstname:  document.getElementById('field-firstname')?.value  || '',
-    lastname:   document.getElementById('field-lastname')?.value   || '',
-    restaurant: document.getElementById('field-restaurant')?.value || ''
-}, { merge: true }).catch(e => console.warn('Errore salvataggio profilo:', e));
-}
-    PROFILO_FIELDS.forEach(id => {
-        const el = document.getElementById(id); if (el) el.setAttribute('readonly', '');
-    });
-    document.getElementById('btn-modifica-profilo').style.display = '';
-    document.getElementById('btn-salva-profilo').style.display = 'none';
-    document.getElementById('btn-annulla-profilo').style.display = 'none';
-    document.getElementById('profilo-status').textContent = 'salvato ✓';
-    setTimeout(() => { document.getElementById('profilo-status').textContent = '—'; }, 3000);
-  });
-
-  document.getElementById('btn-annulla-profilo')?.addEventListener('click', () => {
-    PROFILO_FIELDS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.value = _profiloBackup[id] || ''; el.setAttribute('readonly', ''); }
-    });
-    document.getElementById('btn-modifica-profilo').style.display = '';
-    document.getElementById('btn-salva-profilo').style.display = 'none';
-    document.getElementById('btn-annulla-profilo').style.display = 'none';
-    document.getElementById('profilo-status').textContent = '—';
-  });
-
-  
-</script>
-<script>
-function confrontaPiani() {
-    const m = document.getElementById('modal-piani');
-    if (m) { m.style.display = 'flex'; }
-}
-document.getElementById('modal-piani')?.addEventListener('click', (e) => {
-    if (e.target === document.getElementById('modal-piani'))
-        document.getElementById('modal-piani').style.display = 'none';
-});
-
-function scegliPianoConMail(nomePiano) {
-    const uid = window._plateupUid;
-    // Salva richiesta su Firestore
-    if (uid) {
-        dbPlateup.collection('richieste_piano').add({
-            uid,
-            piano: nomePiano,
-            richiestoIl: new Date().toISOString()
-        }).catch(e => console.warn(e));
+    $('db-plan-dal').textContent = profilo.pianoDal ? dataIt(new Date(profilo.pianoDal)) : '—';
+    if (profilo.rinnovo) {
+      const r = new Date(profilo.rinnovo);
+      $('db-plan-rinnovo').textContent = dataIt(r);
+      $('db-plan-rinnovo-sub').textContent = annuale ? 'rinnovo annuale' : 'rinnovo mensile';
+      $('disdetta-meta').textContent = 'Resta attivo fino al ' + dataIt(r) + '. Nessun addebito successivo.';
     }
-    // Apre il client email con mail precompilata
-    const profilo   = firebase.auth().currentUser;
-    const email     = profilo?.email || '';
-    const subject   = encodeURIComponent(`Richiesta attivazione piano: ${nomePiano}`);
-    const body      = encodeURIComponent(`Ciao PlateUp,\n\nVorrei attivare il piano ${nomePiano}.\n\nEmail account: ${email}\n\nGrazie`);
-    window.location.href = `mailto:info@plateup.it?subject=${subject}&body=${body}`;
-    document.getElementById('modal-piani').style.display = 'none';
-}
+  };
 
-function scegliPiano(btn) {
-    confrontaPiani();
-}
-</script>
-<script>
-const FATT_FIELDS = ['field-ragione','field-piva','field-cf','field-sdi','field-email-amm'];
-let _fattBackup = {};
-
-document.getElementById('btn-modifica-fatturazione')?.addEventListener('click', () => {
-    _fattBackup = {};
-    FATT_FIELDS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { _fattBackup[id] = el.value; el.removeAttribute('readonly'); }
-    });
-    document.getElementById('btn-modifica-fatturazione').style.display = 'none';
-    document.getElementById('btn-salva-fatturazione').style.display = '';
-    document.getElementById('btn-annulla-fatturazione').style.display = '';
-    document.getElementById('fatturazione-status').textContent = 'modifica in corso…';
-});
-
-document.getElementById('btn-salva-fatturazione')?.addEventListener('click', async () => {
-    const uid = window._plateupUid;
-    if (!uid) return;
-    const ra  = document.getElementById('field-ragione')?.value    || '';
-    const pi  = document.getElementById('field-piva')?.value       || '';
-    const cf  = document.getElementById('field-cf')?.value         || '';
-    const sdi = document.getElementById('field-sdi')?.value        || '';
-    const ea  = document.getElementById('field-email-amm')?.value  || '';
+  auth.onAuthStateChanged(async (u) => {
+    if (!u) { window.location.replace('index.html'); return; }
+    utente = u;
     try {
-        await dbPlateup.collection('users').doc(uid).set(
-            { billing: { ragione: ra, piva: pi, cf, sdi, emailAmm: ea } },
-            { merge: true }
-        );
-        FATT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('readonly', ''); });
-        document.getElementById('btn-modifica-fatturazione').style.display = '';
-        document.getElementById('btn-salva-fatturazione').style.display = 'none';
-        document.getElementById('btn-annulla-fatturazione').style.display = 'none';
-        document.getElementById('fatturazione-status').textContent = 'salvato ✓';
-        setTimeout(() => { document.getElementById('fatturazione-status').textContent = '—'; }, 3000);
-    } catch(e) { alert('Errore: ' + e.message); }
-});
+      const snap = await doc().get();
+      if (snap.exists) profilo = snap.data() || {};
+    } catch (e) { console.warn('Profilo non caricato:', e); }
+    mostraProfilo();
+    mostraPiano();
+    document.body.classList.remove('caricamento');
+  });
 
-document.getElementById('btn-annulla-fatturazione')?.addEventListener('click', () => {
-    FATT_FIELDS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.value = _fattBackup[id] || ''; el.setAttribute('readonly', ''); }
+  // ── Modifica e salvataggio (profilo / fatturazione) ──
+  const sezioni = {
+    profilo: { campi: ['field-firstname', 'field-lastname', 'field-phone', 'field-restaurant', 'field-address'],
+      dati: () => ({ firstname: $('field-firstname').value.trim(), lastname: $('field-lastname').value.trim(), phone: $('field-phone').value.trim(),
+        restaurant: $('field-restaurant').value.trim(), address: $('field-address').value.trim() }) },
+    fatturazione: { campi: ['field-ragione', 'field-piva', 'field-cf', 'field-sdi', 'field-email-amm'],
+      dati: () => ({ billing: { ragione: $('field-ragione').value.trim(), piva: $('field-piva').value.trim(), cf: $('field-cf').value.trim().toUpperCase(),
+        sdi: $('field-sdi').value.trim().toUpperCase(), emailAmm: $('field-email-amm').value.trim() } }) }
+  };
+  Object.entries(sezioni).forEach(([nome, sez]) => {
+    const modifica = $('btn-modifica-' + nome), salva = $('btn-salva-' + nome), annulla = $('btn-annulla-' + nome), stato = $(nome + '-status');
+    let copia = {};
+    const modalita = (inModifica) => {
+      sez.campi.forEach((id) => { if (inModifica) $(id).removeAttribute('readonly'); else $(id).setAttribute('readonly', ''); });
+      modifica.style.display = inModifica ? 'none' : '';
+      salva.style.display = annulla.style.display = inModifica ? '' : 'none';
+    };
+    modifica.addEventListener('click', () => {
+      copia = {}; sez.campi.forEach((id) => { copia[id] = $(id).value; });
+      modalita(true); stato.textContent = 'modifica in corso…'; $(sez.campi[0]).focus();
     });
-    document.getElementById('btn-modifica-fatturazione').style.display = '';
-    document.getElementById('btn-salva-fatturazione').style.display = 'none';
-    document.getElementById('btn-annulla-fatturazione').style.display = 'none';
-    document.getElementById('fatturazione-status').textContent = '—';
-});
+    annulla.addEventListener('click', () => {
+      sez.campi.forEach((id) => { $(id).value = copia[id] || ''; });
+      modalita(false); stato.textContent = '—';
+    });
+    salva.addEventListener('click', async () => {
+      const dati = sez.dati();
+      if (nome === 'fatturazione') {
+        const b = dati.billing;
+        if (b.piva && !/^\d{11}$/.test(b.piva)) { stato.textContent = 'partita IVA: 11 cifre'; return; }
+        if (b.emailAmm && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.emailAmm)) { stato.textContent = 'email non valida'; return; }
+      }
+      salva.disabled = true; stato.textContent = 'salvataggio…';
+      try {
+        await doc().set(dati, { merge: true });
+        Object.assign(profilo, dati);
+        mostraProfilo();
+        modalita(false);
+        stato.textContent = 'salvato ✓';
+        setTimeout(() => { stato.textContent = '—'; }, 3000);
+      } catch (e) {
+        stato.textContent = 'non salvato: riprova';
+        console.warn(e);
+      }
+      salva.disabled = false;
+    });
+  });
 
-
-</script>
-<!-- Modal confronta piani -->
-<div id="modal-piani" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:2000; align-items:flex-start; justify-content:center; overflow-y:auto; padding:2rem 1rem;">
-  <div style="background:#1c1f26; border:1px solid #2f3340; border-radius:18px; padding:2rem; max-width:760px; width:100%; margin:auto;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-      <h3 style="color:white; margin:0; font-size:1.2rem;">Confronta i piani</h3>
-      <button onclick="document.getElementById('modal-piani').style.display='none'" style="background:none; border:none; color:#9ca3af; font-size:1.4rem; cursor:pointer;">×</button>
-    </div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem;">
-      <div style="background:#13151a; border:1px solid #2f3340; border-radius:14px; padding:1.4rem;">
-        <div style="font-size:.75rem; color:#9ca3af; font-family:monospace; margin-bottom:.4rem;">Starter</div>
-        <div style="font-size:1.8rem; font-weight:700; color:white; margin-bottom:.8rem;">€49<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
-        <ul style="margin:0 0 1.2rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.85rem; line-height:2;">
-          <li>Fino a 30 tavoli</li><li>Menu digitale multilingua</li><li>Ordini live</li><li>Support email</li>
-        </ul>
-        <button class="db-btn-ghost" style="width:100%;" onclick="scegliPianoConMail('Starter €49/mese')">Scegli Starter</button>
-      </div>
-      <div style="background:#13151a; border:1.5px solid #d4af37; border-radius:14px; padding:1.4rem; position:relative;">
-        <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#d4af37; color:#0e1117; font-size:.7rem; font-weight:700; font-family:monospace; padding:2px 10px; border-radius:20px;">Più scelto</div>
-        <div style="font-size:.75rem; color:#d4af37; font-family:monospace; margin-bottom:.4rem;">Pro</div>
-        <div style="font-size:1.8rem; font-weight:700; color:white; margin-bottom:.8rem;">€89<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
-        <ul style="margin:0 0 1.2rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.85rem; line-height:2;">
-          <li>Tavoli illimitati</li><li>Analytics avanzate</li><li>Gestione turni staff</li><li>Support prioritario</li>
-        </ul>
-        <button class="db-btn-primary" style="width:100%;" onclick="scegliPianoConMail('Pro €89/mese')">Scegli Pro</button>
-      </div>
-      <div style="background:#13151a; border:1px solid #2f3340; border-radius:14px; padding:1.4rem;">
-        <div style="font-size:.75rem; color:#9ca3af; font-family:monospace; margin-bottom:.4rem;">Elite</div>
-        <div style="font-size:1.8rem; font-weight:700; color:white; margin-bottom:.8rem;">€149<span style="font-size:.85rem; font-weight:400; color:#9ca3af;">/mese</span></div>
-        <ul style="margin:0 0 1.2rem; padding:0 0 0 1rem; color:#9ca3af; font-size:.85rem; line-height:2;">
-          <li>Multi-locale</li><li>API access</li><li>Onboarding dedicato</li><li>Support 24/7</li>
-        </ul>
-        <button class="db-btn-ghost" style="width:100%;" onclick="scegliPianoConMail('Elite €149/mese')">Scegli Elite</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<script>
-document.getElementById('btn-sospendi')?.addEventListener('click', () => {
-    if (!confirm('Vuoi sospendere il tuo abbonamento?\nResterai attivo fino alla fine del periodo pagato.')) return;
-    const email = firebase.auth().currentUser?.email || '';
-    const subject = encodeURIComponent('Richiesta sospensione abbonamento PlateUp');
-    const body    = encodeURIComponent('Ciao PlateUp,\n\nVorrei sospendere il mio abbonamento.\n\nEmail account: ' + email + '\n\nGrazie');
-    window.location.href = 'mailto:info@plateup.it?subject=' + subject + '&body=' + body;
-});
-
-document.getElementById('btn-disdici')?.addEventListener('click', () => {
-    if (!confirm('Sei sicuro di voler disdire il piano?\nResterai attivo fino alla fine del periodo pagato. Nessun addebito futuro.')) return;
-    const email = firebase.auth().currentUser?.email || '';
-    const subject = encodeURIComponent('Richiesta disdetta piano PlateUp');
-    const body    = encodeURIComponent('Ciao PlateUp,\n\nVorrei disdire il mio piano.\n\nEmail account: ' + email + '\n\nGrazie');
-    window.location.href = 'mailto:info@plateup.it?subject=' + subject + '&body=' + body;
-});
-
-document.getElementById('btn-elimina')?.addEventListener('click', async () => {
-    const prima = confirm('Stai per eliminare definitivamente il tuo account.\nI dati non sono recuperabili.\n\nContinuare?');
-    if (!prima) return;
-    const seconda = confirm('Conferma finale: eliminare l\'account?');
-    if (!seconda) return;
-    try {
-        const uid = firebase.auth().currentUser?.uid;
-        if (uid) await dbPlateup.collection('users').doc(uid).delete();
-        await firebase.auth().currentUser.delete();
-        window.location.href = 'index.html';
-    } catch(e) {
-        if (e.code === 'auth/requires-recent-login') {
-            alert('Per eliminare l\'account devi prima fare logout e rientrare. Poi riprova.');
-        } else {
-            alert('Errore: ' + e.message);
-        }
+  // ── Piani ──
+  const modal = $('modal-piani');
+  const chiudiModal = () => modal.classList.remove('open');
+  $('db-piani').innerHTML = Object.entries(PIANI).map(([nome, p]) =>
+    '<div class="db-piano' + (nome === 'Pro' ? ' top' : '') + '">' +
+      (nome === 'Pro' ? '<div class="db-piano-badge">Più scelto</div>' : '') +
+      '<div class="db-piano-nome">' + nome + '</div>' +
+      '<div class="db-piano-prezzo">€' + p.prezzo + ' <small>/mese</small></div>' +
+      '<ul>' + p.voci.map((v) => '<li>' + v + '</li>').join('') + '</ul>' +
+      '<button class="' + (nome === 'Pro' ? 'db-btn-primary' : 'db-btn-ghost') + '" style="width:100%" data-piano="' + nome + '">Richiedi ' + nome + '</button>' +
+    '</div>').join('');
+  $('db-opzioni').innerHTML = OPZIONI.map(([n, p], i) =>
+    '<div class="db-opz"><div><b>' + n + '</b><span>' + p + '</span></div><button class="db-btn-ghost small" data-opzione="' + i + '">Richiedi</button></div>').join('');
+  $('btn-cambia-piano').addEventListener('click', () => modal.classList.add('open'));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.hasAttribute('data-chiudi')) return chiudiModal();
+    const opz = e.target.dataset && e.target.dataset.opzione;
+    if (opz !== undefined) {
+      chiudiModal();
+      const [n, p] = OPZIONI[+opz];
+      return mail('Richiesta opzione: ' + n + ' — ' + (profilo.restaurant || utente.email),
+        'Ciao PlateUp,\n\nvorrei aggiungere: ' + n + ' (' + p + ').\n\nLocale: ' + (profilo.restaurant || '') + '\nEmail account: ' + utente.email + '\nTelefono: ' + (profilo.phone || '') + '\n\nGrazie');
     }
-});
+    const piano = e.target.dataset && e.target.dataset.piano;
+    if (!piano) return;
+    chiudiModal();
+    mail('Richiesta piano ' + piano + ' — ' + (profilo.restaurant || utente.email),
+      'Ciao PlateUp,\n\nvorrei attivare il piano ' + piano + '.\n\nLocale: ' + (profilo.restaurant || '') + '\nEmail account: ' + utente.email + '\nTelefono: ' + (profilo.phone || '') + '\n\nGrazie');
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') chiudiModal(); });
+
+  // ── Password ──
+  const pwForm = $('pw-change-form'), pwErr = $('pw-change-err');
+  const pwErrore = (m) => { pwErr.textContent = m; pwErr.classList.add('show'); };
+  const pwPulisci = () => { ['pw-attuale', 'pw-new', 'pw-confirm'].forEach((id) => { $(id).value = ''; }); pwErr.classList.remove('show'); };
+  $('btn-cambia-pw').addEventListener('click', () => { pwForm.classList.toggle('open'); if (pwForm.classList.contains('open')) $('pw-attuale').focus(); });
+  $('btn-pw-cancel').addEventListener('click', () => { pwPulisci(); pwForm.classList.remove('open'); });
+  $('btn-pw-salva').addEventListener('click', async () => {
+    pwErr.classList.remove('show');
+    const attuale = $('pw-attuale').value, nuova = $('pw-new').value, conferma = $('pw-confirm').value;
+    if (!attuale) return pwErrore('Inserisci la password attuale.');
+    if (nuova.length < 8) return pwErrore('La nuova password deve avere almeno 8 caratteri.');
+    if (nuova !== conferma) return pwErrore('Le due password nuove non coincidono.');
+    const btn = $('btn-pw-salva');
+    btn.disabled = true; btn.textContent = 'Salvataggio…';
+    try {
+      await utente.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(utente.email, attuale));
+      await utente.updatePassword(nuova);
+      pwPulisci(); pwForm.classList.remove('open');
+      alert('Password aggiornata.');
+    } catch (e) {
+      pwErrore(['auth/wrong-password', 'auth/invalid-credential', 'auth/invalid-login-credentials'].includes(e.code)
+        ? 'La password attuale non è corretta.'
+        : e.code === 'auth/too-many-requests' ? 'Troppi tentativi: riprova tra qualche minuto.' : 'Non riuscito: riprova.');
+    }
+    btn.disabled = false; btn.textContent = 'Salva password';
+  });
+  $('btn-reset-pw').addEventListener('click', async () => {
+    try {
+      await auth.sendPasswordResetEmail(utente.email);
+      alert('Ti abbiamo mandato un link a ' + utente.email + ' (guarda anche nello spam).');
+    } catch (e) { alert('Invio non riuscito: riprova tra poco.'); }
+  });
+
+  // ── Disdetta e account ──
+  $('btn-sospendi').addEventListener('click', () => mail('Richiesta sospensione abbonamento — ' + (profilo.restaurant || utente.email),
+    'Ciao PlateUp,\n\nvorrei sospendere il mio abbonamento.\nDa (data): \nFino a (data): \n\nEmail account: ' + utente.email + '\n\nGrazie'));
+  $('btn-disdici').addEventListener('click', () => {
+    if (!confirm('Vuoi richiedere la disdetta del piano?\nIl servizio resta attivo fino alla fine del periodo pagato.')) return;
+    mail('Richiesta disdetta piano — ' + (profilo.restaurant || utente.email),
+      'Ciao PlateUp,\n\nvorrei disdire il mio piano.\n\nLocale: ' + (profilo.restaurant || '') + '\nEmail account: ' + utente.email + '\n\nGrazie');
+  });
+  $('btn-elimina').addEventListener('click', async () => {
+    const pw = prompt("Per eliminare l'account scrivi la tua password.\nL'operazione non è reversibile.");
+    if (pw === null) return;
+    if (!confirm("Ultima conferma: eliminare definitivamente l'account " + utente.email + '?')) return;
+    try {
+      // prima la verifica della password: così non si cancella il profilo lasciando l'accesso attivo
+      await utente.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(utente.email, pw));
+      await doc().delete();
+      await utente.delete();
+      window.location.replace('index.html');
+    } catch (e) {
+      alert(['auth/wrong-password', 'auth/invalid-credential', 'auth/invalid-login-credentials'].includes(e.code)
+        ? 'Password non corretta. Nessun dato è stato cancellato.'
+        : "Eliminazione non riuscita: riprova o scrivici a " + MAIL + '.');
+    }
+  });
+
+  $('db-logout').addEventListener('click', async (e) => {
+    e.preventDefault();
+    await auth.signOut();
+    window.location.replace('index.html');
+  });
+
+  // ── Barra laterale: sezione attiva e scorrimento ──
+  const voci = document.querySelectorAll('.db-nav-item');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) voci.forEach((n) => n.classList.toggle('active', n.getAttribute('href') === '#' + e.target.id));
+    });
+  }, { rootMargin: '-30% 0px -55% 0px' });
+  document.querySelectorAll('.db-content > .db-card').forEach((s) => io.observe(s));
+  voci.forEach((a) => a.addEventListener('click', (e) => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (!t) return;
+    e.preventDefault();
+    window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+  }));
+})();
 </script>
 </body>
 </html>
