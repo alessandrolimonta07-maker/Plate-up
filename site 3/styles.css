@@ -11,7 +11,7 @@
   --line-2:    rgba(255, 255, 255, 0.12);
   --cream:     #ffffff;
   --cream-2:   #c9cdd6;
-  --muted:     #6b7280;
+  --muted:     #8b93a1;   /* più leggibile su fondo scuro (contrasto AA) */
   --gold:      #d4af37;
   --gold-deep: #b8941f;
   --gold-dim:  rgba(212, 175, 55, 0.12);
@@ -2980,3 +2980,68 @@ body.nav-open .hamburger span:last-child  { transform: rotate(-45deg) translate(
   width: 22px;
   border-radius: 4px;
 }
+
+
+/* ============================================
+   Sistemazione ottobre 2026
+   ============================================ */
+
+/* Galleria: 4 schermate reali (tolta la foto non nostra) */
+.g-4 { grid-column: span 6; }
+@media (max-width: 900px) { .g-4 { grid-column: span 2; } }
+@media (max-width: 600px) { .g-4 { grid-column: span 1; } }
+/* Su telefono/tablet non esiste l'hover: la didascalia resta sempre visibile */
+@media (hover: none) { .g-overlay { opacity: 1; } }
+.g-slot { cursor: default; }
+.gallery-note { text-align: center; color: var(--muted); font-size: .72rem; margin-top: 22px; }
+
+/* Grafici di esempio */
+.mock-note { font-size: .62rem; color: var(--muted); margin-top: 8px; text-align: right; opacity: .8; }
+
+/* Prezzo annuale: barrato solo il vecchio totale */
+.plan-strike { text-decoration: none; color: var(--cream-2); }
+.plan-strike s { color: #e57367; margin-left: 6px; }
+
+/* Modulo richiesta demo */
+.auth-field select {
+  width: 100%;
+  padding: 13px 14px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-family: var(--sans);
+  font-size: .92rem;
+  color: var(--cream);
+  outline: none;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+.auth-field select:focus { border-color: var(--gold); }
+.auth-send { display: grid; gap: 10px; }
+.auth-submit.ghost {
+  background: transparent;
+  color: var(--cream);
+  border: 1px solid var(--line-2);
+}
+.auth-submit.ghost:hover { border-color: var(--gold); color: var(--gold); }
+.auth-small { font-size: .8rem; color: var(--muted); text-align: center; margin-top: 14px; line-height: 1.5; }
+.auth-small a, .auth-check a, .faq-a a { color: var(--gold); }
+
+/* Accessibilità: niente animazioni per chi le ha disattivate */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .cursor-glow { display: none; }
+}
+/* Focus visibile da tastiera */
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Nav: le voci non vanno a capo */
+.nav-link, .nav-login, .btn-magnetic span { white-space: nowrap; }
+/* L'indicatore "scroll" finiva sopra la riga dei numeri dell'hero */
+.hero-scroll-hint { display: none; }
